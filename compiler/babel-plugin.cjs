@@ -1,18 +1,41 @@
 const { addNamed } = require("@babel/helper-module-imports");
+const path = require("path");
 
 module.exports = function (babel) {
   const { types: t } = babel;
 
   return {
-    name: "jsx-to-dom",
+    name: "waf-compiler",
     visitor: {
-      Program(path, state) {
-        state.jsxElements = [];
-        state.importsNeeded = new Map();
-        state.fileType = state.filename.includes("/app/") ? "page" : "component";
+      Program: {
+        enter(p, state) {
+          state.jsxElements = [];
+          state.importsNeeded = new Map();
+          state.importSources = new Map(); // identifier -> source file
+          
+          const filename = state.filename || "";
+          if (filename.endsWith(".wc.jsx") || filename.endsWith(".wc.tsx")) {
+            state.fileType = "component";
+          } else if (filename.endsWith(".jsx") || filename.endsWith(".tsx")) {
+            state.fileType = "page";
+          } else {
+            state.fileType = "utility";
+          }
+        },
+      },
+
+      ImportDeclaration(path, state) {
+        const source = path.node.source.value;
+        path.node.specifiers.forEach(spec => {
+          if (t.isImportDefaultSpecifier(spec) || t.isImportSpecifier(spec)) {
+            state.importSources.set(spec.local.name, source);
+          }
+        });
       },
 
       ExportDefaultDeclaration(path, state) {
+        if (state.fileType === "utility") return;
+
         const declaration = path.node.declaration;
         if (t.isFunctionDeclaration(declaration)) {
           const componentName = declaration.id.name;
@@ -50,7 +73,7 @@ module.exports = function (babel) {
                 t.identifier("render"),
                 [t.identifier("root")],
                 t.blockStatement([
-                  ...originalStatements, // Include original vars/logic
+                  ...originalStatements,
                   ...statements,
                   t.expressionStatement(
                     t.callExpression(
@@ -63,7 +86,7 @@ module.exports = function (babel) {
             );
             path.replaceWith(renderFn);
           } else {
-            const tagName = "x-" + componentName.toLowerCase();
+            const tagName = "waf-" + componentName.toLowerCase();
             const observedAttributes = Array.from(signals);
 
             const signalId = getImport("signal", "@preact/signals");
@@ -137,7 +160,7 @@ module.exports = function (babel) {
                         t.callExpression(createPropsProxyId, [t.thisExpression()])
                       )
                     ]),
-                    ...originalStatements, // Include original vars/logic
+                    ...originalStatements,
                     ...statements,
                     t.expressionStatement(
                       t.callExpression(
@@ -182,7 +205,13 @@ module.exports = function (babel) {
         const elId = nextId();
 
         if (isComponent) {
-          const componentTagName = "x-" + tagName.toLowerCase();
+          // Enforcement: No .jsx as component
+          const source = state.importSources.get(tagName);
+          if (source && (source.endsWith(".jsx") || source.endsWith(".tsx")) && !source.includes(".wc.")) {
+             throw new Error(`❌ [WAF Compiler] Error in ${state.filename}: Cannot use "${tagName}" as a component because it is a Page file (.jsx / .tsx). Only Web Components (.wc.jsx / .wc.tsx) can be used as JSX tags.`);
+          }
+
+          const componentTagName = "waf-" + tagName.toLowerCase();
           statements.push(
             t.variableDeclaration("const", [
               t.variableDeclarator(

@@ -9,7 +9,7 @@ export default defineConfig({
   plugins: [
     babel({
       babelHelpers: 'bundled',
-      extensions: ['.js', '.jsx', '.ts', '.tsx'],
+      extensions: ['.js', '.jsx', '.ts', '.tsx', '.wc.jsx', '.wc.tsx'],
       configFile: false,
       plugins: [
         "@babel/plugin-syntax-jsx",
