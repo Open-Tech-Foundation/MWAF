@@ -1,0 +1,131 @@
+// Bun Snapshot v1, https://bun.sh/docs/test/snapshots
+
+exports[`WAF Compiler Compiles reactivity.wc.jsx 1`] = `
+"import { createPropsProxy as _createPropsProxy } from "/framework/runtime/props.js";
+import { signal, effect as _effect, signal as _signal } from "@preact/signals";
+class ReactivityElement extends HTMLElement {
+  static observedAttributes = ["title"];
+  constructor() {
+    super();
+    this._propsSignals = {
+      title: _signal(null)
+    };
+  }
+  attributeChangedCallback(name, _, value) {
+    this._propsSignals[name].value = value;
+  }
+  connectedCallback() {
+    this._onCleanups = [];
+    const props = _createPropsProxy(this);
+    const count = signal(0);
+    const el0 = document.createElement("div");
+    _effect(() => el0.title = props.title);
+    const el1 = document.createElement("span");
+    const text2 = document.createTextNode("");
+    _effect(() => text2.textContent = count.value);
+    el1.appendChild(text2);
+    el0.appendChild(el1);
+    const el3 = document.createElement("button");
+    el3.onclick = () => count.value++;
+    const text4 = document.createTextNode("Add");
+    el3.appendChild(text4);
+    el0.appendChild(el3);
+    while (this.firstChild) el0.appendChild(this.firstChild);
+    this.appendChild(el0);
+  }
+  disconnectedCallback() {
+    this._onCleanups.forEach(fn => fn());
+  }
+}
+customElements.define("waf-reactivity", ReactivityElement);
+export default ReactivityElement;"
+`;
+
+exports[`WAF Compiler Compiles basic-elements.jsx 1`] = `
+"export function render(root) {
+  const el0 = document.createElement("div");
+  const el1 = document.createElement("h1");
+  const text2 = document.createTextNode("Hello");
+  el1.appendChild(text2);
+  el0.appendChild(el1);
+  const el3 = document.createElement("p");
+  const text4 = document.createTextNode("World");
+  el3.appendChild(text4);
+  el0.appendChild(el3);
+  root.appendChild(el0);
+}"
+`;
+
+exports[`WAF Compiler Compiles lifecycle.wc.jsx 1`] = `
+"import { createPropsProxy as _createPropsProxy } from "/framework/runtime/props.js";
+import { signal as _signal } from "@preact/signals";
+class LifecycleElement extends HTMLElement {
+  static observedAttributes = [];
+  constructor() {
+    super();
+    this._propsSignals = {};
+  }
+  attributeChangedCallback(name, _, value) {
+    this._propsSignals[name].value = value;
+  }
+  connectedCallback() {
+    this._onCleanups = [];
+    const props = _createPropsProxy(this);
+    ;
+    this._onCleanups.push(() => {
+      console.log("cleaned up");
+    });
+    const el0 = document.createElement("div");
+    const text1 = document.createTextNode("Lifecycle");
+    el0.appendChild(text1);
+    while (this.firstChild) el0.appendChild(this.firstChild);
+    this.appendChild(el0);
+    (() => {
+      console.log("mounted");
+    })();
+  }
+  disconnectedCallback() {
+    this._onCleanups.forEach(fn => fn());
+  }
+}
+customElements.define("waf-lifecycle", LifecycleElement);
+export default LifecycleElement;"
+`;
+
+exports[`WAF Compiler Compiles children-projection.wc.jsx 1`] = `
+"import { createPropsProxy as _createPropsProxy } from "/framework/runtime/props.js";
+import { signal as _signal } from "@preact/signals";
+class WrapperElement extends HTMLElement {
+  static observedAttributes = [];
+  constructor() {
+    super();
+    this._propsSignals = {};
+  }
+  attributeChangedCallback(name, _, value) {
+    this._propsSignals[name].value = value;
+  }
+  connectedCallback() {
+    this._onCleanups = [];
+    const props = _createPropsProxy(this);
+    const el0 = document.createElement("div");
+    el0.class = "wrapper";
+    const el1 = document.createElement("header");
+    const text2 = document.createTextNode("Header");
+    el1.appendChild(text2);
+    el0.appendChild(el1);
+    const el3 = document.createElement("main");
+    el0.appendChild(el3);
+    const el4 = document.createElement("footer");
+    const text5 = document.createTextNode("Footer");
+    el4.appendChild(text5);
+    el0.appendChild(el4);
+    while (this.firstChild) el0.appendChild(this.firstChild);
+    this.appendChild(el0);
+  }
+  disconnectedCallback() {
+    this._onCleanups.forEach(fn => fn());
+  }
+}
+customElements.define("waf-wrapper", WrapperElement);
+export default WrapperElement;"
+`;
