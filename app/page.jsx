@@ -1,14 +1,9 @@
-const today = new Date();
+import LoginForm from './components/LoginForm.jsx';
 
-function formatDate(date) {
-  return new Intl.DateTimeFormat(
-    'en-US',
-    { weekday: 'long' }
-  ).format(date);
-}
-
-export default function TodoList() {
+export default function Page() {
   return (
-    <h1>To Do List for {formatDate(today)}</h1>
+    <div>
+      <LoginForm />
+    </div>
   );
 }

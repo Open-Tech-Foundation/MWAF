@@ -19,11 +19,12 @@
 * **Properties**: Specific attributes (`value`, `checked`, `id`, `title`, `href`, `src`) are assigned as JS properties for maximum compatibility.
 * **Events**: Attributes starting with `on` (e.g., `onclick`) are assigned directly as properties: `el.onclick = value`.
 
-### 4. Components (.wc.jsx)
-* Transformed into a class extending `HTMLElement`.
+### 4. Components
+* Any PascalCase function (not being a page's default export) is transformed into a class extending `HTMLElement`.
 * `props` are proxied to `observedAttributes` and signals.
-* Default export is the class itself.
-* `customElements.define("waf-name", Class)` is called automatically.
+* The component is automatically registered via `customElements.define("waf-name", Class)`.
+* Default exports are automatically wrapped or transformed based on the file type (Page vs. Component).
+
 
 ### 5. Lifecycle Transformation
 The compiler detects calls to `onMount` and `onCleanup` in the component's setup scope:

@@ -1,6 +1,6 @@
 // Bun Snapshot v1, https://bun.sh/docs/test/snapshots
 
-exports[`WAF Compiler Compiles children-projection.wc.jsx 1`] = `
+exports[`WAF Compiler Compiles children-projection.jsx 1`] = `
 "import { createPropsProxy as _createPropsProxy } from "/framework/runtime/props.js";
 import { signal as _signal } from "@preact/signals";
 class WrapperElement extends HTMLElement {
@@ -38,11 +38,53 @@ customElements.define("waf-wrapper", WrapperElement);
 export default WrapperElement;"
 `;
 
-exports[`WAF Compiler Compiles reactivity.wc.jsx 1`] = `
+exports[`WAF Compiler Compiles lifecycle.jsx 1`] = `
+"import { createPropsProxy as _createPropsProxy } from "/framework/runtime/props.js";
+import { signal as _signal } from "@preact/signals";
+class LifecycleElement extends HTMLElement {
+  static observedAttributes = [];
+  constructor() {
+    super();
+    this._propsSignals = {};
+  }
+  attributeChangedCallback(name, _, value) {
+    this._propsSignals[name].value = value;
+  }
+  connectedCallback() {
+    this._onCleanups = [];
+    const props = _createPropsProxy(this);
+    ;
+    this._onCleanups.push(() => {
+      console.log("cleaned up");
+    });
+    const el0 = document.createElement("div");
+    const text1 = document.createTextNode("Lifecycle");
+    el0.appendChild(text1);
+    while (this.firstChild) el0.appendChild(this.firstChild);
+    this.appendChild(el0);
+    (() => {
+      console.log("mounted");
+    })();
+  }
+  disconnectedCallback() {
+    this._onCleanups.forEach(fn => fn());
+  }
+}
+customElements.define("waf-lifecycle", LifecycleElement);
+export default LifecycleElement;"
+`;
+
+exports[`WAF Compiler Compiles reactivity.jsx 1`] = `
 "import { createPropsProxy as _createPropsProxy } from "/framework/runtime/props.js";
 import { signal, effect as _effect, signal as _signal } from "@preact/signals";
 class ReactivityElement extends HTMLElement {
   static observedAttributes = ["title"];
+  set title(val) {
+    this._propsSignals["title"].value = val;
+  }
+  get title() {
+    return this._propsSignals["title"].value;
+  }
   constructor() {
     super();
     this._propsSignals = {
@@ -79,7 +121,7 @@ customElements.define("waf-reactivity", ReactivityElement);
 export default ReactivityElement;"
 `;
 
-exports[`WAF Compiler Compiles basic-elements.jsx 1`] = `
+exports[`WAF Compiler Compiles basic-elements.page.jsx 1`] = `
 "export function render(root) {
   const el0 = document.createElement("div");
   const el1 = document.createElement("h1");
@@ -94,11 +136,17 @@ exports[`WAF Compiler Compiles basic-elements.jsx 1`] = `
 }"
 `;
 
-exports[`WAF Compiler Compiles styling.wc.jsx 1`] = `
+exports[`WAF Compiler Compiles styling.jsx 1`] = `
 "import { createPropsProxy as _createPropsProxy } from "/framework/runtime/props.js";
 import { signal, effect as _effect, signal as _signal } from "@preact/signals";
 class StylingTestElement extends HTMLElement {
   static observedAttributes = ["theme"];
+  set theme(val) {
+    this._propsSignals["theme"].value = val;
+  }
+  get theme() {
+    return this._propsSignals["theme"].value;
+  }
   constructor() {
     super();
     this._propsSignals = {
@@ -136,43 +184,7 @@ customElements.define("waf-stylingtest", StylingTestElement);
 export default StylingTestElement;"
 `;
 
-exports[`WAF Compiler Compiles lifecycle.wc.jsx 1`] = `
-"import { createPropsProxy as _createPropsProxy } from "/framework/runtime/props.js";
-import { signal as _signal } from "@preact/signals";
-class LifecycleElement extends HTMLElement {
-  static observedAttributes = [];
-  constructor() {
-    super();
-    this._propsSignals = {};
-  }
-  attributeChangedCallback(name, _, value) {
-    this._propsSignals[name].value = value;
-  }
-  connectedCallback() {
-    this._onCleanups = [];
-    const props = _createPropsProxy(this);
-    ;
-    this._onCleanups.push(() => {
-      console.log("cleaned up");
-    });
-    const el0 = document.createElement("div");
-    const text1 = document.createTextNode("Lifecycle");
-    el0.appendChild(text1);
-    while (this.firstChild) el0.appendChild(this.firstChild);
-    this.appendChild(el0);
-    (() => {
-      console.log("mounted");
-    })();
-  }
-  disconnectedCallback() {
-    this._onCleanups.forEach(fn => fn());
-  }
-}
-customElements.define("waf-lifecycle", LifecycleElement);
-export default LifecycleElement;"
-`;
-
-exports[`WAF Compiler Compiles comments.jsx 1`] = `
+exports[`WAF Compiler Compiles comments.page.jsx 1`] = `
 "export function render(root) {
   const el0 = document.createElement("div");
   const el1 = document.createElement("h1");
@@ -188,7 +200,7 @@ exports[`WAF Compiler Compiles comments.jsx 1`] = `
 }"
 `;
 
-exports[`WAF Compiler Compiles svg.wc.jsx 1`] = `
+exports[`WAF Compiler Compiles svg.jsx 1`] = `
 "import { createPropsProxy as _createPropsProxy } from "/framework/runtime/props.js";
 import { signal, effect as _effect, signal as _signal } from "@preact/signals";
 class SvgTestElement extends HTMLElement {
@@ -232,7 +244,7 @@ customElements.define("waf-svgtest", SvgTestElement);
 export default SvgTestElement;"
 `;
 
-exports[`WAF Compiler Compiles inline-styles.wc.jsx 1`] = `
+exports[`WAF Compiler Compiles inline-styles.jsx 1`] = `
 "import { createPropsProxy as _createPropsProxy } from "/framework/runtime/props.js";
 import { signal, effect as _effect, signal as _signal } from "@preact/signals";
 class StyleTestElement extends HTMLElement {
@@ -276,7 +288,7 @@ customElements.define("waf-styletest", StyleTestElement);
 export default StyleTestElement;"
 `;
 
-exports[`WAF Compiler Compiles whitespace.jsx 1`] = `
+exports[`WAF Compiler Compiles whitespace.page.jsx 1`] = `
 "import { effect as _effect } from "@preact/signals";
 export function render(root) {
   const name = "WAF";

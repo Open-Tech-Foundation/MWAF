@@ -3,27 +3,27 @@
 ## File Types
 
 ### `.jsx` / `.tsx`
-* **Compiles to**: Imperative DOM render function.
-* **Used for**: Pages (entry points for routes).
-* **Restrictions**: Cannot be used as JSX components; MUST export a default function.
+* **Compiles to**: Either a `render()` function (for pages) or a Web Component (for components).
+* **Page Convention**: Files named `page.jsx` or `page.tsx` act as route entry points. Their default export is transformed into a `render(root)` function.
+* **Component Convention**: Any other `.jsx` or `.tsx` file is automatically transformed into a reusable Web Component (Custom Element).
 
-### `.wc.jsx` / `.wc.tsx`
-* **Compiles to**: Web Component (Custom Element).
-* **Used for**: Reusable UI components.
-* **Compatibility**: Can be imported and used as tags in both `.jsx` and `.wc.jsx` files.
-* **Naming**: Will be automatically registered with the `waf-` prefix (e.g., `Button.wc.jsx` -> `<waf-button>`).
+### Reusable UI Components
+* **Auto-Registration**: Any PascalCase function (e.g., `function Button()`) that is not the default export of a page file is automatically registered as a Web Component.
+* **Naming**: Registered with the `waf-` prefix (e.g., `LoginForm.jsx` -> `<waf-loginform>`).
+* **Usage**: Can be imported and used as standard HTML tags in any JSX file.
 
 ### `.js` / `.ts`
 * **Used for**: Utilities, business logic, signals, and shared state.
 
 ## Rules
-* All components MUST export a default function.
+* All files MUST export a default function.
 * Components MUST follow PascalCase naming (e.g., `Counter`).
+* **File-based Routing**: Only files named `page.jsx` or `page.tsx` can be targeted by the router.
+* **Component Isolation**: Tag usage of a `.jsx` page file as a component is strictly forbidden. Use dedicated component files instead.
 * **CSS Classes**: You may use either `class` or `className` in your JSX. The compiler automatically maps both to the native `className` property.
 * **Inline Styles**: Supports React-style style objects: `style={{ display: 'flex', gap: '10px' }}`.
 * **SVG/Attributes**: Supports camelCase attributes (e.g., `strokeWidth`) which are automatically mapped to their kebab-case versions in the DOM.
 * **Comments**: Standard JSX comments `{/* ... */}` are supported. If using single-line comments `{ // ... }`, ensure the closing brace is on a new line to avoid syntax errors.
-* Tag usage of a `.jsx` file as a component is strictly forbidden and will throw a compiler error.
 
 ## Styling
 WAF supports multiple styling approaches:
