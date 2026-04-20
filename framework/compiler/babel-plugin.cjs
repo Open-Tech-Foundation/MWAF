@@ -421,8 +421,10 @@ module.exports = function (babel) {
 
         return elId;
       } else if (t.isJSXText(n)) {
-        const text = n.value.trim();
+        // Normalize whitespace: remove newlines and their following indentation
+        const text = n.value.replace(/\n\s*/g, "");
         if (!text) return null;
+        
         const textId = nextId("text");
         statements.push(
           t.variableDeclaration("const", [

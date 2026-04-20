@@ -275,3 +275,29 @@ class StyleTestElement extends HTMLElement {
 customElements.define("waf-styletest", StyleTestElement);
 export default StyleTestElement;"
 `;
+
+exports[`WAF Compiler Compiles whitespace.jsx 1`] = `
+"import { effect as _effect } from "@preact/signals";
+export function render(root) {
+  const name = "WAF";
+  const el0 = document.createElement("div");
+  const el1 = document.createElement("span");
+  const text2 = document.createTextNode("Hello ");
+  el1.appendChild(text2);
+  const text3 = document.createTextNode("");
+  _effect(() => text3.textContent = name);
+  el1.appendChild(text3);
+  const text4 = document.createTextNode("!");
+  el1.appendChild(text4);
+  el0.appendChild(el1);
+  const el5 = document.createElement("p");
+  const text6 = document.createTextNode("Line 1Line 2");
+  el5.appendChild(text6);
+  el0.appendChild(el5);
+  const el7 = document.createElement("div");
+  const text8 = document.createTextNode("Spaces should be preserved here -> ");
+  el7.appendChild(text8);
+  el0.appendChild(el7);
+  root.appendChild(el0);
+}"
+`;

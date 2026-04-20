@@ -1,15 +1,14 @@
-import Profile from "./components/Profile.wc";
+const today = new Date();
 
+function formatDate(date) {
+  return new Intl.DateTimeFormat(
+    'en-US',
+    { weekday: 'long' }
+  ).format(date);
+}
 
-export default function Gallery() {
+export default function TodoList() {
   return (
-    <section>
-      <h1>Amazing scientists</h1>
-      <div style={{ display: "flex", gap: "20px", flexWrap: "wrap" }}>
-        <Profile />
-        <Profile />
-        <Profile />
-      </div>
-    </section>
+    <h1>To Do List for {formatDate(today)}</h1>
   );
 }
