@@ -1,10 +1,14 @@
 import { expect, test, describe } from "bun:test";
 import { transformSync } from "@babel/core";
 import plugin from "../../framework/compiler/babel-plugin.cjs";
-import { readFileSync, readdirSync } from "fs";
-import { join } from "path";
+import { readFileSync, readdirSync, mkdirSync, writeFileSync } from "node:fs";
+import { join, basename, extname } from "node:path";
 
 const CASES_DIR = join(import.meta.dir, "cases");
+const OUTPUT_DIR = join(import.meta.dir, "output");
+
+// Ensure output directory exists
+mkdirSync(OUTPUT_DIR, { recursive: true });
 
 describe("WAF Compiler", () => {
   const files = readdirSync(CASES_DIR);
@@ -22,6 +26,10 @@ describe("WAF Compiler", () => {
         ],
         configFile: false,
       });
+
+      // Save to individual output file for easier review
+      const outputFilename = basename(file, extname(file)) + ".compiled.js";
+      writeFileSync(join(OUTPUT_DIR, outputFilename), result.code);
 
       expect(result.code).toMatchSnapshot();
     });

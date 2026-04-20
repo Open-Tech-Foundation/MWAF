@@ -25,11 +25,15 @@ WAF provides global "macros" for reactivity that do not require imports. The com
 ### Reactive Props (Destructuring)
 WAF supports standard React-style destructuring in component parameters. The compiler automatically ensures these stay reactive by transforming them into property accesses on the internal proxy.
 
+### Conditional Rendering & Dynamic Children
+WAF supports all standard JS conditional patterns (ternaries, `&&`, etc.) inside JSX. 
+* **Mechanism**: The compiler wraps dynamic expressions in a `renderDynamic` call.
+* **Anchor**: A hidden Comment node is used as an anchor to swap DOM nodes without re-rendering the entire parent.
+* **Nested JSX**: JSX tags inside conditions are automatically compiled to imperative IIFEs.
+
 ```jsx
-// This works reactively!
-export default function Greet({ name }) {
-  return <h1>Hello {name}</h1>;
-}
+// This works perfectly and reactively
+{isPacked ? <del>{name}</del> : <span>{name}</span>}
 ```
 
 ---

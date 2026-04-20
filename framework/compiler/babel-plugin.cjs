@@ -97,7 +97,10 @@ module.exports = function (babel) {
             path.get("callee").replaceWith(getImport("onMount", "/framework/runtime/lifecycle.js"));
           } else if (name === "onCleanup") {
             path.get("callee").replaceWith(getImport("onCleanup", "/framework/runtime/lifecycle.js"));
+          } else if (name === "$renderDynamic") {
+            path.get("callee").replaceWith(getImport("renderDynamic", "/framework/runtime/dom.js"));
           }
+
 
         }
       }
@@ -130,7 +133,7 @@ module.exports = function (babel) {
 
     if (!jsxNode) return;
 
-    const { statements, rootId, signals } = transformJSX(jsxNode, t, state, getImport);
+    const { statements, rootId, signals } = transformJSX(jsxNode, t, state, getImport, componentPath);
 
     const componentInfo = state.components.get(name);
     
@@ -315,14 +318,14 @@ module.exports = function (babel) {
     }
   }
 
-  function transformJSX(node, t, state, getImport) {
+  function transformJSX(node, t, state, getImport, path) {
     const statements = [];
     const signals = new Set();
     let counter = 0;
     const nextId = (prefix = "el") => t.identifier(prefix + (counter++));
     const toKebabCase = (str) => str.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
 
-    function processNode(n) {
+    function processNode(n, parentElId) {
       if (t.isJSXElement(n)) {
         const tagName = n.openingElement.name.name;
         const isComponent = /^[A-Z]/.test(tagName);
@@ -351,7 +354,7 @@ module.exports = function (babel) {
 
           
           n.children.forEach(child => {
-            const childId = processNode(child);
+            const childId = processNode(child, elId);
             if (childId) statements.push(t.expressionStatement(t.callExpression(t.memberExpression(elId, t.identifier("appendChild")), [childId])));
           });
           return elId;
@@ -394,7 +397,7 @@ module.exports = function (babel) {
         });
 
         n.children.forEach(child => {
-          const childId = processNode(child);
+          const childId = processNode(child, elId);
           if (childId) statements.push(t.expressionStatement(t.callExpression(t.memberExpression(elId, t.identifier("appendChild")), [childId])));
         });
         return elId;
@@ -406,15 +409,44 @@ module.exports = function (babel) {
         return textId;
       } else if (t.isJSXExpressionContainer(n)) {
         if (t.isJSXEmptyExpression(n.expression)) return null;
-        const textId = nextId("text");
-        const effectId = getImport("effect", "@preact/signals");
-        statements.push(t.variableDeclaration("const", [t.variableDeclarator(textId, t.callExpression(t.memberExpression(t.identifier("document"), t.identifier("createTextNode")), [t.stringLiteral("")]))]));
-        statements.push(t.expressionStatement(t.callExpression(effectId, [t.arrowFunctionExpression([], t.assignmentExpression("=", t.memberExpression(textId, t.identifier("textContent")), n.expression))])));
+        
+        // Recursive helper to transform nested JSX elements into imperative IIFEs
+        const transformNestedJSX = (exprNode) => {
+          if (!exprNode || typeof exprNode !== "object") return;
+          if (Array.isArray(exprNode)) {
+            exprNode.forEach(transformNestedJSX);
+            return;
+          }
+          
+          Object.keys(exprNode).forEach(key => {
+            const child = exprNode[key];
+            if (t.isJSXElement(child) || t.isJSXFragment(child)) {
+              const { statements: innerStatements, rootId: innerRootId } = transformJSX(child, t, state, getImport, path);
+              exprNode[key] = t.callExpression(t.arrowFunctionExpression([], t.blockStatement([
+                ...innerStatements,
+                t.returnStatement(innerRootId)
+              ])), []);
+            } else {
+              transformNestedJSX(child);
+            }
+          });
+        };
+
+        transformNestedJSX(n.expression);
+
+
+        const renderDynamicId = getImport("renderDynamic", "/framework/runtime/dom.js");
+        statements.push(t.expressionStatement(t.callExpression(renderDynamicId, [
+          parentElId,
+          t.arrowFunctionExpression([], n.expression)
+        ])));
+
         if (t.isMemberExpression(n.expression) && t.isIdentifier(n.expression.object, { name: "props" })) signals.add(n.expression.property.name);
-        return textId;
+        return null;
       }
     }
-    const rootId = processNode(node);
+    const rootId = processNode(node, t.identifier("root"));
     return { statements, rootId, signals };
   }
+
 };
