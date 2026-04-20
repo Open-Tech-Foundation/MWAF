@@ -1,5 +1,5 @@
 import Counter from "../components/Counter.wc.jsx"
-import Link from "../components/Link.wc.jsx"
+import Link from "../framework/router/Link.wc.jsx"
 
 export default function Page() {
   return (

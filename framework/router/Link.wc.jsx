@@ -1,4 +1,4 @@
-import { navigate } from "../framework/router/index"
+import { navigate } from "./index"
 
 export default function Link(props) {
   return (
