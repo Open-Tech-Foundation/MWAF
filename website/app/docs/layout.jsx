@@ -47,6 +47,7 @@ export default function DocsLayout(props) {
               <Link href="/docs#lists" className="px-2 py-1.5 text-sm text-slate-500 hover:text-accent hover:bg-accent/5 rounded-md transition-colors">List Rendering</Link>
               <Link href="/docs#conditionals" className="px-2 py-1.5 text-sm text-slate-500 hover:text-accent hover:bg-accent/5 rounded-md transition-colors">Conditional Rendering</Link>
               <Link href="/docs#lifecycle" className="px-2 py-1.5 text-sm text-slate-500 hover:text-accent hover:bg-accent/5 rounded-md transition-colors">Lifecycle Hooks</Link>
+              <Link href="/docs#refs" className="px-2 py-1.5 text-sm text-slate-500 hover:text-accent hover:bg-accent/5 rounded-md transition-colors">DOM References ($ref)</Link>
             </div>
           </div>
 

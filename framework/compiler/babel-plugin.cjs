@@ -105,7 +105,7 @@ module.exports = function (babel) {
             return state.importsNeeded.get(key);
           };
 
-          if (name === "$state" || name === "$derived") {
+          if (name === "$state" || name === "$derived" || name === "$ref") {
             // Track this variable as a state variable in the current scope
             const parent = path.findParent(p => p.isVariableDeclarator());
             if (parent && t.isIdentifier(parent.node.id)) {
@@ -114,11 +114,25 @@ module.exports = function (babel) {
             }
             if (name === "$state") {
               path.get("callee").replaceWith(getImport("signal", "@preact/signals-core"));
-            } else {
+            } else if (name === "$derived") {
               path.get("callee").replaceWith(getImport("computed", "@preact/signals-core"));
+            } else if (name === "$ref") {
+              // Track this variable as a ref variable
+              const parent = path.findParent(p => p.isVariableDeclarator());
+              if (parent && t.isIdentifier(parent.node.id)) {
+                if (!state.refVars) state.refVars = new Set();
+                state.refVars.add(parent.node.id.name);
+                if (!state.stateVars) state.stateVars = new Set();
+                state.stateVars.add(parent.node.id.name);
+              }
+              path.get("callee").replaceWith(getImport("signal", "@preact/signals-core"));
             }
           } else if (name === "$effect") {
             path.get("callee").replaceWith(getImport("effect", "@preact/signals-core"));
+          } else if (name === "$expose") {
+            // $expose({ a, b }) -> Object.assign(this, { a, b })
+            path.get("callee").replaceWith(t.memberExpression(t.identifier("Object"), t.identifier("assign")));
+            path.node.arguments.unshift(t.thisExpression());
           } else if (name === "onMount") {
             path.get("callee").replaceWith(getImport("onMount", "/framework/runtime/lifecycle.js"));
           } else if (name === "onCleanup") {
@@ -495,6 +509,17 @@ module.exports = function (babel) {
             const targetProp = name === "class" || name === "className" ? "className" : name;
 
             if (t.isJSXExpressionContainer(value)) {
+              if (name === "ref" && t.isIdentifier(value.expression) && state.refVars?.has(value.expression.name)) {
+                const refName = value.expression.name;
+                const innerId = t.identifier(refName);
+                innerId._processed = true;
+                statements.push(t.expressionStatement(t.assignmentExpression(
+                  "=",
+                  t.memberExpression(innerId, t.identifier("value")),
+                  elId
+                )));
+                return;
+              }
               collectSignals(value.expression);
               const effectId = getImport("effect", "@preact/signals-core");
               statements.push(t.expressionStatement(t.callExpression(effectId, [
@@ -527,6 +552,19 @@ module.exports = function (babel) {
             statements.push(t.expressionStatement(t.assignmentExpression("=", t.memberExpression(elId, t.identifier(name)), t.isJSXExpressionContainer(value) ? value.expression : value)));
           } else if (t.isJSXExpressionContainer(value)) {
             if (t.isJSXEmptyExpression(value.expression)) return;
+            
+            if (originalName === "ref" && t.isIdentifier(value.expression) && state.refVars?.has(value.expression.name)) {
+              const refName = value.expression.name;
+              const innerId = t.identifier(refName);
+              innerId._processed = true;
+              statements.push(t.expressionStatement(t.assignmentExpression(
+                "=",
+                t.memberExpression(innerId, t.identifier("value")),
+                elId
+              )));
+              return;
+            }
+
             collectSignals(value.expression);
             
             const effectId = getImport("effect", "@preact/signals-core");

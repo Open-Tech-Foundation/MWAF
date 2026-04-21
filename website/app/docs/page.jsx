@@ -210,6 +210,25 @@ export default function DocsPage() {
             {"}"}
           </pre>
         </div>
+
+        <div id="refs" className="space-y-4 scroll-mt-24">
+          <h2 className="text-2xl font-bold border-b border-slate-100 pb-2">DOM References ($ref & $expose)</h2>
+          <p className="text-slate-600 leading-relaxed">
+            To access native DOM nodes or component instances, use the `$ref` macro. To customize the API your component exposes to a ref, use `$expose`.
+          </p>
+          <pre className="bg-slate-50 p-4 rounded-xl border border-slate-100 font-mono text-sm overflow-x-auto text-slate-800">
+            <span className="text-indigo-600">function</span> CustomInput() {"{"}{"\n"}
+            {"  "}<span className="text-indigo-600">const</span> input = <span className="text-[#ff851b]">$ref</span>();{"\n"}
+            {"  "}<span className="text-indigo-600">const</span> focus = () =&gt; input.focus();{"\n\n"}
+            {"  "}<span className="text-slate-400">// Expose methods to parents</span>{"\n"}
+            {"  "}<span className="text-[#ff851b]">$expose</span>({"{"} focus {"}"});{"\n\n"}
+            {"  "}<span className="text-indigo-600">return</span> &lt;input ref={"{"}input{"}"} /&gt;;{"\n"}
+            {"}"}
+          </pre>
+          <p className="text-slate-600 leading-relaxed mt-4">
+            Just like `$state`, variables declared with `$ref` are automatically handled by the compiler. You never need to manually access `.value` to interact with the referenced element.
+          </p>
+        </div>
       </section>
 
     </div>
