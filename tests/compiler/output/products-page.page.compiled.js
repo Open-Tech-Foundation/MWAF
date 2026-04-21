@@ -1,8 +1,7 @@
 import { renderDynamic as _renderDynamic } from "/framework/runtime/dom.js";
-import { effect as _effect } from "@preact/signals-core";
-import { signal } from "@preact/signals";
+import { signal as _signal, effect as _effect } from "@preact/signals-core";
 export function render(root, props) {
-  const products = signal(Array.from({
+  const products = _signal(Array.from({
     length: 1000
   }, (_, i) => ({
     id: i,

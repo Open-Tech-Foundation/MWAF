@@ -1,8 +1,7 @@
 import { withInstance as _withInstance } from "/framework/runtime/lifecycle.js";
 import { createPropsProxy as _createPropsProxy } from "/framework/runtime/props.js";
-import { signal as _signal } from "@preact/signals-core";
 import { renderDynamic as _renderDynamic } from "/framework/runtime/dom.js";
-import { effect as _effect } from "@preact/signals-core";
+import { signal as _signal, effect as _effect } from "@preact/signals-core";
 import { signal } from "@preact/signals";
 class ReactivityElement extends HTMLElement {
   static observedAttributes = ["title"];
@@ -26,7 +25,7 @@ class ReactivityElement extends HTMLElement {
     this._onCleanups = [];
     const props = _createPropsProxy(this);
     _withInstance(this, () => {
-      const count = signal(0);
+      const count = _signal(0);
       const rootElement = (() => {
         const el0 = document.createElement("div");
         _effect(() => el0.title = props.title);

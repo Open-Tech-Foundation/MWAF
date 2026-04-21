@@ -1,11 +1,9 @@
-import { signal } from "@preact/signals"
-
 export default function StylingTest(props) {
-  const active = signal(true)
+  const active = $state(true)
   
   return (
     <div class="static-class" className="static-classname">
-      <span class={active.value ? "active" : "inactive"}>
+      <span class={active ? "active" : "inactive"}>
         Reactive Class
       </span>
       <button className={props.theme}>

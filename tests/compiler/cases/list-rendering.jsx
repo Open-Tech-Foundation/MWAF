@@ -4,11 +4,11 @@ export default function ListRendering(props) {
   return (
     <div>
       <ul>
-        {items.value.map(item => (
+        {items.map(item => (
           <li>Item {item}</li>
         ))}
       </ul>
-      <button onclick={() => items.value = [...items.value, 'D']}>
+      <button onclick={() => items = [...items, 'D']}>
         Add
       </button>
     </div>

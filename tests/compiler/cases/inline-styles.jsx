@@ -1,11 +1,9 @@
-import { signal } from "@preact/signals"
-
 export default function StyleTest() {
-  const color = signal("red")
+  const color = $state("red")
   
   return (
     <div style={{ display: "flex", gap: "10px" }}>
-      <span style={{ color: color.value }}>
+      <span style={{ color: color }}>
         Reactive Style
       </span>
       <div style="font-weight: bold;">

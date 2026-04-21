@@ -1,7 +1,5 @@
-import { signal } from "@preact/signals"
-
 export default function SvgTest() {
-  const strokeWidth = signal(2)
+  const strokeWidth = $state(2)
   
   return (
     <svg width="100" height="100" viewBox="0 0 100 100">
@@ -10,7 +8,7 @@ export default function SvgTest() {
         cy="50" 
         r="40" 
         stroke="red" 
-        strokeWidth={strokeWidth.value} 
+        strokeWidth={strokeWidth} 
         fill="transparent"
       />
       <path 

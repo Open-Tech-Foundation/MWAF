@@ -1,27 +1,12 @@
 import { withInstance as _withInstance } from "/framework/runtime/lifecycle.js";
 import { createPropsProxy as _createPropsProxy } from "/framework/runtime/props.js";
 import { renderDynamic as _renderDynamic } from "/framework/runtime/dom.js";
-import { signal as _signal, effect as _effect } from "@preact/signals-core";
+import { signal as _signal } from "@preact/signals-core";
 class NestedFragmentsElement extends HTMLElement {
-  static observedAttributes = ["t1", "t2"];
-  set t1(val) {
-    this._propsSignals["t1"].value = val;
-  }
-  set t2(val) {
-    this._propsSignals["t2"].value = val;
-  }
-  get t1() {
-    return this._propsSignals["t1"].value;
-  }
-  get t2() {
-    return this._propsSignals["t2"].value;
-  }
+  static observedAttributes = [];
   constructor() {
     super();
-    this._propsSignals = {
-      t1: _signal(null),
-      t2: _signal(null)
-    };
+    this._propsSignals = {};
   }
   attributeChangedCallback(name, _, value) {
     this._propsSignals[name].value = value;
@@ -37,15 +22,19 @@ class NestedFragmentsElement extends HTMLElement {
         _renderDynamic(el0, () => show.value && (() => {
           const frag0 = document.createDocumentFragment();
           const el1 = document.createElement("span");
-          _effect(() => el1.title = props.t1);
-          const text2 = document.createTextNode("Part 1");
+          const text2 = document.createTextNode("A");
           el1.appendChild(text2);
           frag0.appendChild(el1);
-          const el3 = document.createElement("span");
-          _effect(() => el3.title = props.t2);
-          const text4 = document.createTextNode("Part 2");
-          el3.appendChild(text4);
-          frag0.appendChild(el3);
+          const frag3 = document.createDocumentFragment();
+          const el4 = document.createElement("span");
+          const text5 = document.createTextNode("B");
+          el4.appendChild(text5);
+          frag3.appendChild(el4);
+          const el6 = document.createElement("span");
+          const text7 = document.createTextNode("C");
+          el6.appendChild(text7);
+          frag3.appendChild(el6);
+          frag0.appendChild(frag3);
           return frag0;
         })());
         return el0;

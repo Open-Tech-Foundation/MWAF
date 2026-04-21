@@ -1,23 +1,21 @@
-import { signal } from "@preact/signals";
-
 export default function ProductsPage() {
-  const products = signal(Array.from({ length: 1000 }, (_, i) => ({
+  const products = $state(Array.from({ length: 1000 }, (_, i) => ({
     id: i,
     name: `Product ${i}`,
     price: Math.floor(Math.random() * 1000)
   })));
 
   const shuffle = () => {
-    const arr = [...products.value];
+    const arr = [...products];
     for (let i = arr.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [arr[i], arr[j]] = [arr[j], arr[i]];
     }
-    products.value = arr;
+    products = arr;
   };
 
   const reverse = () => {
-    products.value = [...products.value].reverse();
+    products = [...products].reverse();
   };
 
   return (
@@ -35,7 +33,7 @@ export default function ProductsPage() {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-        {products.value.map(p => (
+        {products.map(p => (
           <div key={p.id} className="p-4 bg-slate-800 rounded border border-slate-700 hover:border-indigo-500 transition-all">
             <div className="font-bold text-white">{p.name}</div>
             <div className="text-slate-400 mt-1">${p.price}</div>

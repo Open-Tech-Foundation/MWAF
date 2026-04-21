@@ -30,6 +30,15 @@ module.exports = function (babel) {
         if (!path.node.id) return;
         const name = path.node.id.name;
         if (/^[A-Z]/.test(name)) {
+          // Check if this function actually uses JSX. If not, it's just a regular function, not a component.
+          let hasJSX = false;
+          path.traverse({
+            JSXElement() { hasJSX = true; },
+            JSXFragment() { hasJSX = true; }
+          });
+
+          if (!hasJSX) return;
+
           const propsNode = path.node.params[0];
           const observedAttributes = new Set();
           
@@ -54,6 +63,14 @@ module.exports = function (babel) {
       ExportDefaultDeclaration(path, state) {
         const decl = path.node.declaration;
         if (t.isFunctionDeclaration(decl)) {
+          let hasJSX = false;
+          path.traverse({
+            JSXElement() { hasJSX = true; },
+            JSXFragment() { hasJSX = true; }
+          });
+
+          if (!hasJSX) return;
+
           if (decl.id) {
             const name = decl.id.name;
             if (state.components.has(name)) {
@@ -88,12 +105,20 @@ module.exports = function (babel) {
             return state.importsNeeded.get(key);
           };
 
-          if (name === "$state") {
-            path.get("callee").replaceWith(getImport("signal", "@preact/signals-core"));
+          if (name === "$state" || name === "$derived") {
+            // Track this variable as a state variable in the current scope
+            const parent = path.findParent(p => p.isVariableDeclarator());
+            if (parent && t.isIdentifier(parent.node.id)) {
+              if (!state.stateVars) state.stateVars = new Set();
+              state.stateVars.add(parent.node.id.name);
+            }
+            if (name === "$state") {
+              path.get("callee").replaceWith(getImport("signal", "@preact/signals-core"));
+            } else {
+              path.get("callee").replaceWith(getImport("computed", "@preact/signals-core"));
+            }
           } else if (name === "$effect") {
             path.get("callee").replaceWith(getImport("effect", "@preact/signals-core"));
-          } else if (name === "$derived") {
-            path.get("callee").replaceWith(getImport("computed", "@preact/signals-core"));
           } else if (name === "onMount") {
             path.get("callee").replaceWith(getImport("onMount", "/framework/runtime/lifecycle.js"));
           } else if (name === "onCleanup") {
@@ -101,8 +126,47 @@ module.exports = function (babel) {
           } else if (name === "$renderDynamic") {
             path.get("callee").replaceWith(getImport("renderDynamic", "/framework/runtime/dom.js"));
           }
+        }
+      },
 
+      Identifier(path, state) {
+        if (!state.stateVars || !state.stateVars.has(path.node.name)) return;
+        if (path.node._processed) return;
+        
+        // Strictly forbid manual .value access on $state variables
+        if (path.parentPath.isMemberExpression() && !path.parentPath.node.computed) {
+          if (t.isIdentifier(path.parentPath.node.property, { name: "value" })) {
+            throw path.parentPath.buildCodeFrameError(
+              `Manual .value access is forbidden for variables declared with $state. The WAF compiler handles this automatically. Remove the .value from '${path.node.name}.value'.`
+            );
+          }
+          if (path.parentPath.node.property === path.node) return;
+        }
 
+        if (path.parentPath.isVariableDeclarator() && path.parentPath.node.id === path.node) return;
+        if (path.parentPath.isObjectProperty() && path.parentPath.node.key === path.node && !path.parentPath.node.computed) return;
+        if (path.parentPath.isClassProperty() && path.parentPath.node.key === path.node) return;
+        if (path.parentPath.isClassMethod() && path.parentPath.node.key === path.node) return;
+
+        const innerId = t.identifier(path.node.name);
+        innerId._processed = true;
+        const newNode = t.memberExpression(innerId, t.identifier("value"));
+        path.replaceWith(newNode);
+      },
+
+      AssignmentExpression(path, state) {
+        if (t.isIdentifier(path.node.left) && state.stateVars?.has(path.node.left.name)) {
+          const innerId = t.identifier(path.node.left.name);
+          innerId._processed = true;
+          path.node.left = t.memberExpression(innerId, t.identifier("value"));
+        }
+      },
+
+      UpdateExpression(path, state) {
+        if (t.isIdentifier(path.node.argument) && state.stateVars?.has(path.node.argument.name)) {
+          const innerId = t.identifier(path.node.argument.name);
+          innerId._processed = true;
+          path.node.argument = t.memberExpression(innerId, t.identifier("value"));
         }
       },
 

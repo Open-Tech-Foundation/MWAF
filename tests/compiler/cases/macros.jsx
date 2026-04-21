@@ -1,16 +1,16 @@
 export default function MacroTest() {
   const count = $state(0);
-  const doubled = $derived(() => count.value * 2);
+  const doubled = $derived(() => count * 2);
   
   $effect(() => {
-    console.log("Count changed:", count.value);
+    console.log("Count changed:", count);
   });
 
   return (
     <div>
-      <p>Count: {count.value}</p>
-      <p>Doubled: {doubled.value}</p>
-      <button onclick={() => count.value++}>Increment</button>
+      <p>Count: {count}</p>
+      <p>Doubled: {doubled}</p>
+      <button onclick={() => count++}>Increment</button>
     </div>
   );
 }

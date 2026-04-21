@@ -13,16 +13,16 @@ export default function SignupForm() {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    if (!username.value || !email.value || !password.value) {
-      status.value = "❌ Please fill in all fields"
+    if (!username || !email || !password) {
+      status = "❌ Please fill in all fields"
       return
     }
 
-    status.value = "⏳ Creating your account..."
+    status = "⏳ Creating your account..."
 
     setTimeout(() => {
-      status.value = `✅ Welcome aboard, ${username.value}!`
-      console.log({ username: username.value, email: email.value, password: password.value })
+      status = `✅ Welcome aboard, ${username}!`
+      console.log({ username, email, password })
     }, 2000)
   }
 
@@ -38,8 +38,8 @@ export default function SignupForm() {
             class={styles.input}
             type="text"
             placeholder="johndoe"
-            value={username.value}
-            oninput={(e) => username.value = e.target.value}
+            value={username}
+            oninput={(e) => username = e.target.value}
           />
         </div>
 
@@ -49,8 +49,8 @@ export default function SignupForm() {
             class={styles.input}
             type="email"
             placeholder="john@example.com"
-            value={email.value}
-            oninput={(e) => email.value = e.target.value}
+            value={email}
+            oninput={(e) => email = e.target.value}
           />
         </div>
 
@@ -60,8 +60,8 @@ export default function SignupForm() {
             class={styles.input}
             type="password"
             placeholder="••••••••"
-            value={password.value}
-            oninput={(e) => password.value = e.target.value}
+            value={password}
+            oninput={(e) => password = e.target.value}
           />
         </div>
 
@@ -69,7 +69,7 @@ export default function SignupForm() {
       </form>
 
       <div class={styles.statusMsg}>
-        {status.value}
+        {status}
       </div>
     </div>
   )

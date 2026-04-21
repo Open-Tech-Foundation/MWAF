@@ -1,20 +1,19 @@
-import { signal } from "@preact/signals"
-
 export default function LoginForm() {
-  const email = signal("")
-  const password = signal("")
-  const status = signal("")
+  let email = $state("")
+  let password = $state("")
+  let status = $state("")
 
   const handleLogin = (e) => {
     e.preventDefault()
-    if (!email.value || !password.value) {
-      status.value = "Please enter credentials"
+    if (!email || !password) {
+      status = "Please enter credentials"
       return
     }
-    status.value = "Authenticating..."
+    status = "Authenticating..."
     setTimeout(() => {
-      status.value = "Login successful!"
-    }, 1500)
+      status = "Login successful!"
+      console.log({ email: email, password: password })
+    }, 1000)
   }
 
   return (
@@ -37,10 +36,10 @@ export default function LoginForm() {
               <label class="block text-xs font-bold uppercase tracking-widest text-slate-500 mb-2 ml-1">Email Address</label>
               <input 
                 type="email" 
-                placeholder="name@example.com"
-                value={email.value}
-                oninput={(e) => email.value = e.target.value}
-                class="w-full bg-slate-950/50 border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-slate-600 focus:outline-hidden focus:ring-2 focus:ring-indigo-500/50 transition-all"
+                placeholder="you@example.com"
+                value={email}
+                oninput={(e) => email = e.target.value}
+                class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-black focus:border-black outline-none transition-all"
               />
             </div>
 
@@ -49,9 +48,9 @@ export default function LoginForm() {
               <input 
                 type="password" 
                 placeholder="••••••••"
-                value={password.value}
-                oninput={(e) => password.value = e.target.value}
-                class="w-full bg-slate-950/50 border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-slate-600 focus:outline-hidden focus:ring-2 focus:ring-indigo-500/50 transition-all"
+                value={password}
+                oninput={(e) => password = e.target.value}
+                class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-black focus:border-black outline-none transition-all"
               />
             </div>
 
@@ -72,9 +71,11 @@ export default function LoginForm() {
             Don't have an account? <a href="#" class="text-white hover:underline">Sign up</a>
           </div>
 
-          <div class="mt-6 p-3 rounded-lg bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-center text-xs empty:hidden">
-            {status.value}
-          </div>
+          {status && (
+            <div class="mt-6 text-center text-sm font-medium text-slate-500 bg-slate-50 py-3 rounded-lg border border-slate-100">
+              {status}
+            </div>
+          )}
         </div>
       </div>
     </div>

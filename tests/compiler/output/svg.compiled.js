@@ -1,7 +1,6 @@
 import { withInstance as _withInstance } from "/framework/runtime/lifecycle.js";
 import { createPropsProxy as _createPropsProxy } from "/framework/runtime/props.js";
-import { effect as _effect, signal as _signal } from "@preact/signals-core";
-import { signal } from "@preact/signals";
+import { signal as _signal, effect as _effect } from "@preact/signals-core";
 class SvgTestElement extends HTMLElement {
   static observedAttributes = [];
   constructor() {
@@ -16,7 +15,7 @@ class SvgTestElement extends HTMLElement {
     this._onCleanups = [];
     const props = _createPropsProxy(this);
     _withInstance(this, () => {
-      const strokeWidth = signal(2);
+      const strokeWidth = _signal(2);
       const rootElement = (() => {
         const el0 = document.createElement("svg");
         el0.setAttribute("width", "100");

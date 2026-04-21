@@ -1,9 +1,9 @@
 export default function Counter(props) {
   const count = $state(0)
 
-  const doubled = $derived(() => count.value * 2);
+  const doubled = $derived(() => count * 2);
 
-  $effect(() => console.log(doubled.value));
+  $effect(() => console.log(doubled));
 
   onMount(() => {
     console.log(`Counter "${props.label}" mounted!`)
@@ -15,8 +15,8 @@ export default function Counter(props) {
 
   return (
     <div>
-      {count.value} <button onclick={(e) => {
-        count.value++
+      {count} <button onclick={(e) => {
+        count++
       }}>
         {props.label}
       </button>

@@ -1,7 +1,6 @@
 import { withInstance as _withInstance } from "/framework/runtime/lifecycle.js";
 import { createPropsProxy as _createPropsProxy } from "/framework/runtime/props.js";
-import { effect as _effect, signal as _signal } from "@preact/signals-core";
-import { signal } from "@preact/signals";
+import { signal as _signal, effect as _effect } from "@preact/signals-core";
 class StylingTestElement extends HTMLElement {
   static observedAttributes = ["theme"];
   set theme(val) {
@@ -24,7 +23,7 @@ class StylingTestElement extends HTMLElement {
     this._onCleanups = [];
     const props = _createPropsProxy(this);
     _withInstance(this, () => {
-      const active = signal(true);
+      const active = _signal(true);
       const rootElement = (() => {
         const el0 = document.createElement("div");
         el0.className = "static-class";

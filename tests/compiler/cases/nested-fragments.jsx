@@ -1,13 +1,16 @@
-export default function NestedFragments(props) {
-  const show = $state(true);
+export default function NestedFragments() {
+  const show = $state(true)
   return (
     <div>
-      {show.value && (
+      {show && (
         <>
-          <span title={props.t1}>Part 1</span>
-          <span title={props.t2}>Part 2</span>
+          <span>A</span>
+          <>
+            <span>B</span>
+            <span>C</span>
+          </>
         </>
       )}
     </div>
-  );
+  )
 }
