@@ -1,6 +1,7 @@
 import { withInstance as _withInstance } from "/framework/runtime/lifecycle.js";
 import { createPropsProxy as _createPropsProxy } from "/framework/runtime/props.js";
-import { signal, effect as _effect, signal as _signal } from "@preact/signals";
+import { effect as _effect, signal as _signal } from "@preact/signals-core";
+import { signal } from "@preact/signals";
 class StyleTestElement extends HTMLElement {
   static observedAttributes = [];
   constructor() {
@@ -30,7 +31,7 @@ class StyleTestElement extends HTMLElement {
         el1.appendChild(text2);
         el0.appendChild(el1);
         const el3 = document.createElement("div");
-        el3.setAttribute("style", "font-weight: bold;");
+        el3.style = "font-weight: bold;";
         const text4 = document.createTextNode("Static Style String");
         el3.appendChild(text4);
         el0.appendChild(el3);

@@ -1,7 +1,7 @@
 import { withInstance as _withInstance } from "/framework/runtime/lifecycle.js";
 import { createPropsProxy as _createPropsProxy } from "/framework/runtime/props.js";
 import { renderDynamic as _renderDynamic } from "/framework/runtime/dom.js";
-import { signal as _signal, computed as _computed, effect as _effect } from "@preact/signals";
+import { signal as _signal, computed as _computed, effect as _effect } from "@preact/signals-core";
 class MacroTestElement extends HTMLElement {
   static observedAttributes = [];
   constructor() {

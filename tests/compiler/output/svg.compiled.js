@@ -1,6 +1,7 @@
 import { withInstance as _withInstance } from "/framework/runtime/lifecycle.js";
 import { createPropsProxy as _createPropsProxy } from "/framework/runtime/props.js";
-import { signal, effect as _effect, signal as _signal } from "@preact/signals";
+import { effect as _effect, signal as _signal } from "@preact/signals-core";
+import { signal } from "@preact/signals";
 class SvgTestElement extends HTMLElement {
   static observedAttributes = [];
   constructor() {

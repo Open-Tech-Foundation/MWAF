@@ -1,7 +1,7 @@
 import { withInstance as _withInstance } from "/framework/runtime/lifecycle.js";
 import { createPropsProxy as _createPropsProxy } from "/framework/runtime/props.js";
 import { renderDynamic as _renderDynamic } from "/framework/runtime/dom.js";
-import { signal as _signal, effect as _effect } from "@preact/signals";
+import { signal as _signal, effect as _effect } from "@preact/signals-core";
 class NestedFragmentsElement extends HTMLElement {
   static observedAttributes = ["t1", "t2"];
   set t1(val) {

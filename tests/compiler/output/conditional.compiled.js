@@ -1,6 +1,6 @@
 import { withInstance as _withInstance } from "/framework/runtime/lifecycle.js";
 import { createPropsProxy as _createPropsProxy } from "/framework/runtime/props.js";
-import { signal as _signal } from "@preact/signals";
+import { signal as _signal } from "@preact/signals-core";
 import { renderDynamic as _renderDynamic } from "/framework/runtime/dom.js";
 class ItemElement extends HTMLElement {
   static observedAttributes = ["name", "isPacked"];

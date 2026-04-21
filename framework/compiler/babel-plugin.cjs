@@ -89,11 +89,11 @@ module.exports = function (babel) {
           };
 
           if (name === "$state") {
-            path.get("callee").replaceWith(getImport("signal", "@preact/signals"));
+            path.get("callee").replaceWith(getImport("signal", "@preact/signals-core"));
           } else if (name === "$effect") {
-            path.get("callee").replaceWith(getImport("effect", "@preact/signals"));
+            path.get("callee").replaceWith(getImport("effect", "@preact/signals-core"));
           } else if (name === "$derived") {
-            path.get("callee").replaceWith(getImport("computed", "@preact/signals"));
+            path.get("callee").replaceWith(getImport("computed", "@preact/signals-core"));
           } else if (name === "onMount") {
             path.get("callee").replaceWith(getImport("onMount", "/framework/runtime/lifecycle.js"));
           } else if (name === "onCleanup") {
@@ -280,7 +280,7 @@ module.exports = function (babel) {
       // Transform to Web Component Class
       const tagName = "waf-" + name.toLowerCase();
       const observedAttributes = Array.from(allSignals);
-      const signalId = getImport("signal", "@preact/signals");
+      const signalId = getImport("signal", "@preact/signals-core");
       const createPropsProxyId = getImport("createPropsProxy", "/framework/runtime/props.js");
       const classId = t.identifier(name + "Element");
 
@@ -432,7 +432,7 @@ module.exports = function (babel) {
 
             if (t.isJSXExpressionContainer(value)) {
               collectSignals(value.expression);
-              const effectId = getImport("effect", "@preact/signals");
+              const effectId = getImport("effect", "@preact/signals-core");
               statements.push(t.expressionStatement(t.callExpression(effectId, [
                 t.arrowFunctionExpression([], t.assignmentExpression("=", t.memberExpression(elId, t.identifier(targetProp)), value.expression))
               ])));
@@ -465,20 +465,26 @@ module.exports = function (babel) {
             if (t.isJSXEmptyExpression(value.expression)) return;
             collectSignals(value.expression);
             
-            const effectId = getImport("effect", "@preact/signals");
+            const effectId = getImport("effect", "@preact/signals-core");
             const attrProp = (name === "class" || name === "classname") ? "className" : name;
             const isStyle = attrProp === "style";
-            const isProperty = ["className", "style", "value", "checked", "id", "title", "href", "src"].includes(attrProp);
+            const isProperty = ["className", "style", "value", "checked", "id", "title", "href", "src", "key"].includes(attrProp);
             
-            statements.push(t.expressionStatement(t.callExpression(effectId, [t.arrowFunctionExpression([], 
-              isStyle ? t.callExpression(t.memberExpression(t.identifier("Object"), t.identifier("assign")), [t.memberExpression(elId, t.identifier("style")), value.expression])
-              : isProperty ? t.assignmentExpression("=", t.memberExpression(elId, t.identifier(attrProp)), value.expression)
-              : t.callExpression(t.memberExpression(elId, t.identifier("setAttribute")), [t.stringLiteral(toKebabCase(originalName)), value.expression])
-            )])));
+            if (attrProp === "key") {
+              statements.push(t.expressionStatement(t.assignmentExpression("=", t.memberExpression(elId, t.identifier("_key")), value.expression)));
+            } else {
+              statements.push(t.expressionStatement(t.callExpression(effectId, [t.arrowFunctionExpression([], 
+                isStyle ? t.callExpression(t.memberExpression(t.identifier("Object"), t.identifier("assign")), [t.memberExpression(elId, t.identifier("style")), value.expression])
+                : isProperty ? t.assignmentExpression("=", t.memberExpression(elId, t.identifier(attrProp)), value.expression)
+                : t.callExpression(t.memberExpression(elId, t.identifier("setAttribute")), [t.stringLiteral(toKebabCase(originalName)), value.expression])
+              )])));
+            }
           } else {
             const attrProp = (name === "class" || name === "classname") ? "className" : name;
-            if (attrProp === "className") {
-              statements.push(t.expressionStatement(t.assignmentExpression("=", t.memberExpression(elId, t.identifier("className")), value)));
+            const isProperty = ["className", "style", "value", "checked", "id", "title", "href", "src", "key"].includes(attrProp);
+            
+            if (isProperty) {
+              statements.push(t.expressionStatement(t.assignmentExpression("=", t.memberExpression(elId, t.identifier(attrProp === "key" ? "_key" : attrProp)), value)));
             } else {
               statements.push(t.expressionStatement(t.callExpression(t.memberExpression(elId, t.identifier("setAttribute")), [t.stringLiteral(toKebabCase(originalName)), value])));
             }

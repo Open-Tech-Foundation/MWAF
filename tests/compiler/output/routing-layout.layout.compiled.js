@@ -5,7 +5,7 @@ export function render(root, props) {
     el0.className = "root-layout";
     const el1 = document.createElement("nav");
     const el2 = document.createElement("a");
-    el2.setAttribute("href", "/");
+    el2.href = "/";
     const text3 = document.createTextNode("Home");
     el2.appendChild(text3);
     el1.appendChild(el2);
