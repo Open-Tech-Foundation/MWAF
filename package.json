@@ -7,6 +7,8 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
+    "website:dev": "vite website",
+    "website:build": "vite build website",
     "test": "bun test"
   },
   "devDependencies": {

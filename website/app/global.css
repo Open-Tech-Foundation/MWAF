@@ -1,0 +1,24 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap');
+
+@theme {
+  --color-accent: #ff851b;
+  --color-accent-hover: #e67512;
+}
+
+:root {
+  --accent: #ff851b;
+}
+
+body {
+  margin: 0;
+  font-family: 'Geist', sans-serif;
+  background-color: #ffffff;
+  color: #0f172a;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: rgba(255, 133, 27, 0.2);
+  color: #c2610d;
+}
