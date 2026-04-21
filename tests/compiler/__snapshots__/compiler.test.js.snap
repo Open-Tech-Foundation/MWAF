@@ -153,6 +153,24 @@ customElements.define("waf-item", ItemElement);
 export default ItemElement;"
 `;
 
+exports[`WAF Compiler Compiles routing-404.404.jsx 1`] = `
+"export function render(root, props) {
+  const rootElement = (() => {
+    const el0 = document.createElement("div");
+    const el1 = document.createElement("h1");
+    const text2 = document.createTextNode("404 - Not Found");
+    el1.appendChild(text2);
+    el0.appendChild(el1);
+    const el3 = document.createElement("p");
+    const text4 = document.createTextNode("The page you are looking for does not exist.");
+    el3.appendChild(text4);
+    el0.appendChild(el3);
+    return el0;
+  })();
+  root.appendChild(rootElement);
+}"
+`;
+
 exports[`WAF Compiler Compiles children-projection.jsx 1`] = `
 "import { withInstance as _withInstance } from "/framework/runtime/lifecycle.js";
 import { createPropsProxy as _createPropsProxy } from "/framework/runtime/props.js";
@@ -351,7 +369,7 @@ export default NestedReactivityElement;"
 `;
 
 exports[`WAF Compiler Compiles basic-elements.page.jsx 1`] = `
-"export function render(root) {
+"export function render(root, props) {
   const rootElement = (() => {
     const el0 = document.createElement("div");
     const el1 = document.createElement("h1");
@@ -425,7 +443,7 @@ export default StylingTestElement;"
 `;
 
 exports[`WAF Compiler Compiles comments.page.jsx 1`] = `
-"export function render(root) {
+"export function render(root, props) {
   const rootElement = (() => {
     const el0 = document.createElement("div");
     const el1 = document.createElement("h1");
@@ -709,6 +727,28 @@ class BElement extends HTMLElement {
 customElements.define("waf-b", BElement);"
 `;
 
+exports[`WAF Compiler Compiles routing-layout.layout.jsx 1`] = `
+"import { renderDynamic as _renderDynamic } from "/framework/runtime/dom.js";
+export function render(root, props) {
+  const rootElement = (() => {
+    const el0 = document.createElement("div");
+    el0.className = "root-layout";
+    const el1 = document.createElement("nav");
+    const el2 = document.createElement("a");
+    el2.setAttribute("href", "/");
+    const text3 = document.createTextNode("Home");
+    el2.appendChild(text3);
+    el1.appendChild(el2);
+    el0.appendChild(el1);
+    const el4 = document.createElement("main");
+    _renderDynamic(el4, () => props.children);
+    el0.appendChild(el4);
+    return el0;
+  })();
+  root.appendChild(rootElement);
+}"
+`;
+
 exports[`WAF Compiler Compiles inline-styles.jsx 1`] = `
 "import { withInstance as _withInstance } from "/framework/runtime/lifecycle.js";
 import { createPropsProxy as _createPropsProxy } from "/framework/runtime/props.js";
@@ -934,9 +974,42 @@ customElements.define("waf-nestedfragments", NestedFragmentsElement);
 export default NestedFragmentsElement;"
 `;
 
+exports[`WAF Compiler Compiles dynamic-page.page.jsx 1`] = `
+"import { renderDynamic as _renderDynamic } from "/framework/runtime/dom.js";
+import { onMount as _onMount, onCleanup as _onCleanup } from "/framework/runtime/lifecycle.js";
+export function render(root, props) {
+  _onMount(() => {
+    console.log(\`Post page mounted with ID: \${props.params.id}\`);
+  });
+  _onCleanup(() => {
+    console.log(\`Post page cleaned up with ID: \${props.params.id}\`);
+  });
+  const rootElement = (() => {
+    const el0 = document.createElement("div");
+    const el1 = document.createElement("h1");
+    el1.className = "text-2xl font-bold";
+    const text2 = document.createTextNode("Post ");
+    el1.appendChild(text2);
+    _renderDynamic(el1, () => props.params.id);
+    el0.appendChild(el1);
+    const el3 = document.createElement("p");
+    el3.className = "mt-4";
+    const text4 = document.createTextNode("This is a dynamic post page for ID: ");
+    el3.appendChild(text4);
+    const el5 = document.createElement("span");
+    el5.className = "font-mono bg-gray-200 px-1";
+    _renderDynamic(el5, () => props.params.id);
+    el3.appendChild(el5);
+    el0.appendChild(el3);
+    return el0;
+  })();
+  root.appendChild(rootElement);
+}"
+`;
+
 exports[`WAF Compiler Compiles whitespace.page.jsx 1`] = `
 "import { renderDynamic as _renderDynamic } from "/framework/runtime/dom.js";
-export function render(root) {
+export function render(root, props) {
   const name = "WAF";
   const rootElement = (() => {
     const el0 = document.createElement("div");

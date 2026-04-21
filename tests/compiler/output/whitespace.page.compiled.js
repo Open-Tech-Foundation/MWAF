@@ -1,5 +1,5 @@
 import { renderDynamic as _renderDynamic } from "/framework/runtime/dom.js";
-export function render(root) {
+export function render(root, props) {
   const name = "WAF";
   const rootElement = (() => {
     const el0 = document.createElement("div");

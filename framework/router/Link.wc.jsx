@@ -2,8 +2,10 @@ import { navigate } from "./index"
 
 export default function Link(props) {
   return (
-    <a 
-      href={props.href} 
+    <a
+      href={props.href}
+      className={props.className || 'hover:text-blue-400'}
+      style={props.style}
       onclick={(e) => {
         if (
           e.defaultPrevented ||
@@ -18,6 +20,7 @@ export default function Link(props) {
         navigate(props.href)
       }}
     >
+      {props.children}
     </a>
   )
 }

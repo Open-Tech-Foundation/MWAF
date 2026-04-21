@@ -4,7 +4,7 @@ export function mountApp() {
   console.log('mountApp() called');
   const root = document.getElementById('app')
   
-  const pages = import.meta.glob('../../app/**/page.{jsx,tsx}', { eager: true })
+  const pages = import.meta.glob('../../app/**/{page,layout,404}.{jsx,tsx}', { eager: true })
   console.log('Pages found:', Object.keys(pages));
   
   registerRoutes(pages)

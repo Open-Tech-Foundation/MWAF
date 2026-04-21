@@ -14,7 +14,8 @@ module.exports = function (babel) {
           state.components = new Map(); // name -> { path, isDefault, isPage }
           
           const filename = state.filename || "";
-          state.isPageFile = filename.endsWith("page.jsx") || filename.endsWith("page.tsx") || filename.endsWith(".page.jsx") || filename.endsWith(".page.tsx");
+          const pagePatterns = ["page.jsx", "page.tsx", "layout.jsx", "layout.tsx", "404.jsx", "404.tsx"];
+          state.isPageFile = pagePatterns.some(p => filename.endsWith(p));
         },
         exit(p, state) {
           // Process all collected components
@@ -256,7 +257,7 @@ module.exports = function (babel) {
       // Transform to export function render(root) { ... }
       const renderFn = t.functionDeclaration(
         t.identifier("render"),
-        [t.identifier("root")],
+        [t.identifier("root"), t.identifier("props")],
         t.blockStatement([
           ...originalStatements,
           ...statements,
@@ -305,7 +306,16 @@ module.exports = function (babel) {
                   t.identifier("value")
                 ),
                 t.identifier("val")
-              ))
+              )),
+              // Sync back to native attributes for class and style
+              ...(s === "className" ? [
+                t.expressionStatement(t.callExpression(t.memberExpression(t.thisExpression(), t.identifier("setAttribute")), [t.stringLiteral("class"), t.identifier("val")]))
+              ] : s === "style" ? [
+                t.ifStatement(
+                  t.logicalExpression("&&", t.identifier("val"), t.binaryExpression("===", t.unaryExpression("typeof", t.identifier("val"), false), t.stringLiteral("object"))),
+                  t.expressionStatement(t.callExpression(t.memberExpression(t.identifier("Object"), t.identifier("assign")), [t.memberExpression(t.thisExpression(), t.identifier("style")), t.identifier("val")]))
+                )
+              ] : [])
             ])
           )),
           ...observedAttributes.map(s => t.classMethod(

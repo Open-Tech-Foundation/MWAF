@@ -1,4 +1,4 @@
-export function render(root) {
+export function render(root, props) {
   const rootElement = (() => {
     const el0 = document.createElement("div");
     const el1 = document.createElement("h1");
