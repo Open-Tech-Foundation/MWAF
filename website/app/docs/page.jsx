@@ -125,13 +125,51 @@ export function Timer() {
           <p className="text-slate-600">Currently, WAF is in an experimental phase. You can start a new project by cloning the core repository:</p>
           <CodeBlock code={installationCode} language="bash" />
         </div>
+
+        <div id="architecture" className="space-y-4 scroll-mt-24 group">
+          <h2 className="text-2xl font-bold border-b border-slate-100 pb-2 flex items-center gap-2">
+            🏗️ Architecture
+            <a href="#architecture" className="opacity-0 group-hover:opacity-100 text-accent text-sm transition-opacity">#</a>
+          </h2>
+          <p className="text-slate-600 leading-relaxed mb-4">
+            WAF is built on three main pillars that ensure maximum performance and developer experience:
+          </p>
+          <ul className="space-y-3 mb-8">
+            <li className="flex items-center gap-3 text-slate-700">
+              <span className="text-emerald-500">✅</span>
+              <strong>Statically Analyzed JSX</strong>
+            </li>
+            <li className="flex items-center gap-3 text-slate-700">
+              <span className="text-emerald-500">✅</span>
+              <strong>Fine-grained Signals</strong>
+            </li>
+            <li className="flex items-center gap-3 text-slate-700">
+              <span className="text-emerald-500">✅</span>
+              <strong>Native Web Components</strong>
+            </li>
+          </ul>
+          <div className="grid md:grid-cols-3 gap-6 mt-6">
+            <div className="p-4 bg-slate-50 rounded-xl border border-slate-100">
+              <h4 className="font-bold mb-2">⚡ No Hydration</h4>
+              <p className="text-sm text-slate-500">HTML is sent to the client and becomes immediately interactive. No expensive re-render on load.</p>
+            </div>
+            <div className="p-4 bg-slate-50 rounded-xl border border-slate-100">
+              <h4 className="font-bold mb-2">🌐 Web Standards</h4>
+              <p className="text-sm text-slate-500">Every component is a standard Custom Element. Use them anywhere, even in plain HTML.</p>
+            </div>
+            <div className="p-4 bg-slate-50 rounded-xl border border-slate-100">
+              <h4 className="font-bold mb-2">🎯 Signal Driven</h4>
+              <p className="text-sm text-slate-500">Updates are O(1). Changing a value only updates the specific DOM node bound to it.</p>
+            </div>
+          </div>
+        </div>
       </section>
 
-      {/* 2. CORE CONCEPTS */}
+      {/* 2. 🧩 CORE CONCEPTS */}
       <section className="space-y-12">
         <div id="zero-vdom" className="space-y-4 scroll-mt-24 group">
           <h2 className="text-2xl font-bold border-b border-slate-100 pb-2 flex items-center gap-2">
-            Zero-VDOM Architecture
+            ⭕ Zero-VDOM Architecture
             <a href="#zero-vdom" className="opacity-0 group-hover:opacity-100 text-accent text-sm transition-opacity">#</a>
           </h2>
           <p className="text-slate-600 leading-relaxed">
@@ -141,8 +179,11 @@ export function Timer() {
           </p>
         </div>
 
-        <div id="web-components" className="space-y-4 scroll-mt-24">
-          <h2 className="text-2xl font-bold border-b border-slate-100 pb-2">Web Components Under the Hood</h2>
+        <div id="web-components" className="space-y-4 scroll-mt-24 group">
+          <h2 className="text-2xl font-bold border-b border-slate-100 pb-2 flex items-center gap-2">
+            📦 Web Components Under the Hood
+            <a href="#web-components" className="opacity-0 group-hover:opacity-100 text-accent text-sm transition-opacity">#</a>
+          </h2>
           <p className="text-slate-600 leading-relaxed">
             Every capitalized function in WAF that contains JSX syntax (e.g., `function Button()`) is automatically compiled into a native custom element (`{"<waf-button>"}`). 
             Regular capitalized utility functions that do not return JSX are left untouched.
@@ -151,8 +192,11 @@ export function Timer() {
           <CodeBlock code={webComponentsCode} />
         </div>
 
-        <div id="props" className="space-y-4 scroll-mt-24">
-          <h2 className="text-2xl font-bold border-b border-slate-100 pb-2">Component Props</h2>
+        <div id="props" className="space-y-4 scroll-mt-24 group">
+          <h2 className="text-2xl font-bold border-b border-slate-100 pb-2 flex items-center gap-2">
+            📥 Component Props
+            <a href="#props" className="opacity-0 group-hover:opacity-100 text-accent text-sm transition-opacity">#</a>
+          </h2>
           <p className="text-slate-600 leading-relaxed">
             Props are passed down just like in React, but they are fully reactive. If a parent updates a prop, the child component automatically updates without re-rendering the entire component.
           </p>
@@ -160,11 +204,11 @@ export function Timer() {
         </div>
       </section>
 
-      {/* 3. REACTIVITY */}
+      {/* 3. 🧪 REACTIVITY */}
       <section className="space-y-12">
         <div id="state" className="space-y-4 scroll-mt-24 group">
           <h2 className="text-2xl font-bold border-b border-slate-100 pb-2 flex items-center gap-2">
-            The $state Macro
+            ✨ The $state Macro
             <a href="#state" className="opacity-0 group-hover:opacity-100 text-accent text-sm transition-opacity">#</a>
           </h2>
           <p className="text-slate-600 leading-relaxed">
@@ -176,16 +220,22 @@ export function Timer() {
           />
         </div>
 
-        <div id="derived" className="space-y-4 scroll-mt-24">
-          <h2 className="text-2xl font-bold border-b border-slate-100 pb-2">The $derived Macro</h2>
+        <div id="derived" className="space-y-4 scroll-mt-24 group">
+          <h2 className="text-2xl font-bold border-b border-slate-100 pb-2 flex items-center gap-2">
+            🧬 The $derived Macro
+            <a href="#derived" className="opacity-0 group-hover:opacity-100 text-accent text-sm transition-opacity">#</a>
+          </h2>
           <p className="text-slate-600 leading-relaxed">
             Use `$derived` to create computed values that automatically update whenever their dependencies change. These are cached and only re-evaluate when necessary.
           </p>
           <CodeBlock code={derivedCode} />
         </div>
 
-        <div id="effect" className="space-y-4 scroll-mt-24">
-          <h2 className="text-2xl font-bold border-b border-slate-100 pb-2">The $effect Macro</h2>
+        <div id="effect" className="space-y-4 scroll-mt-24 group">
+          <h2 className="text-2xl font-bold border-b border-slate-100 pb-2 flex items-center gap-2">
+            🎬 The $effect Macro
+            <a href="#effect" className="opacity-0 group-hover:opacity-100 text-accent text-sm transition-opacity">#</a>
+          </h2>
           <p className="text-slate-600 leading-relaxed">
             To run side effects when state changes (like fetching data or logging), use `$effect`. It automatically tracks which states you read inside the function.
           </p>
@@ -193,10 +243,13 @@ export function Timer() {
         </div>
       </section>
 
-      {/* 4. ROUTING */}
+      {/* 4. 🛣️ ROUTING */}
       <section className="space-y-12">
-        <div id="file-routing" className="space-y-4 scroll-mt-24">
-          <h2 className="text-2xl font-bold border-b border-slate-100 pb-2">File-based Routing</h2>
+        <div id="file-routing" className="space-y-4 scroll-mt-24 group">
+          <h2 className="text-2xl font-bold border-b border-slate-100 pb-2 flex items-center gap-2">
+            📂 File-based Routing
+            <a href="#file-routing" className="opacity-0 group-hover:opacity-100 text-accent text-sm transition-opacity">#</a>
+          </h2>
           <p className="text-slate-600 leading-relaxed">
             WAF uses a file-system based router. Any file named `page.jsx` inside the `app/` directory becomes a route.
           </p>
@@ -208,16 +261,33 @@ export function Timer() {
           </ul>
         </div>
 
-        <div id="layouts" className="space-y-4 scroll-mt-24">
-          <h2 className="text-2xl font-bold border-b border-slate-100 pb-2">Layouts</h2>
+        <div id="layouts" className="space-y-4 scroll-mt-24 group">
+          <h2 className="text-2xl font-bold border-b border-slate-100 pb-2 flex items-center gap-2">
+            🖼️ Layouts
+            <a href="#layouts" className="opacity-0 group-hover:opacity-100 text-accent text-sm transition-opacity">#</a>
+          </h2>
           <p className="text-slate-600 leading-relaxed">
             Use `layout.jsx` to wrap your pages with shared UI like navigation bars or sidebars. Layouts can be nested indefinitely. The matched child route is passed via `props.children`.
           </p>
           <CodeBlock code={layoutsCode} />
         </div>
 
-        <div id="router-api" className="space-y-4 scroll-mt-24">
-          <h2 className="text-2xl font-bold border-b border-slate-100 pb-2">Router API</h2>
+        <div id="dynamic-routes" className="space-y-4 scroll-mt-24 group">
+          <h2 className="text-2xl font-bold border-b border-slate-100 pb-2 flex items-center gap-2">
+            🔗 Dynamic Routes
+            <a href="#dynamic-routes" className="opacity-0 group-hover:opacity-100 text-accent text-sm transition-opacity">#</a>
+          </h2>
+          <p className="text-slate-600 leading-relaxed">
+            Create dynamic routes by using square brackets in filenames. The parameters are available via `router.params`.
+          </p>
+          <CodeBlock code={`// app/user/[id]/page.jsx\nexport default function UserPage() {\n  return (\n    <div>\n      <h1>User Profile</h1>\n      <p>Viewing user: {router.params.id}</p>\n    </div>\n  );\n}`} />
+        </div>
+
+        <div id="router-api" className="space-y-4 scroll-mt-24 group">
+          <h2 className="text-2xl font-bold border-b border-slate-100 pb-2 flex items-center gap-2">
+            ⚙️ Router API
+            <a href="#router-api" className="opacity-0 group-hover:opacity-100 text-accent text-sm transition-opacity">#</a>
+          </h2>
           <p className="text-slate-600 leading-relaxed">
             The global `router` singleton gives you programmatic control over navigation and reactive access to URL state.
           </p>
@@ -225,41 +295,159 @@ export function Timer() {
         </div>
       </section>
 
-      {/* 5. UI PATTERNS */}
+      {/* 5. 🛠️ ADVANCED */}
       <section className="space-y-12">
-        <div id="lists" className="space-y-4 scroll-mt-24">
-          <h2 className="text-2xl font-bold border-b border-slate-100 pb-2">List Rendering</h2>
+        <div id="lists" className="space-y-4 scroll-mt-24 group">
+          <h2 className="text-2xl font-bold border-b border-slate-100 pb-2 flex items-center gap-2">
+            📜 List Rendering
+            <a href="#lists" className="opacity-0 group-hover:opacity-100 text-accent text-sm transition-opacity">#</a>
+          </h2>
           <p className="text-slate-600 leading-relaxed">
             Use standard JavaScript `.map()` to render lists. WAF automatically wraps the mapping in a reactive execution context, meaning the list updates precisely when the array mutates.
           </p>
           <CodeBlock code={listsCode} />
         </div>
 
-        <div id="conditionals" className="space-y-4 scroll-mt-24">
-          <h2 className="text-2xl font-bold border-b border-slate-100 pb-2">Conditional Rendering</h2>
+        <div id="conditionals" className="space-y-4 scroll-mt-24 group">
+          <h2 className="text-2xl font-bold border-b border-slate-100 pb-2 flex items-center gap-2">
+            🔀 Conditional Rendering
+            <a href="#conditionals" className="opacity-0 group-hover:opacity-100 text-accent text-sm transition-opacity">#</a>
+          </h2>
           <p className="text-slate-600 leading-relaxed">
             Use standard logical operators (`&&`) or ternary expressions (`? :`) for conditional UI. WAF will intelligently mount and unmount these DOM fragments dynamically.
           </p>
           <CodeBlock code={conditionalsCode} />
         </div>
 
-        <div id="lifecycle" className="space-y-4 scroll-mt-24">
-          <h2 className="text-2xl font-bold border-b border-slate-100 pb-2">Lifecycle Hooks</h2>
+        <div id="lifecycle" className="space-y-4 scroll-mt-24 group">
+          <h2 className="text-2xl font-bold border-b border-slate-100 pb-2 flex items-center gap-2">
+            ⏱️ Lifecycle Hooks
+            <a href="#lifecycle" className="opacity-0 group-hover:opacity-100 text-accent text-sm transition-opacity">#</a>
+          </h2>
           <p className="text-slate-600 leading-relaxed">
             If you need to interact with the DOM after the component mounts, or clean up intervals when it unmounts, use `onMount` and `onCleanup`.
           </p>
           <CodeBlock code={lifecycleCode} />
         </div>
 
-        <div id="refs" className="space-y-4 scroll-mt-24">
-          <h2 className="text-2xl font-bold border-b border-slate-100 pb-2">DOM References ($ref & $expose)</h2>
+        <div id="refs" className="space-y-4 scroll-mt-24 group">
+          <h2 className="text-2xl font-bold border-b border-slate-100 pb-2 flex items-center gap-2">
+            🎯 DOM References ($ref & $expose)
+            <a href="#refs" className="opacity-0 group-hover:opacity-100 text-accent text-sm transition-opacity">#</a>
+          </h2>
           <p className="text-slate-600 leading-relaxed">
             To access native DOM nodes or component instances, use the `$ref` macro. To customize the API your component exposes to a ref, use `$expose`.
           </p>
           <CodeBlock code={refsCode} />
-          <p className="text-slate-600 leading-relaxed mt-4">
-            Just like `$state`, variables declared with `$ref` are automatically handled by the compiler. You never need to manually access `.value` to interact with the referenced element.
+        </div>
+
+        <div id="global-state" className="space-y-4 scroll-mt-24 group">
+          <h2 className="text-2xl font-bold border-b border-slate-100 pb-2 flex items-center gap-2">
+            🌎 Global State Management
+            <a href="#global-state" className="opacity-0 group-hover:opacity-100 text-accent text-sm transition-opacity">#</a>
+          </h2>
+          <p className="text-slate-600 leading-relaxed">
+            Since WAF reactivity is based on standard signals, global state is as simple as exporting a signal from a shared file.
           </p>
+          <CodeBlock code={`// store.js\nimport { signal } from "@preact/signals-core";\nexport const user = signal(null);\n\n// component.jsx\nimport { user } from "./store";\nexport function Profile() {\n  return <div>{user.value?.name ?? "Guest"}</div>;\n}`} />
+        </div>
+      </section>
+
+      {/* 6. ⚙️ API REFERENCE */}
+      <section className="space-y-12 border-t border-slate-100 pt-12">
+        <h2 className="text-3xl font-bold text-slate-900">API Reference 📖</h2>
+
+        <div id="api-macros" className="space-y-4 scroll-mt-24">
+          <h3 className="text-xl font-bold text-slate-800">Macros</h3>
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="border-b border-slate-100">
+                  <th className="py-2 font-bold text-slate-900">Name</th>
+                  <th className="py-2 font-bold text-slate-900">Description</th>
+                </tr>
+              </thead>
+              <tbody className="text-sm text-slate-600">
+                <tr className="border-b border-slate-50">
+                  <td className="py-3 font-mono text-accent">$state(init)</td>
+                  <td className="py-3">Creates a reactive state variable. Auto-unwrapped by compiler.</td>
+                </tr>
+                <tr className="border-b border-slate-50">
+                  <td className="py-3 font-mono text-accent">$derived(fn)</td>
+                  <td className="py-3">Creates a computed signal that updates when dependencies change.</td>
+                </tr>
+                <tr className="border-b border-slate-50">
+                  <td className="py-3 font-mono text-accent">$effect(fn)</td>
+                  <td className="py-3">Runs side effects on state changes. Returns a cleanup function.</td>
+                </tr>
+                <tr className="border-b border-slate-50">
+                  <td className="py-3 font-mono text-accent">$ref()</td>
+                  <td className="py-3">Creates a reference to a DOM element or component.</td>
+                </tr>
+                <tr className="border-b border-slate-50">
+                  <td className="py-3 font-mono text-accent">$expose(api)</td>
+                  <td className="py-3">Defines the public API of a component accessible via a ref.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div id="api-hooks" className="space-y-4 scroll-mt-24">
+          <h3 className="text-xl font-bold text-slate-800">Hooks</h3>
+          <ul className="space-y-4">
+            <li>
+              <div className="font-mono text-accent">onMount(callback)</div>
+              <p className="text-sm text-slate-600">Executes when the component is inserted into the DOM.</p>
+            </li>
+            <li>
+              <div className="font-mono text-accent">onCleanup(callback)</div>
+              <p className="text-sm text-slate-600">Executes before the component is removed from the DOM.</p>
+            </li>
+          </ul>
+        </div>
+
+        <div id="api-router" className="space-y-4 scroll-mt-24">
+          <h3 className="text-xl font-bold text-slate-800">Router</h3>
+          <p className="text-sm text-slate-600">The `router` object provides reactive access to the current URL.</p>
+          <ul className="list-disc pl-6 text-sm text-slate-600 space-y-1">
+            <li><code className="text-accent">router.pathname</code>: Current path (reactive)</li>
+            <li><code className="text-accent">router.params</code>: Dynamic route parameters</li>
+            <li><code className="text-accent">router.query</code>: URL search parameters</li>
+            <li><code className="text-accent">router.push(url)</code>: Navigate to a new URL</li>
+          </ul>
+        </div>
+
+        <div id="api-attributes" className="space-y-4 scroll-mt-24">
+          <h3 className="text-xl font-bold text-slate-800">Elements & Attributes</h3>
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="border-b border-slate-100">
+                  <th className="py-2 font-bold text-slate-900">Attribute</th>
+                  <th className="py-2 font-bold text-slate-900">Handling</th>
+                </tr>
+              </thead>
+              <tbody className="text-sm text-slate-600">
+                <tr className="border-b border-slate-50">
+                  <td className="py-3 font-mono text-accent">className / class</td>
+                  <td className="py-3">Mapped to native <code className="bg-slate-100 px-1 rounded">className</code> property.</td>
+                </tr>
+                <tr className="border-b border-slate-50">
+                  <td className="py-3 font-mono text-accent">style</td>
+                  <td className="py-3">Accepts an object. Mapped via <code className="bg-slate-100 px-1 rounded">Object.assign(el.style, ...)</code>.</td>
+                </tr>
+                <tr className="border-b border-slate-50">
+                  <td className="py-3 font-mono text-accent">on[Event]</td>
+                  <td className="py-3">Standard event listeners (e.g. <code className="bg-slate-100 px-1 rounded">onclick</code>).</td>
+                </tr>
+                <tr className="border-b border-slate-50">
+                  <td className="py-3 font-mono text-accent">ref</td>
+                  <td className="py-3">Binds the element to a variable declared with <code className="bg-slate-100 px-1 rounded">$ref()</code>.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </section>
 

@@ -35,7 +35,14 @@ export default function DocsLayout(props) {
 
   // Auto-highlight sidebar on scroll
   $effect(() => {
-    const sections = ['introduction', 'installation', 'zero-vdom', 'web-components', 'props', 'state', 'derived', 'effect', 'file-routing', 'layouts', 'router-api', 'lists', 'conditionals', 'lifecycle', 'refs'];
+    const sections = [
+      'introduction', 'installation', 'architecture', 
+      'zero-vdom', 'web-components', 'props', 
+      'state', 'derived', 'effect', 
+      'file-routing', 'layouts', 'dynamic-routes', 'router-api',
+      'lists', 'conditionals', 'lifecycle', 'refs', 'global-state',
+      'api-macros', 'api-hooks', 'api-router', 'api-attributes'
+    ];
     
     const observer = new IntersectionObserver((entries) => {
       if (window._isProgrammaticScroll) return;
@@ -58,7 +65,7 @@ export default function DocsLayout(props) {
   return (
     <div className="flex-1 max-w-7xl mx-auto px-8 w-full flex gap-12 py-12">
       <aside className="w-64 shrink-0 hidden md:block">
-        <div className="sticky top-24 space-y-8">
+        <div className="sticky top-24 space-y-8 max-h-[calc(100vh-120px)] overflow-y-auto pr-4 scrollbar-hide hover:scrollbar-default">
           
           <div>
             <h4 className="font-bold text-slate-900 mb-3 px-2 text-xs uppercase tracking-wider opacity-50">Getting Started</h4>
@@ -114,6 +121,7 @@ export default function DocsLayout(props) {
               {navLink({ href: "/docs#api-macros", children: "Macros" })}
               {navLink({ href: "/docs#api-hooks", children: "Hooks" })}
               {navLink({ href: "/docs#api-router", children: "Router" })}
+              {navLink({ href: "/docs#api-attributes", children: "Elements" })}
             </div>
           </div>
 
