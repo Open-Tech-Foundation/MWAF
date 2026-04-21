@@ -65,6 +65,7 @@ export default function DocsLayout(props) {
             <div className="flex flex-col space-y-1">
               {navLink({ href: "/docs#introduction", children: "Introduction" })}
               {navLink({ href: "/docs#installation", children: "Installation" })}
+              {navLink({ href: "/docs#architecture", children: "Architecture" })}
             </div>
           </div>
 
@@ -91,17 +92,28 @@ export default function DocsLayout(props) {
             <div className="flex flex-col space-y-1">
               {navLink({ href: "/docs#file-routing", children: "File-based Routing" })}
               {navLink({ href: "/docs#layouts", children: "Layouts" })}
+              {navLink({ href: "/docs#dynamic-routes", children: "Dynamic Routes" })}
               {navLink({ href: "/docs#router-api", children: "Router API" })}
             </div>
           </div>
 
           <div>
-            <h4 className="font-bold text-slate-900 mb-3 px-2 text-xs uppercase tracking-wider opacity-50">UI Patterns</h4>
+            <h4 className="font-bold text-slate-900 mb-3 px-2 text-xs uppercase tracking-wider opacity-50">Advanced</h4>
             <div className="flex flex-col space-y-1">
               {navLink({ href: "/docs#lists", children: "List Rendering" })}
               {navLink({ href: "/docs#conditionals", children: "Conditional Rendering" })}
               {navLink({ href: "/docs#lifecycle", children: "Lifecycle Hooks" })}
-              {navLink({ href: "/docs#refs", children: "DOM References ($ref)" })}
+              {navLink({ href: "/docs#refs", children: "DOM References" })}
+              {navLink({ href: "/docs#global-state", children: "Global State" })}
+            </div>
+          </div>
+
+          <div>
+            <h4 className="font-bold text-slate-900 mb-3 px-2 text-xs uppercase tracking-wider opacity-50">API Reference</h4>
+            <div className="flex flex-col space-y-1">
+              {navLink({ href: "/docs#api-macros", children: "Macros" })}
+              {navLink({ href: "/docs#api-hooks", children: "Hooks" })}
+              {navLink({ href: "/docs#api-router", children: "Router" })}
             </div>
           </div>
 

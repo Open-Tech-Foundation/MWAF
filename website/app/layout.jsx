@@ -30,9 +30,12 @@ export default function WebsiteLayout(props) {
         </div>
 
         <div className="flex flex-col items-center md:items-end gap-4 mt-6 md:mt-0">
-          <div className="flex items-center gap-2 px-4 py-1.5 bg-white border border-slate-200 rounded-full text-slate-600 shadow-sm">
-            <span className="text-[#10b981] font-bold text-lg leading-none" style={{ marginTop: '-2px' }}>✓</span>
-            <span>This site is rendered entirely using <strong>WAF</strong></span>
+          <div className="flex items-center gap-3 px-5 py-2.5 bg-white border border-slate-200 rounded-full text-slate-600 shadow-sm">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+              <polyline points="22 4 12 14.01 9 11.01"></polyline>
+            </svg>
+            <span>This site is built entirely using <strong>WAF</strong></span>
           </div>
           <div className="flex gap-6">
             <a href="https://twitter.com" className="hover:text-black">Twitter</a>

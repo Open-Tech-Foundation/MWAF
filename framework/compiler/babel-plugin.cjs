@@ -538,8 +538,16 @@ module.exports = function (babel) {
           return elId;
         }
 
+        const svgTags = ['svg', 'path', 'polyline', 'line', 'circle', 'rect', 'ellipse', 'polygon', 'g', 'text', 'tspan', 'defs', 'lineargradient', 'stop'];
+        const isSvg = svgTags.includes(tagName.toLowerCase());
+
         statements.push(t.variableDeclaration("const", [
-          t.variableDeclarator(elId, t.callExpression(t.memberExpression(t.identifier("document"), t.identifier("createElement")), [t.stringLiteral(tagName)]))
+          t.variableDeclarator(
+            elId, 
+            isSvg 
+              ? t.callExpression(t.memberExpression(t.identifier("document"), t.identifier("createElementNS")), [t.stringLiteral("http://www.w3.org/2000/svg"), t.stringLiteral(tagName)])
+              : t.callExpression(t.memberExpression(t.identifier("document"), t.identifier("createElement")), [t.stringLiteral(tagName)])
+          )
         ]));
 
         n.openingElement.attributes.forEach(attr => {
