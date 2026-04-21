@@ -31,13 +31,26 @@ export function registerRoutes(pages) {
 
 function matchRoute(path) {
   for (const route in routes.pages) {
-    const pattern = route.replace(/\[([^\]]+)\]/g, '(?<$1>[^/]+)');
+    // Convert [ ...param ] to catch-all regex and [ param ] to single segment regex
+    const pattern = route
+      .replace(/\[\.\.\.([^\]]+)\]/g, '(?<$1>.+)')
+      .replace(/\[([^\]]+)\]/g, '(?<$1>[^/]+)');
+    
     const regex = new RegExp(`^${pattern}$`);
     const match = path.match(regex);
     if (match) {
+      const params = { ...(match.groups || {}) };
+      
+      // Transform catch-all segments into arrays
+      for (const key in params) {
+        if (route.includes(`[...${key}]`)) {
+          params[key] = params[key].split('/');
+        }
+      }
+
       return { 
         page: routes.pages[route], 
-        params: match.groups || {},
+        params,
         route
       };
     }

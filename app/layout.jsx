@@ -8,6 +8,7 @@ export default function GlobalLayout(props) {
         <Link href="/login" className="hover:text-red-400">Login</Link>
         <Link href="/counter">Counter</Link>
         <Link href="/about">About</Link>
+        <Link href="/shop/clothing/shirts">Shop</Link>
         <Link href="/post/1">Post 1</Link>
         <Link href="/post/2">Post 2</Link>
       </nav>
