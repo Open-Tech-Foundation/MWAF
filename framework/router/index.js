@@ -1,9 +1,17 @@
 import { withInstance } from '../runtime/lifecycle.js'
+import { signal } from '@preact/signals-core'
 
 export const routes = {
   pages: {},
   layouts: {},
   notFound: null
+}
+
+export const router = {
+  pathname: signal(window.location.pathname),
+  searchParams: signal(new URLSearchParams(window.location.search)),
+  push: (path) => navigate(path),
+  replace: (path) => navigate(path, undefined, true)
 }
 
 let currentPageInstance = null;
@@ -58,8 +66,17 @@ function matchRoute(path) {
   return null;
 }
 
-export function navigate(path, root = document.getElementById("app")) {
-  const match = matchRoute(path) || (routes.notFound ? { page: routes.notFound, params: {}, route: null } : null);
+export function navigate(path, root = document.getElementById("app"), replace = false, isPopState = false) {
+  // Parse path for pathname and search params
+  const url = new URL(path, window.location.origin);
+  const pathname = url.pathname;
+  
+  if (!isPopState) {
+    router.pathname.value = pathname;
+    router.searchParams.value = new URLSearchParams(url.search);
+  }
+
+  const match = matchRoute(pathname) || (routes.notFound ? { page: routes.notFound, params: {}, route: null } : null);
   
   if (match) {
     const { page, params, route } = match;
@@ -107,8 +124,23 @@ export function navigate(path, root = document.getElementById("app")) {
       instance._onMounts.forEach(fn => fn());
     }
 
-    window.history.pushState({}, '', path);
+    if (!isPopState) {
+      if (replace) {
+        window.history.replaceState({}, '', path);
+      } else {
+        window.history.pushState({}, '', path);
+      }
+    }
   } else {
     root.innerHTML = '<h1>404 Not Found</h1>';
   }
+}
+
+// Sync router state with browser history navigation
+if (typeof window !== 'undefined') {
+  window.addEventListener('popstate', () => {
+    router.pathname.value = window.location.pathname;
+    router.searchParams.value = new URLSearchParams(window.location.search);
+    navigate(window.location.pathname + window.location.search, undefined, false, true);
+  });
 }
