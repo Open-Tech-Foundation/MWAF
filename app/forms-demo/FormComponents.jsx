@@ -55,7 +55,7 @@ export function BasicForm() {
 
   const form = createForm({
     initialValues: { username: "", email: "" },
-    resolver: zodResolver(schema)
+    validator: zodResolver(schema)
   });
 
   return (
@@ -117,7 +117,7 @@ export function ComplexForm() {
       preferences: { newsletter: true },
       skills: ["JavaScript"] 
     },
-    resolver: zodResolver(schema)
+    validator: zodResolver(schema)
   });
 
   const addSkill = () => {

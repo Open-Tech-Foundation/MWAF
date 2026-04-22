@@ -20,7 +20,7 @@ const setPath = (obj, path, value) => {
 /**
  * Creates a reactive form state manager.
  */
-export function createForm({ initialValues = {}, validate, schema, resolver } = {}) {
+export function createForm({ initialValues = {}, validate, schema, validator } = {}) {
   const fields = {}; // Stores field signals by path
   const touched = {}; // Stores touched signals by path
   const fieldPaths = signal([]); // Track list of paths for computed to depend on
@@ -67,8 +67,8 @@ export function createForm({ initialValues = {}, validate, schema, resolver } = 
   // Reactive validation
   effect(() => {
     const currentValues = values.value;
-    if (resolver) {
-      const result = resolver(currentValues, schema);
+    if (validator) {
+      const result = validator(currentValues, schema);
       errors.value = result.errors || {};
     } else if (validate) {
       errors.value = validate(currentValues) || {};
@@ -102,8 +102,8 @@ export function createForm({ initialValues = {}, validate, schema, resolver } = 
 
       const currentValues = values.value;
       let currentErrors = {};
-      if (resolver) {
-        currentErrors = resolver(currentValues, schema).errors || {};
+      if (validator) {
+        currentErrors = validator(currentValues, schema).errors || {};
       } else if (validate) {
         currentErrors = validate(currentValues) || {};
       }
