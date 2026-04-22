@@ -37,5 +37,5 @@ class LifecycleElement extends HTMLElement {
     this._onCleanups.forEach(fn => fn());
   }
 }
-customElements.define("waf-lifecycle", LifecycleElement);
+customElements.define("mwaf-lifecycle", LifecycleElement);
 export default LifecycleElement;

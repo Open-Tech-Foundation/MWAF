@@ -89,5 +89,5 @@ class ComplexExpressionsElement extends HTMLElement {
     this._onCleanups.forEach(fn => fn());
   }
 }
-customElements.define("waf-complexexpressions", ComplexExpressionsElement);
+customElements.define("mwaf-complexexpressions", ComplexExpressionsElement);
 export default ComplexExpressionsElement;

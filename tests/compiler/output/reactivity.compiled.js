@@ -48,5 +48,5 @@ class ReactivityElement extends HTMLElement {
     this._onCleanups.forEach(fn => fn());
   }
 }
-customElements.define("waf-reactivity", ReactivityElement);
+customElements.define("mwaf-reactivity", ReactivityElement);
 export default ReactivityElement;

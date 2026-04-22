@@ -34,10 +34,10 @@ class MultipleComponentsElement extends HTMLElement {
     _withInstance(this, () => {
       const rootElement = (() => {
         const el0 = document.createElement("div");
-        const el1 = document.createElement("waf-a");
+        const el1 = document.createElement("mwaf-a");
         _effect(() => el1.val = props.a);
         el0.appendChild(el1);
-        const el2 = document.createElement("waf-b");
+        const el2 = document.createElement("mwaf-b");
         _effect(() => el2.val = props.b);
         el0.appendChild(el2);
         return el0;
@@ -51,7 +51,7 @@ class MultipleComponentsElement extends HTMLElement {
     this._onCleanups.forEach(fn => fn());
   }
 }
-customElements.define("waf-multiplecomponents", MultipleComponentsElement);
+customElements.define("mwaf-multiplecomponents", MultipleComponentsElement);
 export default MultipleComponentsElement;
 class AElement extends HTMLElement {
   static observedAttributes = ["val"];
@@ -89,7 +89,7 @@ class AElement extends HTMLElement {
     this._onCleanups.forEach(fn => fn());
   }
 }
-customElements.define("waf-a", AElement);
+customElements.define("mwaf-a", AElement);
 class BElement extends HTMLElement {
   static observedAttributes = ["val"];
   set val(val) {
@@ -126,4 +126,4 @@ class BElement extends HTMLElement {
     this._onCleanups.forEach(fn => fn());
   }
 }
-customElements.define("waf-b", BElement);
+customElements.define("mwaf-b", BElement);

@@ -49,5 +49,5 @@ class MacroTestElement extends HTMLElement {
     this._onCleanups.forEach(fn => fn());
   }
 }
-customElements.define("waf-macrotest", MacroTestElement);
+customElements.define("mwaf-macrotest", MacroTestElement);
 export default MacroTestElement;

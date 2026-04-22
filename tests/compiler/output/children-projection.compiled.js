@@ -39,5 +39,5 @@ class WrapperElement extends HTMLElement {
     this._onCleanups.forEach(fn => fn());
   }
 }
-customElements.define("waf-wrapper", WrapperElement);
+customElements.define("mwaf-wrapper", WrapperElement);
 export default WrapperElement;

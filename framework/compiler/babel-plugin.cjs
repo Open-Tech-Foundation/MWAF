@@ -5,7 +5,7 @@ module.exports = function (babel) {
   const { types: t } = babel;
 
   return {
-    name: "waf-compiler",
+    name: "mwaf-compiler",
     visitor: {
       Program: {
         enter(p, state) {
@@ -151,7 +151,7 @@ module.exports = function (babel) {
         if (path.parentPath.isMemberExpression() && !path.parentPath.node.computed) {
           if (t.isIdentifier(path.parentPath.node.property, { name: "value" })) {
             throw path.parentPath.buildCodeFrameError(
-              `Manual .value access is forbidden for variables declared with $state. The WAF compiler handles this automatically. Remove the .value from '${path.node.name}.value'.`
+              `Manual .value access is forbidden for variables declared with $state. The MWAF compiler handles this automatically. Remove the .value from '${path.node.name}.value'.`
             );
           }
           if (path.parentPath.node.property === path.node) return;
@@ -356,7 +356,7 @@ module.exports = function (babel) {
       }
     } else {
       // Transform to Web Component Class
-      const tagName = "waf-" + name.toLowerCase();
+      const tagName = "mwaf-" + name.toLowerCase();
       const observedAttributes = Array.from(allSignals);
       const signalId = getImport("signal", "@preact/signals-core");
       const createPropsProxyId = getImport("createPropsProxy", "/framework/runtime/props.js");
@@ -498,7 +498,7 @@ module.exports = function (babel) {
         const elId = nextId();
 
         if (isComponent) {
-          const componentTagName = "waf-" + tagName.toLowerCase();
+          const componentTagName = "mwaf-" + tagName.toLowerCase();
           statements.push(t.variableDeclaration("const", [
             t.variableDeclarator(elId, t.callExpression(t.memberExpression(t.identifier("document"), t.identifier("createElement")), [t.stringLiteral(componentTagName)]))
           ]));

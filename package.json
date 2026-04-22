@@ -1,5 +1,9 @@
 {
-  "name": "wcf",
+  "name": "mwaf",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Open-Tech-Foundation/MWAF.git"
+  },
   "module": "index.ts",
   "type": "module",
   "private": true,

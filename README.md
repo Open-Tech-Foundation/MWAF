@@ -1,19 +1,19 @@
-# WAF — Web Application Framework
+# MWAF — Minimal Web App Framework
 
-A project of the [Open Tech Foundation](https://github.com/Open-Tech-Foundation).
+A project of the [Open Tech Foundation](https://github.com/Open-Tech-Foundation/MWAF).
 
-**[🚀 Try the WAF Documentation & Playground](https://open-tech-foundation.github.io/waf/)**
+**[🚀 Try the MWAF Documentation & Playground](https://open-tech-foundation.github.io/MWAF/)**
 
 > [!CAUTION]
 > **EXPERIMENTAL PRE-RELEASE**
 >
-> WAF is currently in an experimental, pre-release state. The framework architecture and APIs are subject to breaking changes as we optimize for production readiness.
+> MWAF is currently in an experimental, pre-release state. The framework architecture and APIs are subject to breaking changes as we optimize for production readiness.
 
 ## Overview
 
->**WAF (Web Application Framework)** is a modern, high-performance UI framework that compiles JSX directly into optimized, imperative native DOM operations. 
+>**MWAF (Minimal Web App Framework)** is a modern, high-performance UI framework that compiles JSX directly into optimized, imperative native DOM operations. 
 
-Unlike traditional frameworks, WAF has **Zero-VDOM**. There is no Virtual DOM diffing or reconciliation loop. Instead, our compiler statically analyzes your components and generates the exact `document.createElement` and DOM property assignments needed. Every component you write is compiled into a **Standard Web Component**, ensuring perfect isolation and native performance.
+Unlike traditional frameworks, MWAF has **Zero-VDOM**. There is no Virtual DOM diffing or reconciliation loop. Instead, our compiler statically analyzes your components and generates the exact `document.createElement` and DOM property assignments needed. Every component you write is compiled into a **Standard Web Component**, ensuring perfect isolation and native performance.
 
 ## Key Features
 
@@ -45,11 +45,11 @@ export default function Counter() {
 
 ## 📊 Performance Benchmarks
 
-WAF is designed for extreme performance in data-heavy applications. By bypassing the Virtual DOM, we aim for near-native speeds for large-scale DOM manipulations.
+MWAF is designed for extreme performance in data-heavy applications. By bypassing the Virtual DOM, we aim for near-native speeds for large-scale DOM manipulations.
 
 > [!NOTE]
 > **Comprehensive Benchmarks Coming Soon.**
-> We are currently preparing a standardized benchmark suite comparing WAF against other major frameworks (React, Svelte, Solid) across rendering, memory usage, and update latency.
+> We are currently preparing a standardized benchmark suite comparing MWAF against other major frameworks (React, Svelte, Solid) across rendering, memory usage, and update latency.
 
 ## License
 

@@ -80,5 +80,5 @@ class StateEdgeCasesElement extends HTMLElement {
     this._onCleanups.forEach(fn => fn());
   }
 }
-customElements.define("waf-stateedgecases", StateEdgeCasesElement);
+customElements.define("mwaf-stateedgecases", StateEdgeCasesElement);
 export default StateEdgeCasesElement;

@@ -50,5 +50,5 @@ class ItemElement extends HTMLElement {
     this._onCleanups.forEach(fn => fn());
   }
 }
-customElements.define("waf-item", ItemElement);
+customElements.define("mwaf-item", ItemElement);
 export default ItemElement;

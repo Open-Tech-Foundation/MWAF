@@ -6,13 +6,13 @@ export default function WebsiteLayout(props) {
       <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200 px-8 py-4 flex justify-between items-center">
         <div className="flex items-center gap-2">
           <img src="/logo.png" alt="Logo" className="w-8 h-8" />
-          <span className="font-bold tracking-tight text-lg">WAF</span>
+          <span className="font-bold tracking-tight text-lg">MWAF</span>
         </div>
         
         <nav className="flex gap-8 text-sm font-medium text-slate-500">
           <Link href="/" className="hover:text-black transition-colors">Home</Link>
           <Link href="/docs" className="hover:text-black transition-colors">Docs</Link>
-          <a href="https://github.com/Open-Tech-Foundation" target="_blank" className="hover:text-black transition-colors">GitHub</a>
+          <a href="https://github.com/Open-Tech-Foundation/MWAF" target="_blank" className="hover:text-black transition-colors">GitHub</a>
         </nav>
       </header>
 
@@ -23,7 +23,7 @@ export default function WebsiteLayout(props) {
       <footer className="py-12 border-t border-slate-100 flex flex-col md:flex-row justify-between items-center px-8 text-xs text-slate-400 bg-slate-50 mt-auto">
         <div className="flex flex-col gap-2">
           <div className="font-bold text-slate-900 flex items-center gap-2">
-            WAF Framework
+            MWAF Framework
             <span className="px-2 py-0.5 bg-accent/10 text-accent rounded text-[10px] uppercase tracking-wider">v0.1-alpha</span>
           </div>
           <div>© 2026 Open-Tech-Foundation. Experimental.</div>
@@ -35,11 +35,11 @@ export default function WebsiteLayout(props) {
               <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
               <polyline points="22 4 12 14.01 9 11.01"></polyline>
             </svg>
-            <span>This site is built entirely using <strong>WAF</strong></span>
+            <span>This site is built entirely using <strong>MWAF</strong></span>
           </div>
           <div className="flex gap-6">
             <a href="https://twitter.com" className="hover:text-black">Twitter</a>
-            <a href="https://github.com/Open-Tech-Foundation" className="hover:text-black">GitHub</a>
+            <a href="https://github.com/Open-Tech-Foundation/MWAF" className="hover:text-black">GitHub</a>
           </div>
         </div>
       </footer>

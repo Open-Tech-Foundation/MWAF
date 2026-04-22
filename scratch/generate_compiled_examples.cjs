@@ -14,7 +14,7 @@ const counterCode = `export default function Counter() {
 }`;
 
 const todoCode = `export default function TodoList() {
-  let todos = $state([{ id: 1, text: "Learn WAF", done: false }]);
+  let todos = $state([{ id: 1, text: "Learn MWAF", done: false }]);
   
   const toggle = (id) => {
     todos = todos.map(t => t.id === id ? { ...t, done: !t.done } : t);

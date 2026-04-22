@@ -49,5 +49,5 @@ class StylingTestElement extends HTMLElement {
     this._onCleanups.forEach(fn => fn());
   }
 }
-customElements.define("waf-stylingtest", StylingTestElement);
+customElements.define("mwaf-stylingtest", StylingTestElement);
 export default StylingTestElement;

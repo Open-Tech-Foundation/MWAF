@@ -11,7 +11,7 @@ html {
 }
 
 /* Ensure custom elements behave like blocks */
-waf-navlink, waf-link, waf-counter, waf-todolist {
+mwaf-navlink, mwaf-link, mwaf-counter, mwaf-todolist {
   display: block;
 }
 

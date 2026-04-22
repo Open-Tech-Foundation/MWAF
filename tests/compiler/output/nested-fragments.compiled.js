@@ -48,5 +48,5 @@ class NestedFragmentsElement extends HTMLElement {
     this._onCleanups.forEach(fn => fn());
   }
 }
-customElements.define("waf-nestedfragments", NestedFragmentsElement);
+customElements.define("mwaf-nestedfragments", NestedFragmentsElement);
 export default NestedFragmentsElement;

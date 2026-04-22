@@ -1,6 +1,6 @@
 // Bun Snapshot v1, https://bun.sh/docs/test/snapshots
 
-exports[`WAF Compiler Compiles complex-expressions.jsx 1`] = `
+exports[`MWAF Compiler Compiles complex-expressions.jsx 1`] = `
 "import { withInstance as _withInstance } from "/framework/runtime/lifecycle.js";
 import { createPropsProxy as _createPropsProxy } from "/framework/runtime/props.js";
 import { renderDynamic as _renderDynamic } from "/framework/runtime/dom.js";
@@ -92,11 +92,11 @@ class ComplexExpressionsElement extends HTMLElement {
     this._onCleanups.forEach(fn => fn());
   }
 }
-customElements.define("waf-complexexpressions", ComplexExpressionsElement);
+customElements.define("mwaf-complexexpressions", ComplexExpressionsElement);
 export default ComplexExpressionsElement;"
 `;
 
-exports[`WAF Compiler Compiles conditional.jsx 1`] = `
+exports[`MWAF Compiler Compiles conditional.jsx 1`] = `
 "import { withInstance as _withInstance } from "/framework/runtime/lifecycle.js";
 import { createPropsProxy as _createPropsProxy } from "/framework/runtime/props.js";
 import { signal as _signal } from "@preact/signals-core";
@@ -149,11 +149,11 @@ class ItemElement extends HTMLElement {
     this._onCleanups.forEach(fn => fn());
   }
 }
-customElements.define("waf-item", ItemElement);
+customElements.define("mwaf-item", ItemElement);
 export default ItemElement;"
 `;
 
-exports[`WAF Compiler Compiles routing-404.404.jsx 1`] = `
+exports[`MWAF Compiler Compiles routing-404.404.jsx 1`] = `
 "export function render(root, props) {
   const rootElement = (() => {
     const el0 = document.createElement("div");
@@ -171,7 +171,7 @@ exports[`WAF Compiler Compiles routing-404.404.jsx 1`] = `
 }"
 `;
 
-exports[`WAF Compiler Compiles children-projection.jsx 1`] = `
+exports[`MWAF Compiler Compiles children-projection.jsx 1`] = `
 "import { withInstance as _withInstance } from "/framework/runtime/lifecycle.js";
 import { createPropsProxy as _createPropsProxy } from "/framework/runtime/props.js";
 import { signal as _signal } from "@preact/signals-core";
@@ -213,11 +213,11 @@ class WrapperElement extends HTMLElement {
     this._onCleanups.forEach(fn => fn());
   }
 }
-customElements.define("waf-wrapper", WrapperElement);
+customElements.define("mwaf-wrapper", WrapperElement);
 export default WrapperElement;"
 `;
 
-exports[`WAF Compiler Compiles lifecycle.jsx 1`] = `
+exports[`MWAF Compiler Compiles lifecycle.jsx 1`] = `
 "import { withInstance as _withInstance } from "/framework/runtime/lifecycle.js";
 import { createPropsProxy as _createPropsProxy } from "/framework/runtime/props.js";
 import { signal as _signal } from "@preact/signals-core";
@@ -257,11 +257,11 @@ class LifecycleElement extends HTMLElement {
     this._onCleanups.forEach(fn => fn());
   }
 }
-customElements.define("waf-lifecycle", LifecycleElement);
+customElements.define("mwaf-lifecycle", LifecycleElement);
 export default LifecycleElement;"
 `;
 
-exports[`WAF Compiler Compiles reactivity.jsx 1`] = `
+exports[`MWAF Compiler Compiles reactivity.jsx 1`] = `
 "import { withInstance as _withInstance } from "/framework/runtime/lifecycle.js";
 import { createPropsProxy as _createPropsProxy } from "/framework/runtime/props.js";
 import { renderDynamic as _renderDynamic } from "/framework/runtime/dom.js";
@@ -312,11 +312,11 @@ class ReactivityElement extends HTMLElement {
     this._onCleanups.forEach(fn => fn());
   }
 }
-customElements.define("waf-reactivity", ReactivityElement);
+customElements.define("mwaf-reactivity", ReactivityElement);
 export default ReactivityElement;"
 `;
 
-exports[`WAF Compiler Compiles nested-reactivity.jsx 1`] = `
+exports[`MWAF Compiler Compiles nested-reactivity.jsx 1`] = `
 "import { withInstance as _withInstance } from "/framework/runtime/lifecycle.js";
 import { createPropsProxy as _createPropsProxy } from "/framework/runtime/props.js";
 import { renderDynamic as _renderDynamic } from "/framework/runtime/dom.js";
@@ -364,11 +364,11 @@ class NestedReactivityElement extends HTMLElement {
     this._onCleanups.forEach(fn => fn());
   }
 }
-customElements.define("waf-nestedreactivity", NestedReactivityElement);
+customElements.define("mwaf-nestedreactivity", NestedReactivityElement);
 export default NestedReactivityElement;"
 `;
 
-exports[`WAF Compiler Compiles basic-elements.page.jsx 1`] = `
+exports[`MWAF Compiler Compiles basic-elements.page.jsx 1`] = `
 "export function render(root, props) {
   const rootElement = (() => {
     const el0 = document.createElement("div");
@@ -386,7 +386,7 @@ exports[`WAF Compiler Compiles basic-elements.page.jsx 1`] = `
 }"
 `;
 
-exports[`WAF Compiler Compiles state-edge-cases.jsx 1`] = `
+exports[`MWAF Compiler Compiles state-edge-cases.jsx 1`] = `
 "import { withInstance as _withInstance } from "/framework/runtime/lifecycle.js";
 import { createPropsProxy as _createPropsProxy } from "/framework/runtime/props.js";
 import { renderDynamic as _renderDynamic } from "/framework/runtime/dom.js";
@@ -469,11 +469,11 @@ class StateEdgeCasesElement extends HTMLElement {
     this._onCleanups.forEach(fn => fn());
   }
 }
-customElements.define("waf-stateedgecases", StateEdgeCasesElement);
+customElements.define("mwaf-stateedgecases", StateEdgeCasesElement);
 export default StateEdgeCasesElement;"
 `;
 
-exports[`WAF Compiler Compiles styling.jsx 1`] = `
+exports[`MWAF Compiler Compiles styling.jsx 1`] = `
 "import { withInstance as _withInstance } from "/framework/runtime/lifecycle.js";
 import { createPropsProxy as _createPropsProxy } from "/framework/runtime/props.js";
 import { signal as _signal, effect as _effect } from "@preact/signals-core";
@@ -525,11 +525,11 @@ class StylingTestElement extends HTMLElement {
     this._onCleanups.forEach(fn => fn());
   }
 }
-customElements.define("waf-stylingtest", StylingTestElement);
+customElements.define("mwaf-stylingtest", StylingTestElement);
 export default StylingTestElement;"
 `;
 
-exports[`WAF Compiler Compiles ref.jsx 1`] = `
+exports[`MWAF Compiler Compiles ref.jsx 1`] = `
 "import { withInstance as _withInstance } from "/framework/runtime/lifecycle.js";
 import { createPropsProxy as _createPropsProxy } from "/framework/runtime/props.js";
 import { effect as _effect } from "@preact/signals-core";
@@ -570,7 +570,7 @@ class CustomInputElement extends HTMLElement {
     this._onCleanups.forEach(fn => fn());
   }
 }
-customElements.define("waf-custominput", CustomInputElement);
+customElements.define("mwaf-custominput", CustomInputElement);
 class RefTestElement extends HTMLElement {
   static observedAttributes = [];
   constructor() {
@@ -605,7 +605,7 @@ class RefTestElement extends HTMLElement {
         const text2 = document.createTextNode("Ref Test");
         el1.appendChild(text2);
         el0.appendChild(el1);
-        const el3 = document.createElement("waf-custominput");
+        const el3 = document.createElement("mwaf-custominput");
         myInput.value = el3;
         el0.appendChild(el3);
         const el4 = document.createElement("button");
@@ -624,11 +624,11 @@ class RefTestElement extends HTMLElement {
     this._onCleanups.forEach(fn => fn());
   }
 }
-customElements.define("waf-reftest", RefTestElement);
+customElements.define("mwaf-reftest", RefTestElement);
 export default RefTestElement;"
 `;
 
-exports[`WAF Compiler Compiles products-page.page.jsx 1`] = `
+exports[`MWAF Compiler Compiles products-page.page.jsx 1`] = `
 "import { renderDynamic as _renderDynamic } from "/framework/runtime/dom.js";
 import { signal as _signal, effect as _effect } from "@preact/signals-core";
 export function render(root, props) {
@@ -704,7 +704,7 @@ export function render(root, props) {
 }"
 `;
 
-exports[`WAF Compiler Compiles comments.page.jsx 1`] = `
+exports[`MWAF Compiler Compiles comments.page.jsx 1`] = `
 "export function render(root, props) {
   const rootElement = (() => {
     const el0 = document.createElement("div");
@@ -723,7 +723,7 @@ exports[`WAF Compiler Compiles comments.page.jsx 1`] = `
 }"
 `;
 
-exports[`WAF Compiler Compiles svg.jsx 1`] = `
+exports[`MWAF Compiler Compiles svg.jsx 1`] = `
 "import { withInstance as _withInstance } from "/framework/runtime/lifecycle.js";
 import { createPropsProxy as _createPropsProxy } from "/framework/runtime/props.js";
 import { signal as _signal, effect as _effect } from "@preact/signals-core";
@@ -743,11 +743,11 @@ class SvgTestElement extends HTMLElement {
     _withInstance(this, () => {
       let strokeWidth = _signal(2);
       const rootElement = (() => {
-        const el0 = document.createElement("svg");
+        const el0 = document.createElementNS("http://www.w3.org/2000/svg", "svg");
         el0.setAttribute("width", "100");
         el0.setAttribute("height", "100");
         el0.setAttribute("view-box", "0 0 100 100");
-        const el1 = document.createElement("circle");
+        const el1 = document.createElementNS("http://www.w3.org/2000/svg", "circle");
         el1.setAttribute("cx", "50");
         el1.setAttribute("cy", "50");
         el1.setAttribute("r", "40");
@@ -755,7 +755,7 @@ class SvgTestElement extends HTMLElement {
         _effect(() => el1.setAttribute("stroke-width", strokeWidth.value));
         el1.setAttribute("fill", "transparent");
         el0.appendChild(el1);
-        const el2 = document.createElement("path");
+        const el2 = document.createElementNS("http://www.w3.org/2000/svg", "path");
         el2.setAttribute("d", "M 10 10 L 90 90");
         el2.setAttribute("stroke", "blue");
         el2.setAttribute("stroke-linecap", "round");
@@ -771,11 +771,11 @@ class SvgTestElement extends HTMLElement {
     this._onCleanups.forEach(fn => fn());
   }
 }
-customElements.define("waf-svgtest", SvgTestElement);
+customElements.define("mwaf-svgtest", SvgTestElement);
 export default SvgTestElement;"
 `;
 
-exports[`WAF Compiler Compiles component-props.jsx 1`] = `
+exports[`MWAF Compiler Compiles component-props.jsx 1`] = `
 "import { withInstance as _withInstance } from "/framework/runtime/lifecycle.js";
 import { createPropsProxy as _createPropsProxy } from "/framework/runtime/props.js";
 import { renderDynamic as _renderDynamic } from "/framework/runtime/dom.js";
@@ -797,7 +797,7 @@ class ParentElement extends HTMLElement {
       let count = _signal(0);
       const rootElement = (() => {
         const el0 = document.createElement("div");
-        const el1 = document.createElement("waf-child");
+        const el1 = document.createElement("mwaf-child");
         _effect(() => el1.val = count.value);
         el0.appendChild(el1);
         const el2 = document.createElement("button");
@@ -816,7 +816,7 @@ class ParentElement extends HTMLElement {
     this._onCleanups.forEach(fn => fn());
   }
 }
-customElements.define("waf-parent", ParentElement);
+customElements.define("mwaf-parent", ParentElement);
 export default ParentElement;
 class ChildElement extends HTMLElement {
   static observedAttributes = ["val"];
@@ -854,10 +854,10 @@ class ChildElement extends HTMLElement {
     this._onCleanups.forEach(fn => fn());
   }
 }
-customElements.define("waf-child", ChildElement);"
+customElements.define("mwaf-child", ChildElement);"
 `;
 
-exports[`WAF Compiler Compiles multiple-components.jsx 1`] = `
+exports[`MWAF Compiler Compiles multiple-components.jsx 1`] = `
 "import { withInstance as _withInstance } from "/framework/runtime/lifecycle.js";
 import { createPropsProxy as _createPropsProxy } from "/framework/runtime/props.js";
 import { signal as _signal } from "@preact/signals-core";
@@ -894,10 +894,10 @@ class MultipleComponentsElement extends HTMLElement {
     _withInstance(this, () => {
       const rootElement = (() => {
         const el0 = document.createElement("div");
-        const el1 = document.createElement("waf-a");
+        const el1 = document.createElement("mwaf-a");
         _effect(() => el1.val = props.a);
         el0.appendChild(el1);
-        const el2 = document.createElement("waf-b");
+        const el2 = document.createElement("mwaf-b");
         _effect(() => el2.val = props.b);
         el0.appendChild(el2);
         return el0;
@@ -911,7 +911,7 @@ class MultipleComponentsElement extends HTMLElement {
     this._onCleanups.forEach(fn => fn());
   }
 }
-customElements.define("waf-multiplecomponents", MultipleComponentsElement);
+customElements.define("mwaf-multiplecomponents", MultipleComponentsElement);
 export default MultipleComponentsElement;
 class AElement extends HTMLElement {
   static observedAttributes = ["val"];
@@ -949,7 +949,7 @@ class AElement extends HTMLElement {
     this._onCleanups.forEach(fn => fn());
   }
 }
-customElements.define("waf-a", AElement);
+customElements.define("mwaf-a", AElement);
 class BElement extends HTMLElement {
   static observedAttributes = ["val"];
   set val(val) {
@@ -986,10 +986,10 @@ class BElement extends HTMLElement {
     this._onCleanups.forEach(fn => fn());
   }
 }
-customElements.define("waf-b", BElement);"
+customElements.define("mwaf-b", BElement);"
 `;
 
-exports[`WAF Compiler Compiles routing-layout.layout.jsx 1`] = `
+exports[`MWAF Compiler Compiles routing-layout.layout.jsx 1`] = `
 "import { renderDynamic as _renderDynamic } from "/framework/runtime/dom.js";
 export function render(root, props) {
   const rootElement = (() => {
@@ -1011,7 +1011,7 @@ export function render(root, props) {
 }"
 `;
 
-exports[`WAF Compiler Compiles catch-all-page.page.jsx 1`] = `
+exports[`MWAF Compiler Compiles catch-all-page.page.jsx 1`] = `
 "import { renderDynamic as _renderDynamic } from "/framework/runtime/dom.js";
 export function render(root, props) {
   const rootElement = (() => {
@@ -1051,7 +1051,7 @@ export function render(root, props) {
 }"
 `;
 
-exports[`WAF Compiler Compiles inline-styles.jsx 1`] = `
+exports[`MWAF Compiler Compiles inline-styles.jsx 1`] = `
 "import { withInstance as _withInstance } from "/framework/runtime/lifecycle.js";
 import { createPropsProxy as _createPropsProxy } from "/framework/runtime/props.js";
 import { signal as _signal, effect as _effect } from "@preact/signals-core";
@@ -1099,11 +1099,11 @@ class StyleTestElement extends HTMLElement {
     this._onCleanups.forEach(fn => fn());
   }
 }
-customElements.define("waf-styletest", StyleTestElement);
+customElements.define("mwaf-styletest", StyleTestElement);
 export default StyleTestElement;"
 `;
 
-exports[`WAF Compiler Compiles macros.jsx 1`] = `
+exports[`MWAF Compiler Compiles macros.jsx 1`] = `
 "import { withInstance as _withInstance } from "/framework/runtime/lifecycle.js";
 import { createPropsProxy as _createPropsProxy } from "/framework/runtime/props.js";
 import { renderDynamic as _renderDynamic } from "/framework/runtime/dom.js";
@@ -1155,11 +1155,11 @@ class MacroTestElement extends HTMLElement {
     this._onCleanups.forEach(fn => fn());
   }
 }
-customElements.define("waf-macrotest", MacroTestElement);
+customElements.define("mwaf-macrotest", MacroTestElement);
 export default MacroTestElement;"
 `;
 
-exports[`WAF Compiler Compiles list-rendering.jsx 1`] = `
+exports[`MWAF Compiler Compiles list-rendering.jsx 1`] = `
 "import { withInstance as _withInstance } from "/framework/runtime/lifecycle.js";
 import { createPropsProxy as _createPropsProxy } from "/framework/runtime/props.js";
 import { renderDynamic as _renderDynamic } from "/framework/runtime/dom.js";
@@ -1206,11 +1206,11 @@ class ListRenderingElement extends HTMLElement {
     this._onCleanups.forEach(fn => fn());
   }
 }
-customElements.define("waf-listrendering", ListRenderingElement);
+customElements.define("mwaf-listrendering", ListRenderingElement);
 export default ListRenderingElement;"
 `;
 
-exports[`WAF Compiler Compiles nested-fragments.jsx 1`] = `
+exports[`MWAF Compiler Compiles nested-fragments.jsx 1`] = `
 "import { withInstance as _withInstance } from "/framework/runtime/lifecycle.js";
 import { createPropsProxy as _createPropsProxy } from "/framework/runtime/props.js";
 import { renderDynamic as _renderDynamic } from "/framework/runtime/dom.js";
@@ -1261,11 +1261,11 @@ class NestedFragmentsElement extends HTMLElement {
     this._onCleanups.forEach(fn => fn());
   }
 }
-customElements.define("waf-nestedfragments", NestedFragmentsElement);
+customElements.define("mwaf-nestedfragments", NestedFragmentsElement);
 export default NestedFragmentsElement;"
 `;
 
-exports[`WAF Compiler Compiles dynamic-page.page.jsx 1`] = `
+exports[`MWAF Compiler Compiles dynamic-page.page.jsx 1`] = `
 "import { renderDynamic as _renderDynamic } from "/framework/runtime/dom.js";
 import { onMount as _onMount, onCleanup as _onCleanup } from "/framework/runtime/lifecycle.js";
 export function render(root, props) {
@@ -1298,10 +1298,10 @@ export function render(root, props) {
 }"
 `;
 
-exports[`WAF Compiler Compiles whitespace.page.jsx 1`] = `
+exports[`MWAF Compiler Compiles whitespace.page.jsx 1`] = `
 "import { renderDynamic as _renderDynamic } from "/framework/runtime/dom.js";
 export function render(root, props) {
-  const name = "WAF";
+  const name = "MWAF";
   const rootElement = (() => {
     const el0 = document.createElement("div");
     const el1 = document.createElement("span");

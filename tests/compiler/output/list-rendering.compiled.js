@@ -44,5 +44,5 @@ class ListRenderingElement extends HTMLElement {
     this._onCleanups.forEach(fn => fn());
   }
 }
-customElements.define("waf-listrendering", ListRenderingElement);
+customElements.define("mwaf-listrendering", ListRenderingElement);
 export default ListRenderingElement;

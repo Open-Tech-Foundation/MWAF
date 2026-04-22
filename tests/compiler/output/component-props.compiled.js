@@ -19,7 +19,7 @@ class ParentElement extends HTMLElement {
       let count = _signal(0);
       const rootElement = (() => {
         const el0 = document.createElement("div");
-        const el1 = document.createElement("waf-child");
+        const el1 = document.createElement("mwaf-child");
         _effect(() => el1.val = count.value);
         el0.appendChild(el1);
         const el2 = document.createElement("button");
@@ -38,7 +38,7 @@ class ParentElement extends HTMLElement {
     this._onCleanups.forEach(fn => fn());
   }
 }
-customElements.define("waf-parent", ParentElement);
+customElements.define("mwaf-parent", ParentElement);
 export default ParentElement;
 class ChildElement extends HTMLElement {
   static observedAttributes = ["val"];
@@ -76,4 +76,4 @@ class ChildElement extends HTMLElement {
     this._onCleanups.forEach(fn => fn());
   }
 }
-customElements.define("waf-child", ChildElement);
+customElements.define("mwaf-child", ChildElement);

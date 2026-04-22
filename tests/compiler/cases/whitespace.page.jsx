@@ -1,5 +1,5 @@
 export default function WhitespaceTest() {
-  const name = "WAF"
+  const name = "MWAF"
   return (
     <div>
       <span>Hello {name}!</span>

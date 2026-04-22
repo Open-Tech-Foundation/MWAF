@@ -28,7 +28,7 @@ export default function SignupForm() {
 
   return (
     <div class={styles.card}>
-      <h2 class={`${styles.title} green`}>Join WAF</h2>
+      <h2 class={`${styles.title} green`}>Join MWAF</h2>
       <p class={styles.subtitle}>Experience the future of zero-VDOM apps</p>
 
       <form onsubmit={handleSubmit}>

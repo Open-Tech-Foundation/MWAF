@@ -17,11 +17,11 @@ class SvgTestElement extends HTMLElement {
     _withInstance(this, () => {
       let strokeWidth = _signal(2);
       const rootElement = (() => {
-        const el0 = document.createElement("svg");
+        const el0 = document.createElementNS("http://www.w3.org/2000/svg", "svg");
         el0.setAttribute("width", "100");
         el0.setAttribute("height", "100");
         el0.setAttribute("view-box", "0 0 100 100");
-        const el1 = document.createElement("circle");
+        const el1 = document.createElementNS("http://www.w3.org/2000/svg", "circle");
         el1.setAttribute("cx", "50");
         el1.setAttribute("cy", "50");
         el1.setAttribute("r", "40");
@@ -29,7 +29,7 @@ class SvgTestElement extends HTMLElement {
         _effect(() => el1.setAttribute("stroke-width", strokeWidth.value));
         el1.setAttribute("fill", "transparent");
         el0.appendChild(el1);
-        const el2 = document.createElement("path");
+        const el2 = document.createElementNS("http://www.w3.org/2000/svg", "path");
         el2.setAttribute("d", "M 10 10 L 90 90");
         el2.setAttribute("stroke", "blue");
         el2.setAttribute("stroke-linecap", "round");
@@ -45,5 +45,5 @@ class SvgTestElement extends HTMLElement {
     this._onCleanups.forEach(fn => fn());
   }
 }
-customElements.define("waf-svgtest", SvgTestElement);
+customElements.define("mwaf-svgtest", SvgTestElement);
 export default SvgTestElement;

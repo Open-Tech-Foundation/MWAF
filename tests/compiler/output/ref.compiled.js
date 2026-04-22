@@ -38,7 +38,7 @@ class CustomInputElement extends HTMLElement {
     this._onCleanups.forEach(fn => fn());
   }
 }
-customElements.define("waf-custominput", CustomInputElement);
+customElements.define("mwaf-custominput", CustomInputElement);
 class RefTestElement extends HTMLElement {
   static observedAttributes = [];
   constructor() {
@@ -73,7 +73,7 @@ class RefTestElement extends HTMLElement {
         const text2 = document.createTextNode("Ref Test");
         el1.appendChild(text2);
         el0.appendChild(el1);
-        const el3 = document.createElement("waf-custominput");
+        const el3 = document.createElement("mwaf-custominput");
         myInput.value = el3;
         el0.appendChild(el3);
         const el4 = document.createElement("button");
@@ -92,5 +92,5 @@ class RefTestElement extends HTMLElement {
     this._onCleanups.forEach(fn => fn());
   }
 }
-customElements.define("waf-reftest", RefTestElement);
+customElements.define("mwaf-reftest", RefTestElement);
 export default RefTestElement;
