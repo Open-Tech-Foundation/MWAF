@@ -10,15 +10,18 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview",
+    "preview": "bun run website:build && wrangler dev",
     "website:dev": "vite website",
     "website:build": "vite build website",
-    "test": "bun test"
+    "test": "bun test",
+    "deploy": "bun run website:build && wrangler deploy"
   },
   "devDependencies": {
     "@babel/preset-react": "^7.28.5",
+    "@cloudflare/vite-plugin": "^1.33.1",
     "@rollup/plugin-babel": "^7.0.0",
-    "@types/bun": "latest"
+    "@types/bun": "latest",
+    "wrangler": "^4.84.1"
   },
   "peerDependencies": {
     "typescript": "^5"
