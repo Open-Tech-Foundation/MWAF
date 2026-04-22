@@ -7,13 +7,35 @@ export const routes = {
   notFound: null
 }
 
-export const router = {
+const routerSignals = {
   pathname: signal(window.location.pathname),
   searchParams: signal(new URLSearchParams(window.location.search)),
   hash: signal(window.location.hash),
-  push: (path) => navigate(path),
-  replace: (path) => navigate(path, undefined, true)
-}
+  isGuarding: signal(false),
+  guard: null
+};
+
+export const router = new Proxy(routerSignals, {
+  get: (target, key) => {
+    if (key === "push") return (path) => navigate(path);
+    if (key === "replace") return (path) => navigate(path, undefined, true);
+    
+    const s = target[key];
+    if (s && typeof s === 'object' && 'value' in s && typeof s.subscribe === 'function') {
+      return s.value;
+    }
+    return s;
+  },
+  set: (target, key, val) => {
+    const s = target[key];
+    if (s && typeof s === 'object' && 'value' in s && typeof s.subscribe === 'function') {
+      s.value = val;
+    } else {
+      target[key] = val;
+    }
+    return true;
+  }
+});
 
 let currentPageInstance = null;
 
@@ -65,6 +87,7 @@ function matchRoute(path) {
   return null;
 }
 
+
 function scrollToHash(hash) {
   if (!hash) return;
   const id = hash.replace('#', '');
@@ -74,7 +97,7 @@ function scrollToHash(hash) {
   }
 }
 
-export function navigate(path, root = document.getElementById("app"), replace = false, isPopState = false) {
+export async function navigate(path, root = document.getElementById("app"), replace = false, isPopState = false) {
   if (!path) return;
   
   const url = new URL(path, window.location.origin);
@@ -83,10 +106,49 @@ export function navigate(path, root = document.getElementById("app"), replace = 
   const oldSearch = window.location.search;
   const oldHash = window.location.hash;
   
+  // 1. Run Route Guard if registered
+  if (router.guard) {
+    const match = matchRoute(pathname);
+    const to = {
+      path: pathname,
+      fullPath: pathname + url.search + url.hash,
+      params: match?.params || {},
+      query: Object.fromEntries(new URLSearchParams(url.search))
+    };
+
+    routerSignals.isGuarding.value = true;
+    
+    try {
+      await new Promise((resolve, reject) => {
+        const tools = {
+          next: () => resolve(),
+          redirect: (p) => {
+            navigate(p, root, false);
+            reject('redirected');
+          },
+          replace: (p) => {
+            navigate(p, root, true);
+            reject('redirected');
+          }
+        };
+        
+        // Execute guard
+        Promise.resolve(routerSignals.guard(to, tools)).catch(reject);
+      });
+    } catch (e) {
+      routerSignals.isGuarding.value = false;
+      if (e === 'redirected') return;
+      console.error('Route Guard Error:', e);
+      return;
+    }
+    
+    routerSignals.isGuarding.value = false;
+  }
+
   if (!isPopState) {
-    router.pathname.value = pathname;
-    router.searchParams.value = new URLSearchParams(url.search);
-    router.hash.value = url.hash;
+    routerSignals.pathname.value = pathname;
+    routerSignals.searchParams.value = new URLSearchParams(url.search);
+    routerSignals.hash.value = url.hash;
   }
 
   // If only hash changed, don't re-render everything
@@ -135,8 +197,11 @@ export function navigate(path, root = document.getElementById("app"), replace = 
       }
     });
 
-    root.innerHTML = '';
-    root.appendChild(content);
+    if (!root) root = document.getElementById("app");
+    if (root) {
+      root.innerHTML = '';
+      root.appendChild(content);
+    }
 
     if (instance._onMounts) {
       instance._onMounts.forEach(fn => fn());
@@ -150,20 +215,20 @@ export function navigate(path, root = document.getElementById("app"), replace = 
     // Scroll to hash after render
     setTimeout(() => scrollToHash(url.hash), 100);
   } else {
-    root.innerHTML = '<h1>404 Not Found</h1>';
+    if (root) root.innerHTML = '<h1>404 Not Found</h1>';
   }
 }
 
 if (typeof window !== 'undefined') {
   window.addEventListener('popstate', () => {
     const fullPath = window.location.pathname + window.location.search + window.location.hash;
-    router.pathname.value = window.location.pathname;
-    router.searchParams.value = new URLSearchParams(window.location.search);
-    router.hash.value = window.location.hash;
+    routerSignals.pathname.value = window.location.pathname;
+    routerSignals.searchParams.value = new URLSearchParams(window.location.search);
+    routerSignals.hash.value = window.location.hash;
     navigate(fullPath, undefined, false, true);
   });
   window.addEventListener('hashchange', () => {
-    router.hash.value = window.location.hash;
+    routerSignals.hash.value = window.location.hash;
     scrollToHash(window.location.hash);
   });
 }

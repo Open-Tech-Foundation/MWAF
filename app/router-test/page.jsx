@@ -20,13 +20,13 @@ export default function RouterTestPage() {
       <div className="bg-slate-800 p-6 rounded-xl border border-slate-700 space-y-4">
         <div>
           <div className="text-slate-400 text-sm font-bold uppercase tracking-wider mb-1">Current Pathname</div>
-          <div className="text-emerald-400 font-mono text-xl">{router.pathname}</div>
+          <div className="text-emerald-400 font-mono text-xl">{() => router.pathname}</div>
         </div>
         
         <div>
           <div className="text-slate-400 text-sm font-bold uppercase tracking-wider mb-1">Search Params (query)</div>
           <div className="text-indigo-400 font-mono text-xl">
-            {() => router.searchParams.value.get('query') || 'none'}
+            {() => router.searchParams.get('query') || 'none'}
           </div>
         </div>
       </div>
