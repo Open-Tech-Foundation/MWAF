@@ -16,6 +16,8 @@ class CustomInputElement extends HTMLElement {
     this._onMounts = [];
     this._onCleanups = [];
     const props = _createPropsProxy(this);
+    this._children = Array.from(this.childNodes);
+    while (this.firstChild) this.removeChild(this.firstChild);
     _withInstance(this, () => {
       const input = _signal();
       const focus = () => input.value.focus();
@@ -29,8 +31,6 @@ class CustomInputElement extends HTMLElement {
         el0.setAttribute("placeholder", "Custom Input");
         return el0;
       })();
-      this._children = Array.from(this.childNodes);
-      while (this.firstChild) rootElement.appendChild(this.firstChild);
       this.appendChild(rootElement);
     });
     this._onMounts.forEach(fn => fn());
@@ -53,6 +53,8 @@ class RefTestElement extends HTMLElement {
     this._onMounts = [];
     this._onCleanups = [];
     const props = _createPropsProxy(this);
+    this._children = Array.from(this.childNodes);
+    while (this.firstChild) this.removeChild(this.firstChild);
     _withInstance(this, () => {
       const myDiv = _signal();
       const myInput = _signal();
@@ -84,8 +86,6 @@ class RefTestElement extends HTMLElement {
         el0.appendChild(el4);
         return el0;
       })();
-      this._children = Array.from(this.childNodes);
-      while (this.firstChild) rootElement.appendChild(this.firstChild);
       this.appendChild(rootElement);
     });
     this._onMounts.forEach(fn => fn());

@@ -424,16 +424,15 @@ module.exports = function (babel) {
             t.expressionStatement(t.assignmentExpression("=", t.memberExpression(t.thisExpression(), t.identifier("_onMounts")), t.arrayExpression([]))),
             t.expressionStatement(t.assignmentExpression("=", t.memberExpression(t.thisExpression(), t.identifier("_onCleanups")), t.arrayExpression([]))),
             t.variableDeclaration("const", [t.variableDeclarator(t.identifier("props"), t.callExpression(createPropsProxyId, [t.thisExpression()]))]),
-            
+            t.expressionStatement(t.assignmentExpression("=", t.memberExpression(t.thisExpression(), t.identifier("_children")), t.callExpression(t.memberExpression(t.identifier("Array"), t.identifier("from")), [t.memberExpression(t.thisExpression(), t.identifier("childNodes"))]))),
+            t.whileStatement(t.memberExpression(t.thisExpression(), t.identifier("firstChild")), t.expressionStatement(t.callExpression(t.memberExpression(t.thisExpression(), t.identifier("removeChild")), [t.memberExpression(t.thisExpression(), t.identifier("firstChild"))]))),
+
             // Wrap setup in withInstance(this, () => { ... })
             t.expressionStatement(t.callExpression(getImport("withInstance", "/framework/runtime/lifecycle.js"), [
               t.thisExpression(),
               t.arrowFunctionExpression([], t.blockStatement([
                 ...originalStatements,
                 ...statements,
-
-                t.expressionStatement(t.assignmentExpression("=", t.memberExpression(t.thisExpression(), t.identifier("_children")), t.callExpression(t.memberExpression(t.identifier("Array"), t.identifier("from")), [t.memberExpression(t.thisExpression(), t.identifier("childNodes"))]))),
-                t.whileStatement(t.memberExpression(t.thisExpression(), t.identifier("firstChild")), t.expressionStatement(t.callExpression(t.memberExpression(rootId, t.identifier("appendChild")), [t.memberExpression(t.thisExpression(), t.identifier("firstChild"))]))),
                 t.expressionStatement(t.callExpression(t.memberExpression(t.thisExpression(), t.identifier("appendChild")), [rootId]))
               ]))
             ])),

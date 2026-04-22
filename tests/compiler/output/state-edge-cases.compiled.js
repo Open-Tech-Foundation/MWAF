@@ -15,6 +15,8 @@ class StateEdgeCasesElement extends HTMLElement {
     this._onMounts = [];
     this._onCleanups = [];
     const props = _createPropsProxy(this);
+    this._children = Array.from(this.childNodes);
+    while (this.firstChild) this.removeChild(this.firstChild);
     _withInstance(this, () => {
       let count = _signal(0);
       let user = _signal({
@@ -71,8 +73,6 @@ class StateEdgeCasesElement extends HTMLElement {
         el0.appendChild(el3);
         return el0;
       })();
-      this._children = Array.from(this.childNodes);
-      while (this.firstChild) rootElement.appendChild(this.firstChild);
       this.appendChild(rootElement);
     });
     this._onMounts.forEach(fn => fn());

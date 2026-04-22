@@ -14,6 +14,8 @@ class WrapperElement extends HTMLElement {
     this._onMounts = [];
     this._onCleanups = [];
     const props = _createPropsProxy(this);
+    this._children = Array.from(this.childNodes);
+    while (this.firstChild) this.removeChild(this.firstChild);
     _withInstance(this, () => {
       const rootElement = (() => {
         const el0 = document.createElement("div");
@@ -30,8 +32,6 @@ class WrapperElement extends HTMLElement {
         el0.appendChild(el4);
         return el0;
       })();
-      this._children = Array.from(this.childNodes);
-      while (this.firstChild) rootElement.appendChild(this.firstChild);
       this.appendChild(rootElement);
     });
     this._onMounts.forEach(fn => fn());

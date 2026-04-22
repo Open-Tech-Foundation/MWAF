@@ -23,6 +23,8 @@ class NestedReactivityElement extends HTMLElement {
     this._onMounts = [];
     this._onCleanups = [];
     const props = _createPropsProxy(this);
+    this._children = Array.from(this.childNodes);
+    while (this.firstChild) this.removeChild(this.firstChild);
     _withInstance(this, () => {
       let show = _signal(true);
       const rootElement = (() => {
@@ -36,8 +38,6 @@ class NestedReactivityElement extends HTMLElement {
         })());
         return el0;
       })();
-      this._children = Array.from(this.childNodes);
-      while (this.firstChild) rootElement.appendChild(this.firstChild);
       this.appendChild(rootElement);
     });
     this._onMounts.forEach(fn => fn());
