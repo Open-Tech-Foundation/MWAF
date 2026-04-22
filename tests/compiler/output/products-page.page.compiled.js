@@ -1,5 +1,7 @@
-import { renderDynamic as _renderDynamic, mapped as _mapped } from "/framework/runtime/dom.js";
-import { signal as _signal, effect as _effect } from "@preact/signals-core";
+import { renderDynamic as _renderDynamic } from "/framework/runtime/dom.js";
+import { effect as _effect } from "@preact/signals-core";
+import { mapped as _mapped } from "/framework/runtime/dom.js";
+import { signal as _signal } from "@preact/signals-core";
 export function render(root, props) {
   let products = _signal(Array.from({
     length: 1000
@@ -66,7 +68,7 @@ export function render(root, props) {
       el0.appendChild(el4);
       return el0;
     })());
-    _renderDynamic(el9, () => mapped10);
+    _renderDynamic(el9, () => mapped10());
     el0.appendChild(el9);
     return el0;
   })();

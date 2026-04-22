@@ -41,6 +41,7 @@ class ItemElement extends HTMLElement {
         })() : props.name);
         return el0;
       })();
+      this._children = Array.from(this.childNodes);
       while (this.firstChild) rootElement.appendChild(this.firstChild);
       this.appendChild(rootElement);
     });

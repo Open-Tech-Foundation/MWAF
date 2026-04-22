@@ -1,25 +1,55 @@
-import { effect } from "@preact/signals-core";
+import { effect, signal } from "@preact/signals-core";
 
-export function createPropsProxy(instance) {
-  return new Proxy({}, {
-    get(_, key) {
-      if (key === "__signals") return instance._propsSignals;
-      if (key === "children") return instance._children;
-      if (instance._propsSignals[key]) return instance._propsSignals[key].value;
-      return instance[key];
+function toKebabCase(str) {
+  return str.replace(/([a-z])([A-Z])/g, "$1-$2").toLowerCase();
+}
+
+export function createPropsProxy(el) {
+  if (!el._propsSignals) el._propsSignals = {};
+  
+  return new Proxy(el, {
+    get: (target, key) => {
+      if (key === "__signals") return target._propsSignals;
+      if (key === "children") return target._children;
+      if (typeof key === "symbol") return target[key];
+      if (key === "then") return undefined; // Promise check
+      
+      if (!target._propsSignals[key]) {
+        const initialValue = target.getAttribute(toKebabCase(key)) || target[key];
+        target._propsSignals[key] = signal(initialValue);
+      }
+      return target._propsSignals[key].value;
     },
-    ownKeys(_) {
-      const keys = new Set([
-        ...Object.keys(instance._propsSignals),
-        ...Object.keys(instance).filter(k => !k.startsWith('_')),
-        "children"
-      ]);
-      return Array.from(keys);
+    set: (target, key, value) => {
+      const isSignal = value && typeof value === "object" && "value" in value && typeof value.subscribe === "function";
+      
+      if (!target._propsSignals[key]) {
+        target._propsSignals[key] = signal(isSignal ? value.value : value);
+      }
+      
+      if (isSignal) {
+        // Link the internal signal to the external one
+        if (target._propsSignals[key]._link) target._propsSignals[key]._link(); // Cleanup old link
+        target._propsSignals[key]._link = effect(() => {
+          target._propsSignals[key].value = value.value;
+        });
+      } else {
+        target._propsSignals[key].value = value;
+      }
+      
+      target[key] = value;
+      return true;
     },
-    getOwnPropertyDescriptor(target, key) {
+    ownKeys: (target) => {
+      const keys = new Set(Object.keys(target));
+      Object.keys(target._propsSignals).forEach(k => keys.add(k));
+      keys.add("children");
+      return Array.from(keys).filter(k => !k.startsWith("_"));
+    },
+    getOwnPropertyDescriptor: (target, key) => {
       return {
         enumerable: true,
-        configurable: true,
+        configurable: true
       };
     }
   });

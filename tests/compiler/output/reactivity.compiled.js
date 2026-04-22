@@ -39,6 +39,7 @@ class ReactivityElement extends HTMLElement {
         el0.appendChild(el2);
         return el0;
       })();
+      this._children = Array.from(this.childNodes);
       while (this.firstChild) rootElement.appendChild(this.firstChild);
       this.appendChild(rootElement);
     });

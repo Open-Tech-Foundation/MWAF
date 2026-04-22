@@ -29,6 +29,7 @@ class CustomInputElement extends HTMLElement {
         el0.setAttribute("placeholder", "Custom Input");
         return el0;
       })();
+      this._children = Array.from(this.childNodes);
       while (this.firstChild) rootElement.appendChild(this.firstChild);
       this.appendChild(rootElement);
     });
@@ -83,6 +84,7 @@ class RefTestElement extends HTMLElement {
         el0.appendChild(el4);
         return el0;
       })();
+      this._children = Array.from(this.childNodes);
       while (this.firstChild) rootElement.appendChild(this.firstChild);
       this.appendChild(rootElement);
     });

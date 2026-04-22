@@ -1,4 +1,4 @@
-import { renderDynamic as _renderDynamic, mapped as _mapped } from "/framework/runtime/dom.js";
+import { mapped as _mapped, renderDynamic as _renderDynamic } from "/framework/runtime/dom.js";
 export function render(root, props) {
   const rootElement = (() => {
     const el0 = document.createElement("div");
@@ -19,7 +19,7 @@ export function render(root, props) {
       _renderDynamic(el0, () => segment);
       return el0;
     })());
-    _renderDynamic(el5, () => mapped6);
+    _renderDynamic(el5, () => mapped6());
     el0.appendChild(el5);
     const el7 = document.createElement("div");
     el7.className = "mt-4 p-4 bg-slate-800 rounded";

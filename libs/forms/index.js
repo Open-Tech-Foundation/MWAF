@@ -22,11 +22,13 @@ const setPath = (obj, path, value) => {
  */
 export function createForm({ initialValues = {}, validate, schema, resolver } = {}) {
   const fields = {}; // Stores field signals by path
+  const touched = {}; // Stores touched signals by path
   const fieldPaths = signal([]); // Track list of paths for computed to depend on
 
   function ensureField(path, initVal) {
     if (!fields[path]) {
       fields[path] = signal(initVal === undefined ? "" : initVal);
+      touched[path] = signal(false);
     }
     if (!fieldPaths.value.includes(path)) {
       fieldPaths.value = [...fieldPaths.value, path];
@@ -54,7 +56,6 @@ export function createForm({ initialValues = {}, validate, schema, resolver } = 
   // Computed state object
   const values = computed(() => {
     const res = {};
-    // By reading fieldPaths.value, this computed re-runs when fields are added
     fieldPaths.value.forEach(path => {
       setPath(res, path, fields[path].value);
     });
@@ -81,6 +82,9 @@ export function createForm({ initialValues = {}, validate, schema, resolver } = 
       value: s, 
       oninput: (e) => {
         s.value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
+      },
+      onblur: () => {
+        if (touched[name]) touched[name].value = true;
       }
     };
   }
@@ -88,6 +92,14 @@ export function createForm({ initialValues = {}, validate, schema, resolver } = 
   function handleSubmit(onSubmit) {
     return (e) => {
       if (e && e.preventDefault) e.preventDefault();
+      
+      // Mark all fields as touched on submit
+      batch(() => {
+        fieldPaths.value.forEach(path => {
+          if (touched[path]) touched[path].value = true;
+        });
+      });
+
       const currentValues = values.value;
       let currentErrors = {};
       if (resolver) {
@@ -95,7 +107,9 @@ export function createForm({ initialValues = {}, validate, schema, resolver } = 
       } else if (validate) {
         currentErrors = validate(currentValues) || {};
       }
+      
       errors.value = currentErrors;
+      
       if (Object.keys(currentErrors).length === 0) {
         onSubmit(currentValues);
       }
@@ -104,23 +118,15 @@ export function createForm({ initialValues = {}, validate, schema, resolver } = 
 
   function setValues(newValues) {
     batch(() => {
-      // Identify all current paths that start with the keys being updated
       const keysToUpdate = Object.keys(newValues);
       const remainingPaths = fieldPaths.value.filter(path => {
         return !keysToUpdate.some(k => path === k || path.startsWith(k + "."));
       });
-      
-      // Remove those paths from fieldPaths so walk can re-add them
       fieldPaths.value = remainingPaths;
-      
       walk(newValues);
     });
   }
 
-  /**
-   * Returns a reactive signal for an array at the given path.
-   * Useful for high-performance keyed list rendering.
-   */
   function array(path) {
     return computed(() => values.value[path] || []);
   }
@@ -131,7 +137,6 @@ export function createForm({ initialValues = {}, validate, schema, resolver } = 
     setValues,
     getValues: () => values.value,
     array,
-    // Proxy delegates to the computed values.value
     values: new Proxy({}, {
       get: (_, key) => values.value[key],
       set: (_, key, val) => {
@@ -147,18 +152,12 @@ export function createForm({ initialValues = {}, validate, schema, resolver } = 
           value: val,
           writable: true
         } : undefined;
-      },
-      defineProperty: (_, key, desc) => {
-        if (desc.value !== undefined) {
-          setValues({ [key]: desc.value });
-        }
-        return true;
-      },
-      deleteProperty: (_, key) => {
-        // Handle deletion if needed, but for now just return true
-        return true;
       }
     }),
-    errors
+    errors,
+    touched: new Proxy({}, {
+      get: (_, key) => touched[key]
+    }),
+    fields // Also expose the raw signals map for advanced usage
   };
 }

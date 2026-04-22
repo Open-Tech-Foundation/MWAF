@@ -83,6 +83,7 @@ class ComplexExpressionsElement extends HTMLElement {
         })());
         return el0;
       })();
+      this._children = Array.from(this.childNodes);
       while (this.firstChild) rootElement.appendChild(this.firstChild);
       this.appendChild(rootElement);
     });
@@ -140,6 +141,7 @@ class ItemElement extends HTMLElement {
         })() : props.name);
         return el0;
       })();
+      this._children = Array.from(this.childNodes);
       while (this.firstChild) rootElement.appendChild(this.firstChild);
       this.appendChild(rootElement);
     });
@@ -204,6 +206,7 @@ class WrapperElement extends HTMLElement {
         el0.appendChild(el4);
         return el0;
       })();
+      this._children = Array.from(this.childNodes);
       while (this.firstChild) rootElement.appendChild(this.firstChild);
       this.appendChild(rootElement);
     });
@@ -248,6 +251,7 @@ class LifecycleElement extends HTMLElement {
         el0.appendChild(text1);
         return el0;
       })();
+      this._children = Array.from(this.childNodes);
       while (this.firstChild) rootElement.appendChild(this.firstChild);
       this.appendChild(rootElement);
     });
@@ -303,6 +307,7 @@ class ReactivityElement extends HTMLElement {
         el0.appendChild(el2);
         return el0;
       })();
+      this._children = Array.from(this.childNodes);
       while (this.firstChild) rootElement.appendChild(this.firstChild);
       this.appendChild(rootElement);
     });
@@ -355,6 +360,7 @@ class NestedReactivityElement extends HTMLElement {
         })());
         return el0;
       })();
+      this._children = Array.from(this.childNodes);
       while (this.firstChild) rootElement.appendChild(this.firstChild);
       this.appendChild(rootElement);
     });
@@ -424,6 +430,7 @@ class SpreadTestElement extends HTMLElement {
         el0.appendChild(el1);
         return el0;
       })();
+      this._children = Array.from(this.childNodes);
       while (this.firstChild) rootElement.appendChild(this.firstChild);
       this.appendChild(rootElement);
     });
@@ -511,6 +518,7 @@ class StateEdgeCasesElement extends HTMLElement {
         el0.appendChild(el3);
         return el0;
       })();
+      this._children = Array.from(this.childNodes);
       while (this.firstChild) rootElement.appendChild(this.firstChild);
       this.appendChild(rootElement);
     });
@@ -567,6 +575,7 @@ class StylingTestElement extends HTMLElement {
         el0.appendChild(el3);
         return el0;
       })();
+      this._children = Array.from(this.childNodes);
       while (this.firstChild) rootElement.appendChild(this.firstChild);
       this.appendChild(rootElement);
     });
@@ -612,6 +621,7 @@ class CustomInputElement extends HTMLElement {
         el0.setAttribute("placeholder", "Custom Input");
         return el0;
       })();
+      this._children = Array.from(this.childNodes);
       while (this.firstChild) rootElement.appendChild(this.firstChild);
       this.appendChild(rootElement);
     });
@@ -666,6 +676,7 @@ class RefTestElement extends HTMLElement {
         el0.appendChild(el4);
         return el0;
       })();
+      this._children = Array.from(this.childNodes);
       while (this.firstChild) rootElement.appendChild(this.firstChild);
       this.appendChild(rootElement);
     });
@@ -680,8 +691,10 @@ export default RefTestElement;"
 `;
 
 exports[`MWAF Compiler Compiles products-page.page.jsx 1`] = `
-"import { renderDynamic as _renderDynamic, mapped as _mapped } from "/framework/runtime/dom.js";
-import { signal as _signal, effect as _effect } from "@preact/signals-core";
+"import { renderDynamic as _renderDynamic } from "/framework/runtime/dom.js";
+import { effect as _effect } from "@preact/signals-core";
+import { mapped as _mapped } from "/framework/runtime/dom.js";
+import { signal as _signal } from "@preact/signals-core";
 export function render(root, props) {
   let products = _signal(Array.from({
     length: 1000
@@ -748,7 +761,7 @@ export function render(root, props) {
       el0.appendChild(el4);
       return el0;
     })());
-    _renderDynamic(el9, () => mapped10);
+    _renderDynamic(el9, () => mapped10());
     el0.appendChild(el9);
     return el0;
   })();
@@ -814,6 +827,7 @@ class SvgTestElement extends HTMLElement {
         el0.appendChild(el2);
         return el0;
       })();
+      this._children = Array.from(this.childNodes);
       while (this.firstChild) rootElement.appendChild(this.firstChild);
       this.appendChild(rootElement);
     });
@@ -859,6 +873,7 @@ class ParentElement extends HTMLElement {
         el0.appendChild(el2);
         return el0;
       })();
+      this._children = Array.from(this.childNodes);
       while (this.firstChild) rootElement.appendChild(this.firstChild);
       this.appendChild(rootElement);
     });
@@ -897,6 +912,7 @@ class ChildElement extends HTMLElement {
         _renderDynamic(el0, () => props.val);
         return el0;
       })();
+      this._children = Array.from(this.childNodes);
       while (this.firstChild) rootElement.appendChild(this.firstChild);
       this.appendChild(rootElement);
     });
@@ -954,6 +970,7 @@ class MultipleComponentsElement extends HTMLElement {
         el0.appendChild(el2);
         return el0;
       })();
+      this._children = Array.from(this.childNodes);
       while (this.firstChild) rootElement.appendChild(this.firstChild);
       this.appendChild(rootElement);
     });
@@ -992,6 +1009,7 @@ class AElement extends HTMLElement {
         _renderDynamic(el0, () => props.val);
         return el0;
       })();
+      this._children = Array.from(this.childNodes);
       while (this.firstChild) rootElement.appendChild(this.firstChild);
       this.appendChild(rootElement);
     });
@@ -1029,6 +1047,7 @@ class BElement extends HTMLElement {
         _renderDynamic(el0, () => props.val);
         return el0;
       })();
+      this._children = Array.from(this.childNodes);
       while (this.firstChild) rootElement.appendChild(this.firstChild);
       this.appendChild(rootElement);
     });
@@ -1064,7 +1083,7 @@ export function render(root, props) {
 `;
 
 exports[`MWAF Compiler Compiles catch-all-page.page.jsx 1`] = `
-"import { renderDynamic as _renderDynamic, mapped as _mapped } from "/framework/runtime/dom.js";
+"import { mapped as _mapped, renderDynamic as _renderDynamic } from "/framework/runtime/dom.js";
 export function render(root, props) {
   const rootElement = (() => {
     const el0 = document.createElement("div");
@@ -1085,7 +1104,7 @@ export function render(root, props) {
       _renderDynamic(el0, () => segment);
       return el0;
     })());
-    _renderDynamic(el5, () => mapped6);
+    _renderDynamic(el5, () => mapped6());
     el0.appendChild(el5);
     const el7 = document.createElement("div");
     el7.className = "mt-4 p-4 bg-slate-800 rounded";
@@ -1143,6 +1162,7 @@ class StyleTestElement extends HTMLElement {
         el0.appendChild(el3);
         return el0;
       })();
+      this._children = Array.from(this.childNodes);
       while (this.firstChild) rootElement.appendChild(this.firstChild);
       this.appendChild(rootElement);
     });
@@ -1199,6 +1219,7 @@ class MacroTestElement extends HTMLElement {
         el0.appendChild(el5);
         return el0;
       })();
+      this._children = Array.from(this.childNodes);
       while (this.firstChild) rootElement.appendChild(this.firstChild);
       this.appendChild(rootElement);
     });
@@ -1215,7 +1236,7 @@ export default MacroTestElement;"
 exports[`MWAF Compiler Compiles list-rendering.jsx 1`] = `
 "import { withInstance as _withInstance } from "/framework/runtime/lifecycle.js";
 import { createPropsProxy as _createPropsProxy } from "/framework/runtime/props.js";
-import { renderDynamic as _renderDynamic, mapped as _mapped } from "/framework/runtime/dom.js";
+import { mapped as _mapped, renderDynamic as _renderDynamic } from "/framework/runtime/dom.js";
 import { signal as _signal } from "@preact/signals-core";
 class ListRenderingElement extends HTMLElement {
   static observedAttributes = [];
@@ -1242,7 +1263,7 @@ class ListRenderingElement extends HTMLElement {
           _renderDynamic(el0, () => item);
           return el0;
         })());
-        _renderDynamic(el1, () => mapped2);
+        _renderDynamic(el1, () => mapped2());
         el0.appendChild(el1);
         const el3 = document.createElement("button");
         el3.onclick = () => items.value = [...items.value, 'D'];
@@ -1251,6 +1272,7 @@ class ListRenderingElement extends HTMLElement {
         el0.appendChild(el3);
         return el0;
       })();
+      this._children = Array.from(this.childNodes);
       while (this.firstChild) rootElement.appendChild(this.firstChild);
       this.appendChild(rootElement);
     });
@@ -1306,6 +1328,7 @@ class NestedFragmentsElement extends HTMLElement {
         })());
         return el0;
       })();
+      this._children = Array.from(this.childNodes);
       while (this.firstChild) rootElement.appendChild(this.firstChild);
       this.appendChild(rootElement);
     });

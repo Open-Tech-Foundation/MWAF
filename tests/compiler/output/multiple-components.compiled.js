@@ -42,6 +42,7 @@ class MultipleComponentsElement extends HTMLElement {
         el0.appendChild(el2);
         return el0;
       })();
+      this._children = Array.from(this.childNodes);
       while (this.firstChild) rootElement.appendChild(this.firstChild);
       this.appendChild(rootElement);
     });
@@ -80,6 +81,7 @@ class AElement extends HTMLElement {
         _renderDynamic(el0, () => props.val);
         return el0;
       })();
+      this._children = Array.from(this.childNodes);
       while (this.firstChild) rootElement.appendChild(this.firstChild);
       this.appendChild(rootElement);
     });
@@ -117,6 +119,7 @@ class BElement extends HTMLElement {
         _renderDynamic(el0, () => props.val);
         return el0;
       })();
+      this._children = Array.from(this.childNodes);
       while (this.firstChild) rootElement.appendChild(this.firstChild);
       this.appendChild(rootElement);
     });

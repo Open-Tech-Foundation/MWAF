@@ -36,6 +36,7 @@ class NestedReactivityElement extends HTMLElement {
         })());
         return el0;
       })();
+      this._children = Array.from(this.childNodes);
       while (this.firstChild) rootElement.appendChild(this.firstChild);
       this.appendChild(rootElement);
     });

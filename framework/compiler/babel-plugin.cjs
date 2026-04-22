@@ -432,6 +432,7 @@ module.exports = function (babel) {
                 ...originalStatements,
                 ...statements,
 
+                t.expressionStatement(t.assignmentExpression("=", t.memberExpression(t.thisExpression(), t.identifier("_children")), t.callExpression(t.memberExpression(t.identifier("Array"), t.identifier("from")), [t.memberExpression(t.thisExpression(), t.identifier("childNodes"))]))),
                 t.whileStatement(t.memberExpression(t.thisExpression(), t.identifier("firstChild")), t.expressionStatement(t.callExpression(t.memberExpression(rootId, t.identifier("appendChild")), [t.memberExpression(t.thisExpression(), t.identifier("firstChild"))]))),
                 t.expressionStatement(t.callExpression(t.memberExpression(t.thisExpression(), t.identifier("appendChild")), [rootId]))
               ]))

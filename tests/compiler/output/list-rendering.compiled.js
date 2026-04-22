@@ -1,6 +1,6 @@
 import { withInstance as _withInstance } from "/framework/runtime/lifecycle.js";
 import { createPropsProxy as _createPropsProxy } from "/framework/runtime/props.js";
-import { renderDynamic as _renderDynamic, mapped as _mapped } from "/framework/runtime/dom.js";
+import { mapped as _mapped, renderDynamic as _renderDynamic } from "/framework/runtime/dom.js";
 import { signal as _signal } from "@preact/signals-core";
 class ListRenderingElement extends HTMLElement {
   static observedAttributes = [];
@@ -27,7 +27,7 @@ class ListRenderingElement extends HTMLElement {
           _renderDynamic(el0, () => item);
           return el0;
         })());
-        _renderDynamic(el1, () => mapped2);
+        _renderDynamic(el1, () => mapped2());
         el0.appendChild(el1);
         const el3 = document.createElement("button");
         el3.onclick = () => items.value = [...items.value, 'D'];
@@ -36,6 +36,7 @@ class ListRenderingElement extends HTMLElement {
         el0.appendChild(el3);
         return el0;
       })();
+      this._children = Array.from(this.childNodes);
       while (this.firstChild) rootElement.appendChild(this.firstChild);
       this.appendChild(rootElement);
     });

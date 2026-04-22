@@ -28,6 +28,7 @@ class LifecycleElement extends HTMLElement {
         el0.appendChild(text1);
         return el0;
       })();
+      this._children = Array.from(this.childNodes);
       while (this.firstChild) rootElement.appendChild(this.firstChild);
       this.appendChild(rootElement);
     });
