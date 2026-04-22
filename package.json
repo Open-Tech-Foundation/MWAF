@@ -11,8 +11,8 @@
     "packages/*"
   ],
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
+    "dev": "vite playground",
+    "build": "vite build playground",
     "preview": "bun run website:build && wrangler dev",
     "website:dev": "vite website",
     "website:build": "vite build website",

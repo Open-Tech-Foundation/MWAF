@@ -11,9 +11,9 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      '@opentf/mwaf-core': path.resolve(__dirname, 'packages/mwaf-core'),
-      '@opentf/mwaf-form': path.resolve(__dirname, 'packages/mwaf-form'),
-      '@opentf/mwaf-ui': path.resolve(__dirname, 'packages/mwaf-ui')
+      '@opentf/mwaf-core': path.resolve(__dirname, '../packages/mwaf-core'),
+      '@opentf/mwaf-form': path.resolve(__dirname, '../packages/mwaf-form'),
+      '@opentf/mwaf-ui': path.resolve(__dirname, '../packages/mwaf-ui')
     }
   },
   plugins: [tailwindcss(), babel({
@@ -23,7 +23,7 @@ export default defineConfig({
     configFile: false,
     plugins: [
       "@babel/plugin-syntax-jsx",
-      [path.resolve(__dirname, 'packages/mwaf-core/compiler/babel-plugin.cjs')]
+      [path.resolve(__dirname, '../packages/mwaf-core/compiler/babel-plugin.cjs')]
     ]
   }), cloudflare()]
 })
