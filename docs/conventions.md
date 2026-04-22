@@ -63,3 +63,31 @@ MWAF supports multiple styling approaches:
 *   Components MUST follow PascalCase naming (e.g., `UserProfile`).
 *   **File-based Routing**: Only files named `page.jsx` or `page.tsx` can be targeted by the router.
 *   **No Manual Imports**: You do NOT need to import `signal`, `effect`, `onMount`, etc. from the framework; the compiler handles this automatically.
+
+---
+
+## Navigation & Security
+
+### `app/routeGuard.js` (Convention)
+MWAF supports a centralized, async navigation protection layer. If a file named `app/routeGuard.js` exists, it is automatically discovered and activated.
+
+*   **Async Support**: Can perform session checks or data pre-fetching.
+*   **Signature**: `async function routeGuard(to, { next, redirect, replace })`
+*   **Redirects**: Use `router.redirect(path)` to halt navigation and move to a new URL.
+
+### Reactive Router API
+The global `router` object is a reactive Proxy that automatically unwraps its internal signals.
+
+*   **Direct Access**: Access `router.pathname` or `router.isGuarding` directly without `.value`.
+*   **Reactivity**: Wrap accesses in an arrow function `{() => ...}` to ensure the UI updates when navigation occurs.
+*   **Methods**: `router.push(path)` and `router.replace(path)` for imperative navigation.
+
+---
+
+## Forms Engine
+
+MWAF includes a path-based reactive forms library in `libs/forms`.
+
+*   **`validator`**: The primary prop for schema-based validation (e.g., Zod).
+*   **`register(path)`**: Provides a two-way binding for form inputs.
+*   **Reactive Errors**: Errors are tracked automatically and reactively based on the validator results.

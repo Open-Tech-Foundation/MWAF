@@ -16,6 +16,7 @@
 * Each `.jsx` file (except `page.jsx`) is wrapped in a class extending `HTMLElement`.
 * Props are mapped to `observedAttributes` and reactive setters.
 * `connectedCallback` initializes the reactive setup.
+* **Child Projection (Capture & Clear)**: Before rendering internal JSX, the framework captures all original `childNodes` into an internal `_children` property and clears the host element. This allows manual JSX projection using `{props.children}` to work correctly without being overwritten by automatic framework appending.
 
 ### Pages
 * `page.jsx` exports a `render(root)` function.
