@@ -2,7 +2,7 @@
 
 A project of the [Open Tech Foundation](https://github.com/Open-Tech-Foundation/MWAF).
 
-**[🚀 Try the MWAF Documentation & Playground](https://open-tech-foundation.github.io/MWAF/)**
+**[🚀 Try the MWAF Documentation & Playground](https://mwaf.opentf.workers.dev/)**
 
 > [!CAUTION]
 > **EXPERIMENTAL PRE-RELEASE**
