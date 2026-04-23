@@ -7,12 +7,13 @@ export default function WebsiteLayout(props) {
         <div className="flex items-center gap-2">
           <img src="/logo.png" alt="Logo" className="w-8 h-8" />
           <span className="font-bold tracking-tight text-lg">Web App Framework</span>
+          <span className="px-2 py-0.5 bg-[#ff851b]/10 text-[#ff851b] rounded text-[10px] uppercase tracking-wider font-bold">v0.1.0-alpha.1</span>
         </div>
         
         <nav className="flex gap-8 text-sm font-medium text-slate-500">
           <Link href="/" className="hover:text-black transition-colors">Home</Link>
           <Link href="/docs" className="hover:text-black transition-colors">Docs</Link>
-          <a href="https://github.com/Open-Tech-Foundation/Web App Framework" target="_blank" className="hover:text-black transition-colors">GitHub</a>
+          <a href="https://github.com/Open-Tech-Foundation/Web-App-Framework" target="_blank" className="hover:text-black transition-colors">GitHub</a>
         </nav>
       </header>
 
@@ -23,10 +24,9 @@ export default function WebsiteLayout(props) {
       <footer className="py-12 border-t border-slate-100 flex flex-col md:flex-row justify-between items-center px-8 text-xs text-slate-400 bg-slate-50 mt-auto">
         <div className="flex flex-col gap-2">
           <div className="font-bold text-slate-900 flex items-center gap-2">
-            Web App Framework Framework
-            <span className="px-2 py-0.5 bg-accent/10 text-accent rounded text-[10px] uppercase tracking-wider">v0.1-alpha</span>
+            Web App Framework
           </div>
-          <div>© 2026 Open-Tech-Foundation. Experimental.</div>
+          <div>© 2026 <a href="https://github.com/Open-Tech-Foundation" target="_blank" className="hover:text-slate-900 transition-colors">Open-Tech-Foundation</a>.</div>
         </div>
 
         <div className="flex flex-col items-center md:items-end gap-4 mt-6 md:mt-0">
@@ -36,10 +36,6 @@ export default function WebsiteLayout(props) {
               <polyline points="22 4 12 14.01 9 11.01"></polyline>
             </svg>
             <span>This site is built entirely using <strong>Web App Framework</strong></span>
-          </div>
-          <div className="flex gap-6">
-            <a href="https://twitter.com" className="hover:text-black">Twitter</a>
-            <a href="https://github.com/Open-Tech-Foundation/Web App Framework" className="hover:text-black">GitHub</a>
           </div>
         </div>
       </footer>

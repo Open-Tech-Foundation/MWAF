@@ -113,12 +113,9 @@ customElements.define("web-todolist", TodoListElement);`;
         </p>
 
         <div className="flex justify-center gap-4 pt-4">
-          <Link href="/docs" className="inline-flex items-center justify-center bg-black text-white px-6 py-2.5 rounded-xl font-bold hover:bg-slate-800 transition-all shadow-md active:scale-95">
-            Get Started
+          <Link href="/docs" className="inline-flex items-center justify-center bg-black text-white px-8 py-3 rounded-xl font-bold hover:bg-slate-800 transition-all shadow-md active:scale-95 gap-2">
+            Get Started 🚀
           </Link>
-          <a href="https://github.com/Open-Tech-Foundation/Web App Framework" className="inline-flex items-center justify-center bg-white text-slate-900 border border-slate-200 px-6 py-2.5 rounded-xl font-bold hover:bg-slate-50 transition-all active:scale-95">
-            View on GitHub
-          </a>
         </div>
       </section>
 

@@ -4,10 +4,9 @@ export default function Link(props) {
   return (
     <a
       href={props.href}
-      className={props.className || 'hover:text-accent transition-colors'}
-      style={{ cursor: 'pointer', textDecoration: 'none', display: 'inline-block', ...props.style }}
+      className={props.className}
+      style={props.style}
       onclick={(e) => {
-        console.log('Link clicked:', props.href);
         if (
           e.defaultPrevented ||
           e.metaKey ||
@@ -18,9 +17,8 @@ export default function Link(props) {
         ) return
 
         e.preventDefault()
-        window._isProgrammaticScroll = true;
         navigate(props.href)
-        setTimeout(() => window._isProgrammaticScroll = false, 1000);
+        window.scrollTo(0, 0)
       }}
     >
       {props.children}

@@ -8,7 +8,7 @@
 * [x] Compiler-driven lifecycle hooks (onMount/onCleanup).
 
 ## Phase 2: Refinement (In Progress)
-* [x] Formalized naming conventions (.wc.jsx).
+* [x] Formalized naming conventions (standard .jsx).
 * [x] Compiler enforcement.
 * [x] Children/Slot support (Light DOM).
 * [x] Tailwind CSS v4 integration.
