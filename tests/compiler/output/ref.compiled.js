@@ -1,7 +1,4 @@
-import { createPropsProxy as _createPropsProxy, withInstance as _withInstance } from "@opentf/web";
-import { effect as _effect } from "@preact/signals-core";
-import { onMount as _onMount } from "@opentf/web";
-import { signal as _signal } from "@preact/signals-core";
+import { signal as _signal, onMount as _onMount, effect as _effect, createPropsProxy as _createPropsProxy, withInstance as _withInstance } from "@opentf/web";
 class CustomInputElement extends HTMLElement {
   static observedAttributes = [];
   constructor() {

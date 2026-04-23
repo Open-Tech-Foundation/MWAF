@@ -1,5 +1,4 @@
-import { createPropsProxy as _createPropsProxy, withInstance as _withInstance } from "@opentf/web";
-import { signal as _signal } from "@preact/signals-core";
+import { signal as _signal, createPropsProxy as _createPropsProxy, withInstance as _withInstance } from "@opentf/web";
 class WrapperElement extends HTMLElement {
   static observedAttributes = [];
   constructor() {

@@ -1,5 +1,4 @@
-import { mapped as _mapped, renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy, withInstance as _withInstance } from "@opentf/web";
-import { signal as _signal } from "@preact/signals-core";
+import { signal as _signal, mapped as _mapped, renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy, withInstance as _withInstance } from "@opentf/web";
 class ListRenderingElement extends HTMLElement {
   static observedAttributes = [];
   constructor() {

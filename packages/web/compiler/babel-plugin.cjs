@@ -114,9 +114,9 @@ module.exports = function (babel) {
               state.stateVars.add(parent.node.id.name);
             }
             if (name === "$state") {
-              path.get("callee").replaceWith(getImport("signal", "@preact/signals-core"));
+              path.get("callee").replaceWith(getImport("signal", state.runtimeSource));
             } else if (name === "$derived") {
-              path.get("callee").replaceWith(getImport("computed", "@preact/signals-core"));
+              path.get("callee").replaceWith(getImport("computed", state.runtimeSource));
             } else if (name === "$ref") {
               // Track this variable as a ref variable
               const parent = path.findParent(p => p.isVariableDeclarator());
@@ -126,10 +126,10 @@ module.exports = function (babel) {
                 if (!state.stateVars) state.stateVars = new Set();
                 state.stateVars.add(parent.node.id.name);
               }
-              path.get("callee").replaceWith(getImport("signal", "@preact/signals-core"));
+              path.get("callee").replaceWith(getImport("signal", state.runtimeSource));
             }
           } else if (name === "$effect") {
-            path.get("callee").replaceWith(getImport("effect", "@preact/signals-core"));
+            path.get("callee").replaceWith(getImport("effect", state.runtimeSource));
           } else if (name === "$expose") {
             // $expose({ a, b }) -> Object.assign(this, { a, b })
             path.get("callee").replaceWith(t.memberExpression(t.identifier("Object"), t.identifier("assign")));
@@ -360,7 +360,7 @@ module.exports = function (babel) {
       // Transform to Web Component Class
       const tagName = "web-" + name.toLowerCase();
       const observedAttributes = Array.from(allSignals);
-      const signalId = getImport("signal", "@preact/signals-core");
+      const signalId = getImport("signal", state.runtimeSource);
       const createPropsProxyId = getImport("createPropsProxy", state.runtimeSource);
       const classId = t.identifier(name + "Element");
 
@@ -548,7 +548,7 @@ module.exports = function (babel) {
                 return;
               }
               collectSignals(value.expression);
-              const effectId = getImport("effect", "@preact/signals-core");
+              const effectId = getImport("effect", state.runtimeSource);
               statements.push(t.expressionStatement(t.callExpression(effectId, [
                 t.arrowFunctionExpression([], t.assignmentExpression("=", t.memberExpression(elId, t.identifier(targetProp)), value.expression))
               ])));
@@ -607,7 +607,7 @@ module.exports = function (babel) {
 
             collectSignals(value.expression);
             
-            const effectId = getImport("effect", "@preact/signals-core");
+            const effectId = getImport("effect", state.runtimeSource);
             const attrProp = (name === "class" || name === "classname") ? "className" : name;
             const isStyle = attrProp === "style";
             const isProperty = ["className", "style", "value", "checked", "id", "title", "href", "src", "key"].includes(attrProp);

@@ -1,3 +1,4 @@
+export * from '@preact/signals-core';
 export { mountApp } from './core/mount.js';
 export * from './runtime/dom.js';
 export * from './runtime/lifecycle.js';

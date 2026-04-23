@@ -1,7 +1,4 @@
-import { createPropsProxy as _createPropsProxy, withInstance as _withInstance } from "@opentf/web";
-import { signal as _signal } from "@preact/signals-core";
-import { renderDynamic as _renderDynamic } from "@opentf/web";
-import { effect as _effect } from "@preact/signals-core";
+import { effect as _effect, renderDynamic as _renderDynamic, signal as _signal, createPropsProxy as _createPropsProxy, withInstance as _withInstance } from "@opentf/web";
 class MultipleComponentsElement extends HTMLElement {
   static observedAttributes = ["a", "b"];
   set a(val) {

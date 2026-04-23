@@ -1,6 +1,4 @@
-import { createPropsProxy as _createPropsProxy, withInstance as _withInstance } from "@opentf/web";
-import { signal as _signal } from "@preact/signals-core";
-import { applySpread as _applySpread } from "@opentf/web";
+import { applySpread as _applySpread, signal as _signal, createPropsProxy as _createPropsProxy, withInstance as _withInstance } from "@opentf/web";
 class SpreadTestElement extends HTMLElement {
   static observedAttributes = [];
   constructor() {

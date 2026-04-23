@@ -1,8 +1,7 @@
 // Bun Snapshot v1, https://bun.sh/docs/test/snapshots
 
 exports[`Web App Framework Compiler Compiles complex-expressions.jsx 1`] = `
-"import { renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy, withInstance as _withInstance } from "@opentf/web";
-import { signal as _signal, effect as _effect } from "@preact/signals-core";
+"import { signal as _signal, effect as _effect, renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy, withInstance as _withInstance } from "@opentf/web";
 class ComplexExpressionsElement extends HTMLElement {
   static observedAttributes = ["theme", "color", "loading", "title", "logMessage"];
   set theme(val) {
@@ -96,9 +95,7 @@ export default ComplexExpressionsElement;"
 `;
 
 exports[`Web App Framework Compiler Compiles conditional.jsx 1`] = `
-"import { createPropsProxy as _createPropsProxy, withInstance as _withInstance } from "@opentf/web";
-import { signal as _signal } from "@preact/signals-core";
-import { renderDynamic as _renderDynamic } from "@opentf/web";
+"import { renderDynamic as _renderDynamic, signal as _signal, createPropsProxy as _createPropsProxy, withInstance as _withInstance } from "@opentf/web";
 class ItemElement extends HTMLElement {
   static observedAttributes = ["name", "isPacked"];
   set name(val) {
@@ -171,8 +168,7 @@ exports[`Web App Framework Compiler Compiles routing-404.404.jsx 1`] = `
 `;
 
 exports[`Web App Framework Compiler Compiles children-projection.jsx 1`] = `
-"import { createPropsProxy as _createPropsProxy, withInstance as _withInstance } from "@opentf/web";
-import { signal as _signal } from "@preact/signals-core";
+"import { signal as _signal, createPropsProxy as _createPropsProxy, withInstance as _withInstance } from "@opentf/web";
 class WrapperElement extends HTMLElement {
   static observedAttributes = [];
   constructor() {
@@ -217,9 +213,7 @@ export default WrapperElement;"
 `;
 
 exports[`Web App Framework Compiler Compiles lifecycle.jsx 1`] = `
-"import { createPropsProxy as _createPropsProxy, withInstance as _withInstance } from "@opentf/web";
-import { signal as _signal } from "@preact/signals-core";
-import { onMount as _onMount, onCleanup as _onCleanup } from "@opentf/web";
+"import { onMount as _onMount, onCleanup as _onCleanup, signal as _signal, createPropsProxy as _createPropsProxy, withInstance as _withInstance } from "@opentf/web";
 class LifecycleElement extends HTMLElement {
   static observedAttributes = [];
   constructor() {
@@ -261,8 +255,7 @@ export default LifecycleElement;"
 `;
 
 exports[`Web App Framework Compiler Compiles reactivity.jsx 1`] = `
-"import { renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy, withInstance as _withInstance } from "@opentf/web";
-import { signal as _signal, effect as _effect } from "@preact/signals-core";
+"import { signal as _signal, effect as _effect, renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy, withInstance as _withInstance } from "@opentf/web";
 import { signal } from "@preact/signals";
 class ReactivityElement extends HTMLElement {
   static observedAttributes = ["title"];
@@ -315,8 +308,7 @@ export default ReactivityElement;"
 `;
 
 exports[`Web App Framework Compiler Compiles nested-reactivity.jsx 1`] = `
-"import { renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy, withInstance as _withInstance } from "@opentf/web";
-import { signal as _signal, effect as _effect } from "@preact/signals-core";
+"import { signal as _signal, effect as _effect, renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy, withInstance as _withInstance } from "@opentf/web";
 class NestedReactivityElement extends HTMLElement {
   static observedAttributes = ["title"];
   set title(val) {
@@ -384,9 +376,7 @@ exports[`Web App Framework Compiler Compiles basic-elements.page.jsx 1`] = `
 `;
 
 exports[`Web App Framework Compiler Compiles spread.jsx 1`] = `
-"import { createPropsProxy as _createPropsProxy, withInstance as _withInstance } from "@opentf/web";
-import { signal as _signal } from "@preact/signals-core";
-import { applySpread as _applySpread } from "@opentf/web";
+"import { applySpread as _applySpread, signal as _signal, createPropsProxy as _createPropsProxy, withInstance as _withInstance } from "@opentf/web";
 class SpreadTestElement extends HTMLElement {
   static observedAttributes = [];
   constructor() {
@@ -435,8 +425,7 @@ export default SpreadTestElement;"
 `;
 
 exports[`Web App Framework Compiler Compiles state-edge-cases.jsx 1`] = `
-"import { renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy, withInstance as _withInstance } from "@opentf/web";
-import { signal as _signal } from "@preact/signals-core";
+"import { signal as _signal, renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy, withInstance as _withInstance } from "@opentf/web";
 class StateEdgeCasesElement extends HTMLElement {
   static observedAttributes = [];
   constructor() {
@@ -521,8 +510,7 @@ export default StateEdgeCasesElement;"
 `;
 
 exports[`Web App Framework Compiler Compiles styling.jsx 1`] = `
-"import { createPropsProxy as _createPropsProxy, withInstance as _withInstance } from "@opentf/web";
-import { signal as _signal, effect as _effect } from "@preact/signals-core";
+"import { signal as _signal, effect as _effect, createPropsProxy as _createPropsProxy, withInstance as _withInstance } from "@opentf/web";
 class StylingTestElement extends HTMLElement {
   static observedAttributes = ["theme"];
   set theme(val) {
@@ -577,10 +565,7 @@ export default StylingTestElement;"
 `;
 
 exports[`Web App Framework Compiler Compiles ref.jsx 1`] = `
-"import { createPropsProxy as _createPropsProxy, withInstance as _withInstance } from "@opentf/web";
-import { effect as _effect } from "@preact/signals-core";
-import { onMount as _onMount } from "@opentf/web";
-import { signal as _signal } from "@preact/signals-core";
+"import { signal as _signal, onMount as _onMount, effect as _effect, createPropsProxy as _createPropsProxy, withInstance as _withInstance } from "@opentf/web";
 class CustomInputElement extends HTMLElement {
   static observedAttributes = [];
   constructor() {
@@ -677,10 +662,7 @@ export default RefTestElement;"
 `;
 
 exports[`Web App Framework Compiler Compiles products-page.page.jsx 1`] = `
-"import { renderDynamic as _renderDynamic } from "@opentf/web";
-import { effect as _effect } from "@preact/signals-core";
-import { mapped as _mapped } from "@opentf/web";
-import { signal as _signal } from "@preact/signals-core";
+"import { signal as _signal, mapped as _mapped, effect as _effect, renderDynamic as _renderDynamic } from "@opentf/web";
 export function render(root, props) {
   let products = _signal(Array.from({
     length: 1000
@@ -775,8 +757,7 @@ exports[`Web App Framework Compiler Compiles comments.page.jsx 1`] = `
 `;
 
 exports[`Web App Framework Compiler Compiles svg.jsx 1`] = `
-"import { createPropsProxy as _createPropsProxy, withInstance as _withInstance } from "@opentf/web";
-import { signal as _signal, effect as _effect } from "@preact/signals-core";
+"import { signal as _signal, effect as _effect, createPropsProxy as _createPropsProxy, withInstance as _withInstance } from "@opentf/web";
 class SvgTestElement extends HTMLElement {
   static observedAttributes = [];
   constructor() {
@@ -827,8 +808,7 @@ export default SvgTestElement;"
 `;
 
 exports[`Web App Framework Compiler Compiles component-props.jsx 1`] = `
-"import { renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy, withInstance as _withInstance } from "@opentf/web";
-import { signal as _signal, effect as _effect } from "@preact/signals-core";
+"import { signal as _signal, effect as _effect, renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy, withInstance as _withInstance } from "@opentf/web";
 class ParentElement extends HTMLElement {
   static observedAttributes = [];
   constructor() {
@@ -909,10 +889,7 @@ customElements.define("web-child", ChildElement);"
 `;
 
 exports[`Web App Framework Compiler Compiles multiple-components.jsx 1`] = `
-"import { createPropsProxy as _createPropsProxy, withInstance as _withInstance } from "@opentf/web";
-import { signal as _signal } from "@preact/signals-core";
-import { renderDynamic as _renderDynamic } from "@opentf/web";
-import { effect as _effect } from "@preact/signals-core";
+"import { effect as _effect, renderDynamic as _renderDynamic, signal as _signal, createPropsProxy as _createPropsProxy, withInstance as _withInstance } from "@opentf/web";
 class MultipleComponentsElement extends HTMLElement {
   static observedAttributes = ["a", "b"];
   set a(val) {
@@ -1106,8 +1083,7 @@ export function render(root, props) {
 `;
 
 exports[`Web App Framework Compiler Compiles inline-styles.jsx 1`] = `
-"import { createPropsProxy as _createPropsProxy, withInstance as _withInstance } from "@opentf/web";
-import { signal as _signal, effect as _effect } from "@preact/signals-core";
+"import { signal as _signal, effect as _effect, createPropsProxy as _createPropsProxy, withInstance as _withInstance } from "@opentf/web";
 class StyleTestElement extends HTMLElement {
   static observedAttributes = [];
   constructor() {
@@ -1158,8 +1134,7 @@ export default StyleTestElement;"
 `;
 
 exports[`Web App Framework Compiler Compiles macros.jsx 1`] = `
-"import { renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy, withInstance as _withInstance } from "@opentf/web";
-import { signal as _signal, computed as _computed, effect as _effect } from "@preact/signals-core";
+"import { signal as _signal, computed as _computed, effect as _effect, renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy, withInstance as _withInstance } from "@opentf/web";
 class MacroTestElement extends HTMLElement {
   static observedAttributes = [];
   constructor() {
@@ -1213,8 +1188,7 @@ export default MacroTestElement;"
 `;
 
 exports[`Web App Framework Compiler Compiles list-rendering.jsx 1`] = `
-"import { mapped as _mapped, renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy, withInstance as _withInstance } from "@opentf/web";
-import { signal as _signal } from "@preact/signals-core";
+"import { signal as _signal, mapped as _mapped, renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy, withInstance as _withInstance } from "@opentf/web";
 class ListRenderingElement extends HTMLElement {
   static observedAttributes = [];
   constructor() {
@@ -1264,8 +1238,7 @@ export default ListRenderingElement;"
 `;
 
 exports[`Web App Framework Compiler Compiles nested-fragments.jsx 1`] = `
-"import { renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy, withInstance as _withInstance } from "@opentf/web";
-import { signal as _signal } from "@preact/signals-core";
+"import { signal as _signal, renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy, withInstance as _withInstance } from "@opentf/web";
 class NestedFragmentsElement extends HTMLElement {
   static observedAttributes = [];
   constructor() {

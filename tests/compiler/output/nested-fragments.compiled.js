@@ -1,5 +1,4 @@
-import { renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy, withInstance as _withInstance } from "@opentf/web";
-import { signal as _signal } from "@preact/signals-core";
+import { signal as _signal, renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy, withInstance as _withInstance } from "@opentf/web";
 class NestedFragmentsElement extends HTMLElement {
   static observedAttributes = [];
   constructor() {

@@ -1,6 +1,4 @@
-import { createPropsProxy as _createPropsProxy, withInstance as _withInstance } from "@opentf/web";
-import { signal as _signal } from "@preact/signals-core";
-import { onMount as _onMount, onCleanup as _onCleanup } from "@opentf/web";
+import { onMount as _onMount, onCleanup as _onCleanup, signal as _signal, createPropsProxy as _createPropsProxy, withInstance as _withInstance } from "@opentf/web";
 class LifecycleElement extends HTMLElement {
   static observedAttributes = [];
   constructor() {

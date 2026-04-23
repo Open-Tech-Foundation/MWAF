@@ -1,5 +1,4 @@
-import { renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy, withInstance as _withInstance } from "@opentf/web";
-import { signal as _signal, computed as _computed, effect as _effect } from "@preact/signals-core";
+import { signal as _signal, computed as _computed, effect as _effect, renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy, withInstance as _withInstance } from "@opentf/web";
 class MacroTestElement extends HTMLElement {
   static observedAttributes = [];
   constructor() {

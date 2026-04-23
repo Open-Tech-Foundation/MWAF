@@ -1,7 +1,4 @@
-import { renderDynamic as _renderDynamic } from "@opentf/web";
-import { effect as _effect } from "@preact/signals-core";
-import { mapped as _mapped } from "@opentf/web";
-import { signal as _signal } from "@preact/signals-core";
+import { signal as _signal, mapped as _mapped, effect as _effect, renderDynamic as _renderDynamic } from "@opentf/web";
 export function render(root, props) {
   let products = _signal(Array.from({
     length: 1000

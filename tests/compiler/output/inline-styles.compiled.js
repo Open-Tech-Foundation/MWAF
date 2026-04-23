@@ -1,5 +1,4 @@
-import { createPropsProxy as _createPropsProxy, withInstance as _withInstance } from "@opentf/web";
-import { signal as _signal, effect as _effect } from "@preact/signals-core";
+import { signal as _signal, effect as _effect, createPropsProxy as _createPropsProxy, withInstance as _withInstance } from "@opentf/web";
 class StyleTestElement extends HTMLElement {
   static observedAttributes = [];
   constructor() {
