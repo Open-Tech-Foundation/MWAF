@@ -1,4 +1,4 @@
-import { mountApp } from "@opentf/mwaf-core";
+import { mountApp } from "@opentf/web";
 
 // 1. Discover Website Pages
 const pages = import.meta.glob('./app/**/page.{jsx,tsx}', { eager: true });

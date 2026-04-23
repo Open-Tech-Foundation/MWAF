@@ -25,19 +25,19 @@
         "typescript": "^5",
       },
     },
-    "packages/create-mwaf": {
-      "name": "@opentf/create-mwaf",
+    "packages/create-web": {
+      "name": "@opentf/create-web",
       "version": "1.0.0",
       "bin": {
-        "create-mwaf": "./bin/index.js",
+        "create-web": "./bin/index.js",
       },
       "dependencies": {
         "kolorist": "^1.8.0",
         "prompts": "^2.4.2",
       },
     },
-    "packages/mwaf-core": {
-      "name": "@opentf/mwaf-core",
+    "packages/web": {
+      "name": "@opentf/web",
       "version": "1.0.0",
       "dependencies": {
         "@babel/core": "^7.29.0",
@@ -46,8 +46,8 @@
         "@preact/signals-core": "^1.14.1",
       },
     },
-    "packages/mwaf-form": {
-      "name": "@opentf/mwaf-form",
+    "packages/web-form": {
+      "name": "@opentf/web-form",
       "version": "1.0.0",
       "dependencies": {
         "@preact/signals-core": "^1.14.1",
@@ -56,11 +56,11 @@
         "zod": "^4.3.6",
       },
     },
-    "packages/mwaf-ui": {
-      "name": "@opentf/mwaf-ui",
+    "packages/web-ui": {
+      "name": "@opentf/web-ui",
       "version": "0.1.0",
       "dependencies": {
-        "@opentf/mwaf-core": "workspace:*",
+        "@opentf/web": "workspace:*",
       },
     },
   },
@@ -251,13 +251,13 @@
 
     "@napi-rs/wasm-runtime": ["@napi-rs/wasm-runtime@1.1.4", "", { "dependencies": { "@tybys/wasm-util": "^0.10.1" }, "peerDependencies": { "@emnapi/core": "^1.7.1", "@emnapi/runtime": "^1.7.1" } }, "sha512-3NQNNgA1YSlJb/kMH1ildASP9HW7/7kYnRI2szWJaofaS1hWmbGI4H+d3+22aGzXXN9IJ+n+GiFVcGipJP18ow=="],
 
-    "@opentf/create-mwaf": ["@opentf/create-mwaf@workspace:packages/create-mwaf"],
+    "@opentf/create-web": ["@opentf/create-web@workspace:packages/create-web"],
 
-    "@opentf/mwaf-core": ["@opentf/mwaf-core@workspace:packages/mwaf-core"],
+    "@opentf/web": ["@opentf/web@workspace:packages/web"],
 
-    "@opentf/mwaf-form": ["@opentf/mwaf-form@workspace:packages/mwaf-form"],
+    "@opentf/web-form": ["@opentf/web-form@workspace:packages/web-form"],
 
-    "@opentf/mwaf-ui": ["@opentf/mwaf-ui@workspace:packages/mwaf-ui"],
+    "@opentf/web-ui": ["@opentf/web-ui@workspace:packages/web-ui"],
 
     "@oxc-project/types": ["@oxc-project/types@0.124.0", "", {}, "sha512-VBFWMTBvHxS11Z5Lvlr3IWgrwhMTXV+Md+EQF0Xf60+wAdsGFTBx7X7K/hP4pi8N7dcm1RvcHwDxZ16Qx8keUg=="],
 

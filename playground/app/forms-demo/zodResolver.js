@@ -1,7 +1,7 @@
 /**
- * A Zod resolver for mwaf-forms.
+ * A Zod resolver for web-forms.
  * Converts Zod validation errors into a flat object of field paths and error messages.
- * This is a demo-specific utility and is not part of the core MWAF library.
+ * This is a demo-specific utility and is not part of the core Web App Framework library.
  */
 export function zodResolver(schema) {
   return (values) => {

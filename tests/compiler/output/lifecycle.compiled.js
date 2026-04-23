@@ -1,7 +1,6 @@
-import { withInstance as _withInstance } from "/framework/runtime/lifecycle.js";
-import { createPropsProxy as _createPropsProxy } from "/framework/runtime/props.js";
+import { createPropsProxy as _createPropsProxy, withInstance as _withInstance } from "@opentf/web";
 import { signal as _signal } from "@preact/signals-core";
-import { onMount as _onMount, onCleanup as _onCleanup } from "/framework/runtime/lifecycle.js";
+import { onMount as _onMount, onCleanup as _onCleanup } from "@opentf/web";
 class LifecycleElement extends HTMLElement {
   static observedAttributes = [];
   constructor() {
@@ -38,5 +37,5 @@ class LifecycleElement extends HTMLElement {
     this._onCleanups.forEach(fn => fn());
   }
 }
-customElements.define("mwaf-lifecycle", LifecycleElement);
+customElements.define("web-lifecycle", LifecycleElement);
 export default LifecycleElement;

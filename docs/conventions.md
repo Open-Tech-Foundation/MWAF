@@ -9,24 +9,24 @@
 
 ### Reusable UI Components
 * **Auto-Registration**: Any PascalCase function (e.g., `function Button()`) that is not the default export of a page file is automatically registered as a Web Component.
-* **Naming**: Registered with the `mwaf-` prefix (e.g., `LoginForm.jsx` -> `<mwaf-loginform>`).
+* **Naming**: Registered with the `web-` prefix (e.g., `LoginForm.jsx` -> `<web-loginform>`).
 * **Usage**: Can be imported and used as standard HTML tags in any JSX file.
 
 ---
 
 ## Reactivity & Global Macros
 
-MWAF provides global "macros" for reactivity that do not require imports. The compiler automatically transforms these and injects the necessary imports:
+Web App Framework provides global "macros" for reactivity that do not require imports. The compiler automatically transforms these and injects the necessary imports:
 
 *   **`$state(initialValue)`**: Creates a reactive signal. Use `.value` to read or write.
 *   **`$effect(() => { ... })`**: Automatically tracks any signals accessed inside and re-runs when they change.
 *   **`$derived(() => expression)`**: Creates a memoized reactive value based on other signals.
 
 ### Reactive Props (Destructuring)
-MWAF supports standard React-style destructuring in component parameters. The compiler automatically ensures these stay reactive by transforming them into property accesses on the internal proxy.
+Web App Framework supports standard React-style destructuring in component parameters. The compiler automatically ensures these stay reactive by transforming them into property accesses on the internal proxy.
 
 ### Conditional Rendering & Dynamic Children
-MWAF supports all standard JS conditional patterns (ternaries, `&&`, etc.) inside JSX. 
+Web App Framework supports all standard JS conditional patterns (ternaries, `&&`, etc.) inside JSX. 
 * **Mechanism**: The compiler wraps dynamic expressions in a `renderDynamic` call.
 * **Anchor**: A hidden Comment node is used as an anchor to swap DOM nodes without re-rendering the entire parent.
 * **Nested JSX**: JSX tags inside conditions are automatically compiled to imperative IIFEs.
@@ -51,7 +51,7 @@ These hooks can be used anywhere, including inside your own custom utility funct
 
 ## Styling
 
-MWAF supports multiple styling approaches:
+Web App Framework supports multiple styling approaches:
 1.  **Global CSS**: Standard `.css` files imported in `index.html`.
 2.  **CSS Modules**: Files named `*.module.css` provide class name isolation.
 3.  **Inline Styles**: Supports React-style style objects: `style={{ display: 'flex', color: color.value }}`.
@@ -69,7 +69,7 @@ MWAF supports multiple styling approaches:
 ## Navigation & Security
 
 ### `app/routeGuard.js` (Convention)
-MWAF supports a centralized, async navigation protection layer. If a file named `app/routeGuard.js` exists, it is automatically discovered and activated.
+Web App Framework supports a centralized, async navigation protection layer. If a file named `app/routeGuard.js` exists, it is automatically discovered and activated.
 
 *   **Async Support**: Can perform session checks or data pre-fetching.
 *   **Signature**: `async function routeGuard(to, { next, redirect, replace })`
@@ -86,7 +86,7 @@ The global `router` object is a reactive Proxy that automatically unwraps its in
 
 ## Forms Engine
 
-MWAF includes a path-based reactive forms library in `libs/forms`.
+Web App Framework includes a path-based reactive forms library in `libs/forms`.
 
 *   **`validator`**: The primary prop for schema-based validation (e.g., Zod).
 *   **`register(path)`**: Provides a two-way binding for form inputs.

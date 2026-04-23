@@ -1,6 +1,4 @@
-import { withInstance as _withInstance } from "/framework/runtime/lifecycle.js";
-import { createPropsProxy as _createPropsProxy } from "/framework/runtime/props.js";
-import { renderDynamic as _renderDynamic } from "/framework/runtime/dom.js";
+import { renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy, withInstance as _withInstance } from "@opentf/web";
 import { signal as _signal, computed as _computed, effect as _effect } from "@preact/signals-core";
 class MacroTestElement extends HTMLElement {
   static observedAttributes = [];
@@ -50,5 +48,5 @@ class MacroTestElement extends HTMLElement {
     this._onCleanups.forEach(fn => fn());
   }
 }
-customElements.define("mwaf-macrotest", MacroTestElement);
+customElements.define("web-macrotest", MacroTestElement);
 export default MacroTestElement;

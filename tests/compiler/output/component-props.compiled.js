@@ -1,6 +1,4 @@
-import { withInstance as _withInstance } from "/framework/runtime/lifecycle.js";
-import { createPropsProxy as _createPropsProxy } from "/framework/runtime/props.js";
-import { renderDynamic as _renderDynamic } from "/framework/runtime/dom.js";
+import { renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy, withInstance as _withInstance } from "@opentf/web";
 import { signal as _signal, effect as _effect } from "@preact/signals-core";
 class ParentElement extends HTMLElement {
   static observedAttributes = [];
@@ -21,7 +19,7 @@ class ParentElement extends HTMLElement {
       let count = _signal(0);
       const rootElement = (() => {
         const el0 = document.createElement("div");
-        const el1 = document.createElement("mwaf-child");
+        const el1 = document.createElement("web-child");
         _effect(() => el1.val = count.value);
         el0.appendChild(el1);
         const el2 = document.createElement("button");
@@ -39,7 +37,7 @@ class ParentElement extends HTMLElement {
     this._onCleanups.forEach(fn => fn());
   }
 }
-customElements.define("mwaf-parent", ParentElement);
+customElements.define("web-parent", ParentElement);
 export default ParentElement;
 class ChildElement extends HTMLElement {
   static observedAttributes = ["val"];
@@ -78,4 +76,4 @@ class ChildElement extends HTMLElement {
     this._onCleanups.forEach(fn => fn());
   }
 }
-customElements.define("mwaf-child", ChildElement);
+customElements.define("web-child", ChildElement);

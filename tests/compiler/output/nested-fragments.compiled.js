@@ -1,6 +1,4 @@
-import { withInstance as _withInstance } from "/framework/runtime/lifecycle.js";
-import { createPropsProxy as _createPropsProxy } from "/framework/runtime/props.js";
-import { renderDynamic as _renderDynamic } from "/framework/runtime/dom.js";
+import { renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy, withInstance as _withInstance } from "@opentf/web";
 import { signal as _signal } from "@preact/signals-core";
 class NestedFragmentsElement extends HTMLElement {
   static observedAttributes = [];
@@ -49,5 +47,5 @@ class NestedFragmentsElement extends HTMLElement {
     this._onCleanups.forEach(fn => fn());
   }
 }
-customElements.define("mwaf-nestedfragments", NestedFragmentsElement);
+customElements.define("web-nestedfragments", NestedFragmentsElement);
 export default NestedFragmentsElement;

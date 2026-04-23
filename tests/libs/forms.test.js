@@ -1,7 +1,7 @@
 import { expect, test, describe } from "bun:test";
-import { createForm } from "../../libs/forms/index.js";
+import { createForm } from "../../packages/web-form/index.js";
 
-describe("MWAF Forms Library", () => {
+describe("Web App Framework Forms Library", () => {
   test("initializes with flat values", () => {
     const form = createForm({
       initialValues: { username: "alice", email: "alice@example.com" }
@@ -25,13 +25,13 @@ describe("MWAF Forms Library", () => {
   test("initializes with array values", () => {
     const form = createForm({
       initialValues: {
-        skills: ["JS", "MWAF"]
+        skills: ["JS", "Web App Framework"]
       }
     });
     
     expect(Array.isArray(form.values.skills)).toBe(true);
     expect(form.values.skills[0]).toBe("JS");
-    expect(form.values.skills[1]).toBe("MWAF");
+    expect(form.values.skills[1]).toBe("Web App Framework");
   });
 
   test("updates values reactively", () => {

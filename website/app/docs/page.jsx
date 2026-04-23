@@ -1,19 +1,19 @@
 import CodeBlock from "../components/CodeBlock.jsx";
 
 export default function DocsPage() {
-  const installationCode = `npm create @opentf/mwaf@latest my-app
+  const installationCode = `npm create @opentf/web@latest my-app
 cd my-app
 npm install
 npm run dev`;
 
-  const webComponentsCode = `// This MWAF component:
+  const webComponentsCode = `// This Web App Framework component:
 export function UserCard() { 
   return <div>User</div>; 
 }
 
 // Compiles to:
 class UserCardElement extends HTMLElement { ... }
-customElements.define("mwaf-usercard", UserCardElement);`;
+customElements.define("web-usercard", UserCardElement);`;
 
   const propsCode = `export function Greeting(props) {
   // props.name is reactive!
@@ -45,7 +45,7 @@ const doubled = $derived(() => count * 2);
   );
 }`;
 
-  const routerApiCode = `import { router } from "@opentf/mwaf-core";
+  const routerApiCode = `import { router } from "@opentf/web";
 
 // Reactive signals
 <div>Current Path: {router.pathname}</div>
@@ -72,7 +72,7 @@ return (
   </div>
 );`;
 
-  const lifecycleCode = `import { onMount, onCleanup } from "@opentf/mwaf-core";
+  const lifecycleCode = `import { onMount, onCleanup } from "@opentf/web";
 
 export function Timer() {
   let time = $state(0);
@@ -95,7 +95,7 @@ export function Timer() {
   return <input ref={input} />;
 }`;
 
-  const formsCode = `import { createForm } from "@opentf/mwaf-form";
+  const formsCode = `import { createForm } from "@opentf/web-form";
 
 export function Signup() {
   const { register, handleSubmit, errors } = createForm({
@@ -121,7 +121,7 @@ export function Signup() {
       <section className="space-y-12">
         <div className="space-y-4">
           <h1 className="text-4xl font-bold tracking-tight text-slate-900">Documentation</h1>
-          <p className="text-xl text-slate-500">Everything you need to know to build high-performance web apps with MWAF.</p>
+          <p className="text-xl text-slate-500">Everything you need to know to build high-performance web apps with Web App Framework.</p>
         </div>
 
         <div id="introduction" className="space-y-4 scroll-mt-24 group">
@@ -130,7 +130,7 @@ export function Signup() {
             <a href="#introduction" className="opacity-0 group-hover:opacity-100 text-accent text-sm transition-opacity">#</a>
           </h2>
           <p className="text-slate-600 leading-relaxed">
-            MWAF (Web Application Framework) is a revolutionary approach to building web applications. 
+            Web App Framework is a revolutionary approach to building web applications. 
             Unlike React or Vue, it completely eliminates the Virtual DOM. Instead, it compiles your JSX directly into highly optimized, imperative native DOM operations. 
             Under the hood, every component is compiled into a standard Web Component, ensuring perfect interoperability with the web ecosystem.
           </p>
@@ -152,7 +152,7 @@ export function Signup() {
             <a href="#architecture" className="opacity-0 group-hover:opacity-100 text-accent text-sm transition-opacity">#</a>
           </h2>
           <p className="text-slate-600 leading-relaxed mb-4">
-            MWAF is built on three main pillars that ensure maximum performance and developer experience:
+            Web App Framework is built on three main pillars that ensure maximum performance and developer experience:
           </p>
           <ul className="space-y-3 mb-8">
             <li className="flex items-center gap-3 text-slate-700">
@@ -193,7 +193,7 @@ export function Signup() {
             <a href="#zero-vdom" className="opacity-0 group-hover:opacity-100 text-accent text-sm transition-opacity">#</a>
           </h2>
           <p className="text-slate-600 leading-relaxed">
-            When you write JSX in MWAF, it is not transformed into `React.createElement` calls. 
+            When you write JSX in Web App Framework, it is not transformed into `React.createElement` calls. 
             Instead, our compiler statically analyzes your templates and converts them into `document.createElement`, `appendChild`, and direct attribute assignments. 
             When state changes, only the specific DOM node bound to that state is updated. No diffing, no reconciliation loop.
           </p>
@@ -205,7 +205,7 @@ export function Signup() {
             <a href="#web-components" className="opacity-0 group-hover:opacity-100 text-accent text-sm transition-opacity">#</a>
           </h2>
           <p className="text-slate-600 leading-relaxed">
-            Every capitalized function in MWAF that contains JSX syntax (e.g., `function Button()`) is automatically compiled into a native custom element (`{"<mwaf-button>"}`). 
+            Every capitalized function in Web App Framework that contains JSX syntax (e.g., `function Button()`) is automatically compiled into a native custom element (`{"<web-button>"}`). 
             Regular capitalized utility functions that do not return JSX are left untouched.
             This means you get style encapsulation and native lifecycle management for free on your UI components.
           </p>
@@ -232,7 +232,7 @@ export function Signup() {
             <a href="#state" className="opacity-0 group-hover:opacity-100 text-accent text-sm transition-opacity">#</a>
           </h2>
           <p className="text-slate-600 leading-relaxed">
-            State management in MWAF is powered by signals, but you never have to deal with `.value`. The compiler automatically tracks variables declared with `$state()` and injects reactivity seamlessly.
+            State management in Web App Framework is powered by signals, but you never have to deal with `.value`. The compiler automatically tracks variables declared with `$state()` and injects reactivity seamlessly.
           </p>
           <CodeBlock 
             code={stateCode} 
@@ -271,7 +271,7 @@ export function Signup() {
             <a href="#file-routing" className="opacity-0 group-hover:opacity-100 text-accent text-sm transition-opacity">#</a>
           </h2>
           <p className="text-slate-600 leading-relaxed">
-            MWAF uses a file-system based router. Any file named `page.jsx` inside the `app/` directory becomes a route.
+            Web App Framework uses a file-system based router. Any file named `page.jsx` inside the `app/` directory becomes a route.
           </p>
           <ul className="list-disc pl-6 space-y-2 text-slate-600">
             <li><code className="text-sm bg-slate-100 px-1 rounded">app/page.jsx</code> → <code className="text-sm text-[#ff851b]">/</code></li>
@@ -323,7 +323,7 @@ export function Signup() {
             <a href="#lists" className="opacity-0 group-hover:opacity-100 text-accent text-sm transition-opacity">#</a>
           </h2>
           <p className="text-slate-600 leading-relaxed">
-            Use standard JavaScript `.map()` to render lists. MWAF automatically wraps the mapping in a reactive execution context, meaning the list updates precisely when the array mutates.
+            Use standard JavaScript `.map()` to render lists. Web App Framework automatically wraps the mapping in a reactive execution context, meaning the list updates precisely when the array mutates.
           </p>
           <CodeBlock code={listsCode} />
         </div>
@@ -334,7 +334,7 @@ export function Signup() {
             <a href="#conditionals" className="opacity-0 group-hover:opacity-100 text-accent text-sm transition-opacity">#</a>
           </h2>
           <p className="text-slate-600 leading-relaxed">
-            Use standard logical operators (`&&`) or ternary expressions (`? :`) for conditional UI. MWAF will intelligently mount and unmount these DOM fragments dynamically.
+            Use standard logical operators (`&&`) or ternary expressions (`? :`) for conditional UI. Web App Framework will intelligently mount and unmount these DOM fragments dynamically.
           </p>
           <CodeBlock code={conditionalsCode} />
         </div>
@@ -367,7 +367,7 @@ export function Signup() {
             <a href="#global-state" className="opacity-0 group-hover:opacity-100 text-accent text-sm transition-opacity">#</a>
           </h2>
           <p className="text-slate-600 leading-relaxed">
-            Since MWAF reactivity is based on standard signals, global state is as simple as exporting a signal from a shared file.
+            Since Web App Framework reactivity is based on standard signals, global state is as simple as exporting a signal from a shared file.
           </p>
           <CodeBlock code={`// store.js\n// No imports needed! The compiler handles the macro\nexport const user = $state({ name: "Guest" });\n\n// component.jsx\nimport { user } from "./store";\n\nexport function Profile() {\n  // Access directly, no .value needed\n  return <div>Hello, {user.name}</div>;\n}`} />
         </div>
@@ -377,11 +377,11 @@ export function Signup() {
       <section className="space-y-12">
         <div id="forms" className="space-y-4 scroll-mt-24 group">
           <h2 className="text-2xl font-bold border-b border-slate-100 pb-2 flex items-center gap-2">
-            📝 Form State Management (mwaf-forms)
+            📝 Form State Management (web-forms)
             <a href="#forms" className="opacity-0 group-hover:opacity-100 text-accent text-sm transition-opacity">#</a>
           </h2>
           <p className="text-slate-600 leading-relaxed">
-            MWAF provides official libraries for common application needs. <code className="text-accent">mwaf-forms</code> is a high-performance, signal-based form library that handles state, validation, and submission with minimal boilerplate.
+            Web App Framework provides official libraries for common application needs. <code className="text-accent">web-form</code> is a high-performance, signal-based form library that handles state, validation, and submission with minimal boilerplate.
           </p>
           <p className="text-slate-600 leading-relaxed">
             It leverages <strong>JSX Spread Attributes</strong> to bind inputs to reactive signals automatically.
@@ -395,7 +395,7 @@ export function Signup() {
             <a href="#ui-libs" className="opacity-0 group-hover:opacity-100 text-accent text-sm transition-opacity">#</a>
           </h2>
           <p className="text-slate-600 leading-relaxed italic">
-            Official MWAF UI components and other ecosystem libraries are currently in development.
+            Official Web App Framework UI components and other ecosystem libraries are currently in development.
           </p>
         </div>
       </section>

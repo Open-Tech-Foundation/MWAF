@@ -1,7 +1,6 @@
-import { withInstance as _withInstance } from "/framework/runtime/lifecycle.js";
-import { createPropsProxy as _createPropsProxy } from "/framework/runtime/props.js";
+import { createPropsProxy as _createPropsProxy, withInstance as _withInstance } from "@opentf/web";
 import { signal as _signal } from "@preact/signals-core";
-import { renderDynamic as _renderDynamic } from "/framework/runtime/dom.js";
+import { renderDynamic as _renderDynamic } from "@opentf/web";
 import { effect as _effect } from "@preact/signals-core";
 class MultipleComponentsElement extends HTMLElement {
   static observedAttributes = ["a", "b"];
@@ -36,10 +35,10 @@ class MultipleComponentsElement extends HTMLElement {
     _withInstance(this, () => {
       const rootElement = (() => {
         const el0 = document.createElement("div");
-        const el1 = document.createElement("mwaf-a");
+        const el1 = document.createElement("web-a");
         _effect(() => el1.val = props.a);
         el0.appendChild(el1);
-        const el2 = document.createElement("mwaf-b");
+        const el2 = document.createElement("web-b");
         _effect(() => el2.val = props.b);
         el0.appendChild(el2);
         return el0;
@@ -52,7 +51,7 @@ class MultipleComponentsElement extends HTMLElement {
     this._onCleanups.forEach(fn => fn());
   }
 }
-customElements.define("mwaf-multiplecomponents", MultipleComponentsElement);
+customElements.define("web-multiplecomponents", MultipleComponentsElement);
 export default MultipleComponentsElement;
 class AElement extends HTMLElement {
   static observedAttributes = ["val"];
@@ -91,7 +90,7 @@ class AElement extends HTMLElement {
     this._onCleanups.forEach(fn => fn());
   }
 }
-customElements.define("mwaf-a", AElement);
+customElements.define("web-a", AElement);
 class BElement extends HTMLElement {
   static observedAttributes = ["val"];
   set val(val) {
@@ -129,4 +128,4 @@ class BElement extends HTMLElement {
     this._onCleanups.forEach(fn => fn());
   }
 }
-customElements.define("mwaf-b", BElement);
+customElements.define("web-b", BElement);

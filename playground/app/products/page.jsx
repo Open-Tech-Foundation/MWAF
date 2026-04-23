@@ -1,4 +1,4 @@
-import { mapped } from "@opentf/mwaf-core";
+import { mapped } from "@opentf/web";
 
 export default function ProductsPage() {
   let productsNaive = $state([]);

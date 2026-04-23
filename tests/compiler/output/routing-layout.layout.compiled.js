@@ -1,4 +1,4 @@
-import { renderDynamic as _renderDynamic } from "/framework/runtime/dom.js";
+import { renderDynamic as _renderDynamic } from "@opentf/web";
 export function render(root, props) {
   const rootElement = (() => {
     const el0 = document.createElement("div");

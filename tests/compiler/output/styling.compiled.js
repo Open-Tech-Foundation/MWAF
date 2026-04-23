@@ -1,5 +1,4 @@
-import { withInstance as _withInstance } from "/framework/runtime/lifecycle.js";
-import { createPropsProxy as _createPropsProxy } from "/framework/runtime/props.js";
+import { createPropsProxy as _createPropsProxy, withInstance as _withInstance } from "@opentf/web";
 import { signal as _signal, effect as _effect } from "@preact/signals-core";
 class StylingTestElement extends HTMLElement {
   static observedAttributes = ["theme"];
@@ -50,5 +49,5 @@ class StylingTestElement extends HTMLElement {
     this._onCleanups.forEach(fn => fn());
   }
 }
-customElements.define("mwaf-stylingtest", StylingTestElement);
+customElements.define("web-stylingtest", StylingTestElement);
 export default StylingTestElement;

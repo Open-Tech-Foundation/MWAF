@@ -1,4 +1,4 @@
-import { router } from "@opentf/mwaf-core";
+import { router } from "@opentf/web";
 
 export default function RouterTestPage() {
   const pushTest = () => {

@@ -1,5 +1,5 @@
 export default function WhitespaceTest() {
-  const name = "MWAF"
+  const name = "Web App Framework"
   return (
     <div>
       <span>Hello {name}!</span>

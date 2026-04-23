@@ -1,6 +1,6 @@
 import { expect, test, describe } from "bun:test";
 import { transformSync } from "@babel/core";
-import plugin from "../../framework/compiler/babel-plugin.cjs";
+import plugin from "../../packages/web/compiler/babel-plugin.cjs";
 import { readFileSync, readdirSync, mkdirSync, writeFileSync } from "node:fs";
 import { join, basename, extname } from "node:path";
 
@@ -10,7 +10,7 @@ const OUTPUT_DIR = join(import.meta.dir, "output");
 // Ensure output directory exists
 mkdirSync(OUTPUT_DIR, { recursive: true });
 
-describe("MWAF Compiler", () => {
+describe("Web App Framework Compiler", () => {
   const files = readdirSync(CASES_DIR);
 
   files.forEach((file) => {

@@ -1,4 +1,4 @@
-import { Link, router } from "@opentf/mwaf-core";
+import { Link, router } from "@opentf/web";
 
 const navLink = (props) => {
   const id = props.href.split('#')[1];

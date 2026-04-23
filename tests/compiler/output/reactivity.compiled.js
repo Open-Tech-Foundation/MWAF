@@ -1,6 +1,4 @@
-import { withInstance as _withInstance } from "/framework/runtime/lifecycle.js";
-import { createPropsProxy as _createPropsProxy } from "/framework/runtime/props.js";
-import { renderDynamic as _renderDynamic } from "/framework/runtime/dom.js";
+import { renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy, withInstance as _withInstance } from "@opentf/web";
 import { signal as _signal, effect as _effect } from "@preact/signals-core";
 import { signal } from "@preact/signals";
 class ReactivityElement extends HTMLElement {
@@ -49,5 +47,5 @@ class ReactivityElement extends HTMLElement {
     this._onCleanups.forEach(fn => fn());
   }
 }
-customElements.define("mwaf-reactivity", ReactivityElement);
+customElements.define("web-reactivity", ReactivityElement);
 export default ReactivityElement;

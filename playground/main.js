@@ -1,4 +1,4 @@
-import { mountApp } from "@opentf/mwaf-core";
+import { mountApp } from "@opentf/web";
 
 // 1. Discover Pages & Layouts
 const pages = import.meta.glob('./app/**/{page,layout,404}.{jsx,tsx}', { eager: true });

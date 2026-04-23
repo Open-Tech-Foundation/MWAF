@@ -1,4 +1,4 @@
-import { Link } from "@opentf/mwaf-core";
+import { Link } from "@opentf/web";
 import CodeBlock from "./components/CodeBlock.jsx";
 import Counter from "./components/Counter.jsx";
 import TodoList from "./components/TodoList.jsx";
@@ -39,10 +39,10 @@ export default function HomePage() {
     this.appendChild(rootElement);
   }
 }
-customElements.define("mwaf-counter", CounterElement);`;
+customElements.define("web-counter", CounterElement);`;
 
   const todoCode = `export default function TodoList() {
-  let todos = $state([{ id: 1, text: "Learn MWAF", done: false }]);
+  let todos = $state([{ id: 1, text: "Learn Web App Framework", done: false }]);
   
   const toggle = (id) => {
     todos = todos.map(t => t.id === id ? { ...t, done: !t.done } : t);
@@ -62,7 +62,7 @@ customElements.define("mwaf-counter", CounterElement);`;
 
   const todoCompiled = `class TodoListElement extends HTMLElement {
   connectedCallback() {
-    let todos = _signal([{ id: 1, text: "Learn MWAF", done: false }]);
+    let todos = _signal([{ id: 1, text: "Learn Web App Framework", done: false }]);
     const toggle = id => {
       todos.value = todos.value.map(t => t.id === id ? { ...t, done: !t.done } : t);
     };
@@ -87,7 +87,7 @@ customElements.define("mwaf-counter", CounterElement);`;
     this.appendChild(rootElement);
   }
 }
-customElements.define("mwaf-todolist", TodoListElement);`;
+customElements.define("web-todolist", TodoListElement);`;
 
   return (
     <div className="flex-1 max-w-6xl mx-auto px-8 w-full pb-24">
@@ -100,14 +100,15 @@ customElements.define("mwaf-todolist", TodoListElement);`;
           </span>
           Experimental
         </div>
-        
+
         <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-slate-900 leading-[1.1]">
           The minimal framework for <br />
           <span className="text-accent">modern web apps.</span>
         </h1>
-        
+
         <p className="text-xl text-slate-500 leading-relaxed">
-          MWAF is a high-performance, zero-VDOM framework that compiles JSX to native DOM. 
+          A high-performance, zero-VDOM framework that compiles JSX to native DOM.
+          <br />
           Built with signals and standard Web Components.
         </p>
 
@@ -115,7 +116,7 @@ customElements.define("mwaf-todolist", TodoListElement);`;
           <Link href="/docs" className="inline-flex items-center justify-center bg-black text-white px-6 py-2.5 rounded-xl font-bold hover:bg-slate-800 transition-all shadow-md active:scale-95">
             Get Started
           </Link>
-          <a href="https://github.com/Open-Tech-Foundation/MWAF" className="inline-flex items-center justify-center bg-white text-slate-900 border border-slate-200 px-6 py-2.5 rounded-xl font-bold hover:bg-slate-50 transition-all active:scale-95">
+          <a href="https://github.com/Open-Tech-Foundation/Web App Framework" className="inline-flex items-center justify-center bg-white text-slate-900 border border-slate-200 px-6 py-2.5 rounded-xl font-bold hover:bg-slate-50 transition-all active:scale-95">
             View on GitHub
           </a>
         </div>
@@ -126,13 +127,13 @@ customElements.define("mwaf-todolist", TodoListElement);`;
         <div className="p-6 bg-slate-50 rounded-2xl border border-slate-100 space-y-3">
           <div className="text-3xl">⚡️</div>
           <h3 className="font-bold text-slate-900">Zero VDOM</h3>
-          <p className="text-sm text-slate-500">Eliminate diffing overhead. MWAF maps state changes directly to the DOM for unmatched runtime performance.</p>
+          <p className="text-sm text-slate-500">Eliminate diffing overhead. Web App Framework maps state changes directly to the DOM for unmatched runtime performance.</p>
         </div>
-        
+
         <div className="p-6 bg-slate-50 rounded-2xl border border-slate-100 space-y-3">
           <div className="text-3xl">🧩</div>
           <h3 className="font-bold text-slate-900">Native Components</h3>
-          <p className="text-sm text-slate-500">Interoperate with the entire web ecosystem. Every MWAF component is a standard Web Component.</p>
+          <p className="text-sm text-slate-500">Interoperate with the entire web ecosystem. Every Web App Framework component is a standard Web Component.</p>
         </div>
 
         <div className="p-6 bg-slate-50 rounded-2xl border border-slate-100 space-y-3">
@@ -152,7 +153,7 @@ customElements.define("mwaf-todolist", TodoListElement);`;
       <section className="py-24 space-y-24">
         <div className="text-center space-y-4">
           <h2 className="text-3xl font-bold tracking-tight">Built for developers.</h2>
-          <p className="text-slate-500 max-w-2xl mx-auto">See how easy it is to build reactive applications with MWAF. No boilerplate, just standard JavaScript and JSX.</p>
+          <p className="text-slate-500 max-w-2xl mx-auto">See how easy it is to build reactive applications with Web App Framework. No boilerplate, just standard JavaScript and JSX.</p>
         </div>
 
         {/* Counter Demo */}

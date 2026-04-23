@@ -1,5 +1,5 @@
 /**
- * MWAF Route Guard
+ * Web App Framework Route Guard
  * This function runs before every navigation.
  * 
  * @param {Object} to - Destination route info { path, fullPath, params, query }

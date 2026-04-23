@@ -1,5 +1,4 @@
-import { renderDynamic as _renderDynamic } from "/framework/runtime/dom.js";
-import { onMount as _onMount, onCleanup as _onCleanup } from "/framework/runtime/lifecycle.js";
+import { onMount as _onMount, onCleanup as _onCleanup, renderDynamic as _renderDynamic } from "@opentf/web";
 export function render(root, props) {
   _onMount(() => {
     console.log(`Post page mounted with ID: ${props.params.id}`);

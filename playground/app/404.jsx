@@ -1,4 +1,4 @@
-import { Link } from "@opentf/mwaf-core";
+import { Link } from "@opentf/web";
 
 export default function NotFound() {
   return (

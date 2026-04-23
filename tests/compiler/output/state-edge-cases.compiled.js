@@ -1,6 +1,4 @@
-import { withInstance as _withInstance } from "/framework/runtime/lifecycle.js";
-import { createPropsProxy as _createPropsProxy } from "/framework/runtime/props.js";
-import { renderDynamic as _renderDynamic } from "/framework/runtime/dom.js";
+import { renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy, withInstance as _withInstance } from "@opentf/web";
 import { signal as _signal } from "@preact/signals-core";
 class StateEdgeCasesElement extends HTMLElement {
   static observedAttributes = [];
@@ -81,5 +79,5 @@ class StateEdgeCasesElement extends HTMLElement {
     this._onCleanups.forEach(fn => fn());
   }
 }
-customElements.define("mwaf-stateedgecases", StateEdgeCasesElement);
+customElements.define("web-stateedgecases", StateEdgeCasesElement);
 export default StateEdgeCasesElement;

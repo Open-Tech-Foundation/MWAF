@@ -1,9 +1,7 @@
 // Bun Snapshot v1, https://bun.sh/docs/test/snapshots
 
-exports[`MWAF Compiler Compiles complex-expressions.jsx 1`] = `
-"import { withInstance as _withInstance } from "/framework/runtime/lifecycle.js";
-import { createPropsProxy as _createPropsProxy } from "/framework/runtime/props.js";
-import { renderDynamic as _renderDynamic } from "/framework/runtime/dom.js";
+exports[`Web App Framework Compiler Compiles complex-expressions.jsx 1`] = `
+"import { renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy, withInstance as _withInstance } from "@opentf/web";
 import { signal as _signal, effect as _effect } from "@preact/signals-core";
 class ComplexExpressionsElement extends HTMLElement {
   static observedAttributes = ["theme", "color", "loading", "title", "logMessage"];
@@ -93,15 +91,14 @@ class ComplexExpressionsElement extends HTMLElement {
     this._onCleanups.forEach(fn => fn());
   }
 }
-customElements.define("mwaf-complexexpressions", ComplexExpressionsElement);
+customElements.define("web-complexexpressions", ComplexExpressionsElement);
 export default ComplexExpressionsElement;"
 `;
 
-exports[`MWAF Compiler Compiles conditional.jsx 1`] = `
-"import { withInstance as _withInstance } from "/framework/runtime/lifecycle.js";
-import { createPropsProxy as _createPropsProxy } from "/framework/runtime/props.js";
+exports[`Web App Framework Compiler Compiles conditional.jsx 1`] = `
+"import { createPropsProxy as _createPropsProxy, withInstance as _withInstance } from "@opentf/web";
 import { signal as _signal } from "@preact/signals-core";
-import { renderDynamic as _renderDynamic } from "/framework/runtime/dom.js";
+import { renderDynamic as _renderDynamic } from "@opentf/web";
 class ItemElement extends HTMLElement {
   static observedAttributes = ["name", "isPacked"];
   set name(val) {
@@ -151,11 +148,11 @@ class ItemElement extends HTMLElement {
     this._onCleanups.forEach(fn => fn());
   }
 }
-customElements.define("mwaf-item", ItemElement);
+customElements.define("web-item", ItemElement);
 export default ItemElement;"
 `;
 
-exports[`MWAF Compiler Compiles routing-404.404.jsx 1`] = `
+exports[`Web App Framework Compiler Compiles routing-404.404.jsx 1`] = `
 "export function render(root, props) {
   const rootElement = (() => {
     const el0 = document.createElement("div");
@@ -173,9 +170,8 @@ exports[`MWAF Compiler Compiles routing-404.404.jsx 1`] = `
 }"
 `;
 
-exports[`MWAF Compiler Compiles children-projection.jsx 1`] = `
-"import { withInstance as _withInstance } from "/framework/runtime/lifecycle.js";
-import { createPropsProxy as _createPropsProxy } from "/framework/runtime/props.js";
+exports[`Web App Framework Compiler Compiles children-projection.jsx 1`] = `
+"import { createPropsProxy as _createPropsProxy, withInstance as _withInstance } from "@opentf/web";
 import { signal as _signal } from "@preact/signals-core";
 class WrapperElement extends HTMLElement {
   static observedAttributes = [];
@@ -216,15 +212,14 @@ class WrapperElement extends HTMLElement {
     this._onCleanups.forEach(fn => fn());
   }
 }
-customElements.define("mwaf-wrapper", WrapperElement);
+customElements.define("web-wrapper", WrapperElement);
 export default WrapperElement;"
 `;
 
-exports[`MWAF Compiler Compiles lifecycle.jsx 1`] = `
-"import { withInstance as _withInstance } from "/framework/runtime/lifecycle.js";
-import { createPropsProxy as _createPropsProxy } from "/framework/runtime/props.js";
+exports[`Web App Framework Compiler Compiles lifecycle.jsx 1`] = `
+"import { createPropsProxy as _createPropsProxy, withInstance as _withInstance } from "@opentf/web";
 import { signal as _signal } from "@preact/signals-core";
-import { onMount as _onMount, onCleanup as _onCleanup } from "/framework/runtime/lifecycle.js";
+import { onMount as _onMount, onCleanup as _onCleanup } from "@opentf/web";
 class LifecycleElement extends HTMLElement {
   static observedAttributes = [];
   constructor() {
@@ -261,14 +256,12 @@ class LifecycleElement extends HTMLElement {
     this._onCleanups.forEach(fn => fn());
   }
 }
-customElements.define("mwaf-lifecycle", LifecycleElement);
+customElements.define("web-lifecycle", LifecycleElement);
 export default LifecycleElement;"
 `;
 
-exports[`MWAF Compiler Compiles reactivity.jsx 1`] = `
-"import { withInstance as _withInstance } from "/framework/runtime/lifecycle.js";
-import { createPropsProxy as _createPropsProxy } from "/framework/runtime/props.js";
-import { renderDynamic as _renderDynamic } from "/framework/runtime/dom.js";
+exports[`Web App Framework Compiler Compiles reactivity.jsx 1`] = `
+"import { renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy, withInstance as _withInstance } from "@opentf/web";
 import { signal as _signal, effect as _effect } from "@preact/signals-core";
 import { signal } from "@preact/signals";
 class ReactivityElement extends HTMLElement {
@@ -317,14 +310,12 @@ class ReactivityElement extends HTMLElement {
     this._onCleanups.forEach(fn => fn());
   }
 }
-customElements.define("mwaf-reactivity", ReactivityElement);
+customElements.define("web-reactivity", ReactivityElement);
 export default ReactivityElement;"
 `;
 
-exports[`MWAF Compiler Compiles nested-reactivity.jsx 1`] = `
-"import { withInstance as _withInstance } from "/framework/runtime/lifecycle.js";
-import { createPropsProxy as _createPropsProxy } from "/framework/runtime/props.js";
-import { renderDynamic as _renderDynamic } from "/framework/runtime/dom.js";
+exports[`Web App Framework Compiler Compiles nested-reactivity.jsx 1`] = `
+"import { renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy, withInstance as _withInstance } from "@opentf/web";
 import { signal as _signal, effect as _effect } from "@preact/signals-core";
 class NestedReactivityElement extends HTMLElement {
   static observedAttributes = ["title"];
@@ -370,11 +361,11 @@ class NestedReactivityElement extends HTMLElement {
     this._onCleanups.forEach(fn => fn());
   }
 }
-customElements.define("mwaf-nestedreactivity", NestedReactivityElement);
+customElements.define("web-nestedreactivity", NestedReactivityElement);
 export default NestedReactivityElement;"
 `;
 
-exports[`MWAF Compiler Compiles basic-elements.page.jsx 1`] = `
+exports[`Web App Framework Compiler Compiles basic-elements.page.jsx 1`] = `
 "export function render(root, props) {
   const rootElement = (() => {
     const el0 = document.createElement("div");
@@ -392,11 +383,10 @@ exports[`MWAF Compiler Compiles basic-elements.page.jsx 1`] = `
 }"
 `;
 
-exports[`MWAF Compiler Compiles spread.jsx 1`] = `
-"import { withInstance as _withInstance } from "/framework/runtime/lifecycle.js";
-import { createPropsProxy as _createPropsProxy } from "/framework/runtime/props.js";
+exports[`Web App Framework Compiler Compiles spread.jsx 1`] = `
+"import { createPropsProxy as _createPropsProxy, withInstance as _withInstance } from "@opentf/web";
 import { signal as _signal } from "@preact/signals-core";
-import { applySpread as _applySpread } from "/framework/runtime/props.js";
+import { applySpread as _applySpread } from "@opentf/web";
 class SpreadTestElement extends HTMLElement {
   static observedAttributes = [];
   constructor() {
@@ -440,14 +430,12 @@ class SpreadTestElement extends HTMLElement {
     this._onCleanups.forEach(fn => fn());
   }
 }
-customElements.define("mwaf-spreadtest", SpreadTestElement);
+customElements.define("web-spreadtest", SpreadTestElement);
 export default SpreadTestElement;"
 `;
 
-exports[`MWAF Compiler Compiles state-edge-cases.jsx 1`] = `
-"import { withInstance as _withInstance } from "/framework/runtime/lifecycle.js";
-import { createPropsProxy as _createPropsProxy } from "/framework/runtime/props.js";
-import { renderDynamic as _renderDynamic } from "/framework/runtime/dom.js";
+exports[`Web App Framework Compiler Compiles state-edge-cases.jsx 1`] = `
+"import { renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy, withInstance as _withInstance } from "@opentf/web";
 import { signal as _signal } from "@preact/signals-core";
 class StateEdgeCasesElement extends HTMLElement {
   static observedAttributes = [];
@@ -528,13 +516,12 @@ class StateEdgeCasesElement extends HTMLElement {
     this._onCleanups.forEach(fn => fn());
   }
 }
-customElements.define("mwaf-stateedgecases", StateEdgeCasesElement);
+customElements.define("web-stateedgecases", StateEdgeCasesElement);
 export default StateEdgeCasesElement;"
 `;
 
-exports[`MWAF Compiler Compiles styling.jsx 1`] = `
-"import { withInstance as _withInstance } from "/framework/runtime/lifecycle.js";
-import { createPropsProxy as _createPropsProxy } from "/framework/runtime/props.js";
+exports[`Web App Framework Compiler Compiles styling.jsx 1`] = `
+"import { createPropsProxy as _createPropsProxy, withInstance as _withInstance } from "@opentf/web";
 import { signal as _signal, effect as _effect } from "@preact/signals-core";
 class StylingTestElement extends HTMLElement {
   static observedAttributes = ["theme"];
@@ -585,15 +572,14 @@ class StylingTestElement extends HTMLElement {
     this._onCleanups.forEach(fn => fn());
   }
 }
-customElements.define("mwaf-stylingtest", StylingTestElement);
+customElements.define("web-stylingtest", StylingTestElement);
 export default StylingTestElement;"
 `;
 
-exports[`MWAF Compiler Compiles ref.jsx 1`] = `
-"import { withInstance as _withInstance } from "/framework/runtime/lifecycle.js";
-import { createPropsProxy as _createPropsProxy } from "/framework/runtime/props.js";
+exports[`Web App Framework Compiler Compiles ref.jsx 1`] = `
+"import { createPropsProxy as _createPropsProxy, withInstance as _withInstance } from "@opentf/web";
 import { effect as _effect } from "@preact/signals-core";
-import { onMount as _onMount } from "/framework/runtime/lifecycle.js";
+import { onMount as _onMount } from "@opentf/web";
 import { signal as _signal } from "@preact/signals-core";
 class CustomInputElement extends HTMLElement {
   static observedAttributes = [];
@@ -631,7 +617,7 @@ class CustomInputElement extends HTMLElement {
     this._onCleanups.forEach(fn => fn());
   }
 }
-customElements.define("mwaf-custominput", CustomInputElement);
+customElements.define("web-custominput", CustomInputElement);
 class RefTestElement extends HTMLElement {
   static observedAttributes = [];
   constructor() {
@@ -668,7 +654,7 @@ class RefTestElement extends HTMLElement {
         const text2 = document.createTextNode("Ref Test");
         el1.appendChild(text2);
         el0.appendChild(el1);
-        const el3 = document.createElement("mwaf-custominput");
+        const el3 = document.createElement("web-custominput");
         myInput.value = el3;
         el0.appendChild(el3);
         const el4 = document.createElement("button");
@@ -686,14 +672,14 @@ class RefTestElement extends HTMLElement {
     this._onCleanups.forEach(fn => fn());
   }
 }
-customElements.define("mwaf-reftest", RefTestElement);
+customElements.define("web-reftest", RefTestElement);
 export default RefTestElement;"
 `;
 
-exports[`MWAF Compiler Compiles products-page.page.jsx 1`] = `
-"import { renderDynamic as _renderDynamic } from "/framework/runtime/dom.js";
+exports[`Web App Framework Compiler Compiles products-page.page.jsx 1`] = `
+"import { renderDynamic as _renderDynamic } from "@opentf/web";
 import { effect as _effect } from "@preact/signals-core";
-import { mapped as _mapped } from "/framework/runtime/dom.js";
+import { mapped as _mapped } from "@opentf/web";
 import { signal as _signal } from "@preact/signals-core";
 export function render(root, props) {
   let products = _signal(Array.from({
@@ -769,7 +755,7 @@ export function render(root, props) {
 }"
 `;
 
-exports[`MWAF Compiler Compiles comments.page.jsx 1`] = `
+exports[`Web App Framework Compiler Compiles comments.page.jsx 1`] = `
 "export function render(root, props) {
   const rootElement = (() => {
     const el0 = document.createElement("div");
@@ -788,9 +774,8 @@ exports[`MWAF Compiler Compiles comments.page.jsx 1`] = `
 }"
 `;
 
-exports[`MWAF Compiler Compiles svg.jsx 1`] = `
-"import { withInstance as _withInstance } from "/framework/runtime/lifecycle.js";
-import { createPropsProxy as _createPropsProxy } from "/framework/runtime/props.js";
+exports[`Web App Framework Compiler Compiles svg.jsx 1`] = `
+"import { createPropsProxy as _createPropsProxy, withInstance as _withInstance } from "@opentf/web";
 import { signal as _signal, effect as _effect } from "@preact/signals-core";
 class SvgTestElement extends HTMLElement {
   static observedAttributes = [];
@@ -837,14 +822,12 @@ class SvgTestElement extends HTMLElement {
     this._onCleanups.forEach(fn => fn());
   }
 }
-customElements.define("mwaf-svgtest", SvgTestElement);
+customElements.define("web-svgtest", SvgTestElement);
 export default SvgTestElement;"
 `;
 
-exports[`MWAF Compiler Compiles component-props.jsx 1`] = `
-"import { withInstance as _withInstance } from "/framework/runtime/lifecycle.js";
-import { createPropsProxy as _createPropsProxy } from "/framework/runtime/props.js";
-import { renderDynamic as _renderDynamic } from "/framework/runtime/dom.js";
+exports[`Web App Framework Compiler Compiles component-props.jsx 1`] = `
+"import { renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy, withInstance as _withInstance } from "@opentf/web";
 import { signal as _signal, effect as _effect } from "@preact/signals-core";
 class ParentElement extends HTMLElement {
   static observedAttributes = [];
@@ -865,7 +848,7 @@ class ParentElement extends HTMLElement {
       let count = _signal(0);
       const rootElement = (() => {
         const el0 = document.createElement("div");
-        const el1 = document.createElement("mwaf-child");
+        const el1 = document.createElement("web-child");
         _effect(() => el1.val = count.value);
         el0.appendChild(el1);
         const el2 = document.createElement("button");
@@ -883,7 +866,7 @@ class ParentElement extends HTMLElement {
     this._onCleanups.forEach(fn => fn());
   }
 }
-customElements.define("mwaf-parent", ParentElement);
+customElements.define("web-parent", ParentElement);
 export default ParentElement;
 class ChildElement extends HTMLElement {
   static observedAttributes = ["val"];
@@ -922,14 +905,13 @@ class ChildElement extends HTMLElement {
     this._onCleanups.forEach(fn => fn());
   }
 }
-customElements.define("mwaf-child", ChildElement);"
+customElements.define("web-child", ChildElement);"
 `;
 
-exports[`MWAF Compiler Compiles multiple-components.jsx 1`] = `
-"import { withInstance as _withInstance } from "/framework/runtime/lifecycle.js";
-import { createPropsProxy as _createPropsProxy } from "/framework/runtime/props.js";
+exports[`Web App Framework Compiler Compiles multiple-components.jsx 1`] = `
+"import { createPropsProxy as _createPropsProxy, withInstance as _withInstance } from "@opentf/web";
 import { signal as _signal } from "@preact/signals-core";
-import { renderDynamic as _renderDynamic } from "/framework/runtime/dom.js";
+import { renderDynamic as _renderDynamic } from "@opentf/web";
 import { effect as _effect } from "@preact/signals-core";
 class MultipleComponentsElement extends HTMLElement {
   static observedAttributes = ["a", "b"];
@@ -964,10 +946,10 @@ class MultipleComponentsElement extends HTMLElement {
     _withInstance(this, () => {
       const rootElement = (() => {
         const el0 = document.createElement("div");
-        const el1 = document.createElement("mwaf-a");
+        const el1 = document.createElement("web-a");
         _effect(() => el1.val = props.a);
         el0.appendChild(el1);
-        const el2 = document.createElement("mwaf-b");
+        const el2 = document.createElement("web-b");
         _effect(() => el2.val = props.b);
         el0.appendChild(el2);
         return el0;
@@ -980,7 +962,7 @@ class MultipleComponentsElement extends HTMLElement {
     this._onCleanups.forEach(fn => fn());
   }
 }
-customElements.define("mwaf-multiplecomponents", MultipleComponentsElement);
+customElements.define("web-multiplecomponents", MultipleComponentsElement);
 export default MultipleComponentsElement;
 class AElement extends HTMLElement {
   static observedAttributes = ["val"];
@@ -1019,7 +1001,7 @@ class AElement extends HTMLElement {
     this._onCleanups.forEach(fn => fn());
   }
 }
-customElements.define("mwaf-a", AElement);
+customElements.define("web-a", AElement);
 class BElement extends HTMLElement {
   static observedAttributes = ["val"];
   set val(val) {
@@ -1057,11 +1039,11 @@ class BElement extends HTMLElement {
     this._onCleanups.forEach(fn => fn());
   }
 }
-customElements.define("mwaf-b", BElement);"
+customElements.define("web-b", BElement);"
 `;
 
-exports[`MWAF Compiler Compiles routing-layout.layout.jsx 1`] = `
-"import { renderDynamic as _renderDynamic } from "/framework/runtime/dom.js";
+exports[`Web App Framework Compiler Compiles routing-layout.layout.jsx 1`] = `
+"import { renderDynamic as _renderDynamic } from "@opentf/web";
 export function render(root, props) {
   const rootElement = (() => {
     const el0 = document.createElement("div");
@@ -1082,8 +1064,8 @@ export function render(root, props) {
 }"
 `;
 
-exports[`MWAF Compiler Compiles catch-all-page.page.jsx 1`] = `
-"import { mapped as _mapped, renderDynamic as _renderDynamic } from "/framework/runtime/dom.js";
+exports[`Web App Framework Compiler Compiles catch-all-page.page.jsx 1`] = `
+"import { mapped as _mapped, renderDynamic as _renderDynamic } from "@opentf/web";
 export function render(root, props) {
   const rootElement = (() => {
     const el0 = document.createElement("div");
@@ -1123,9 +1105,8 @@ export function render(root, props) {
 }"
 `;
 
-exports[`MWAF Compiler Compiles inline-styles.jsx 1`] = `
-"import { withInstance as _withInstance } from "/framework/runtime/lifecycle.js";
-import { createPropsProxy as _createPropsProxy } from "/framework/runtime/props.js";
+exports[`Web App Framework Compiler Compiles inline-styles.jsx 1`] = `
+"import { createPropsProxy as _createPropsProxy, withInstance as _withInstance } from "@opentf/web";
 import { signal as _signal, effect as _effect } from "@preact/signals-core";
 class StyleTestElement extends HTMLElement {
   static observedAttributes = [];
@@ -1172,14 +1153,12 @@ class StyleTestElement extends HTMLElement {
     this._onCleanups.forEach(fn => fn());
   }
 }
-customElements.define("mwaf-styletest", StyleTestElement);
+customElements.define("web-styletest", StyleTestElement);
 export default StyleTestElement;"
 `;
 
-exports[`MWAF Compiler Compiles macros.jsx 1`] = `
-"import { withInstance as _withInstance } from "/framework/runtime/lifecycle.js";
-import { createPropsProxy as _createPropsProxy } from "/framework/runtime/props.js";
-import { renderDynamic as _renderDynamic } from "/framework/runtime/dom.js";
+exports[`Web App Framework Compiler Compiles macros.jsx 1`] = `
+"import { renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy, withInstance as _withInstance } from "@opentf/web";
 import { signal as _signal, computed as _computed, effect as _effect } from "@preact/signals-core";
 class MacroTestElement extends HTMLElement {
   static observedAttributes = [];
@@ -1229,14 +1208,12 @@ class MacroTestElement extends HTMLElement {
     this._onCleanups.forEach(fn => fn());
   }
 }
-customElements.define("mwaf-macrotest", MacroTestElement);
+customElements.define("web-macrotest", MacroTestElement);
 export default MacroTestElement;"
 `;
 
-exports[`MWAF Compiler Compiles list-rendering.jsx 1`] = `
-"import { withInstance as _withInstance } from "/framework/runtime/lifecycle.js";
-import { createPropsProxy as _createPropsProxy } from "/framework/runtime/props.js";
-import { mapped as _mapped, renderDynamic as _renderDynamic } from "/framework/runtime/dom.js";
+exports[`Web App Framework Compiler Compiles list-rendering.jsx 1`] = `
+"import { mapped as _mapped, renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy, withInstance as _withInstance } from "@opentf/web";
 import { signal as _signal } from "@preact/signals-core";
 class ListRenderingElement extends HTMLElement {
   static observedAttributes = [];
@@ -1282,14 +1259,12 @@ class ListRenderingElement extends HTMLElement {
     this._onCleanups.forEach(fn => fn());
   }
 }
-customElements.define("mwaf-listrendering", ListRenderingElement);
+customElements.define("web-listrendering", ListRenderingElement);
 export default ListRenderingElement;"
 `;
 
-exports[`MWAF Compiler Compiles nested-fragments.jsx 1`] = `
-"import { withInstance as _withInstance } from "/framework/runtime/lifecycle.js";
-import { createPropsProxy as _createPropsProxy } from "/framework/runtime/props.js";
-import { renderDynamic as _renderDynamic } from "/framework/runtime/dom.js";
+exports[`Web App Framework Compiler Compiles nested-fragments.jsx 1`] = `
+"import { renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy, withInstance as _withInstance } from "@opentf/web";
 import { signal as _signal } from "@preact/signals-core";
 class NestedFragmentsElement extends HTMLElement {
   static observedAttributes = [];
@@ -1338,13 +1313,12 @@ class NestedFragmentsElement extends HTMLElement {
     this._onCleanups.forEach(fn => fn());
   }
 }
-customElements.define("mwaf-nestedfragments", NestedFragmentsElement);
+customElements.define("web-nestedfragments", NestedFragmentsElement);
 export default NestedFragmentsElement;"
 `;
 
-exports[`MWAF Compiler Compiles dynamic-page.page.jsx 1`] = `
-"import { renderDynamic as _renderDynamic } from "/framework/runtime/dom.js";
-import { onMount as _onMount, onCleanup as _onCleanup } from "/framework/runtime/lifecycle.js";
+exports[`Web App Framework Compiler Compiles dynamic-page.page.jsx 1`] = `
+"import { onMount as _onMount, onCleanup as _onCleanup, renderDynamic as _renderDynamic } from "@opentf/web";
 export function render(root, props) {
   _onMount(() => {
     console.log(\`Post page mounted with ID: \${props.params.id}\`);
@@ -1375,10 +1349,10 @@ export function render(root, props) {
 }"
 `;
 
-exports[`MWAF Compiler Compiles whitespace.page.jsx 1`] = `
-"import { renderDynamic as _renderDynamic } from "/framework/runtime/dom.js";
+exports[`Web App Framework Compiler Compiles whitespace.page.jsx 1`] = `
+"import { renderDynamic as _renderDynamic } from "@opentf/web";
 export function render(root, props) {
-  const name = "MWAF";
+  const name = "Web App Framework";
   const rootElement = (() => {
     const el0 = document.createElement("div");
     const el1 = document.createElement("span");

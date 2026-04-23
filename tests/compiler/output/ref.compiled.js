@@ -1,7 +1,6 @@
-import { withInstance as _withInstance } from "/framework/runtime/lifecycle.js";
-import { createPropsProxy as _createPropsProxy } from "/framework/runtime/props.js";
+import { createPropsProxy as _createPropsProxy, withInstance as _withInstance } from "@opentf/web";
 import { effect as _effect } from "@preact/signals-core";
-import { onMount as _onMount } from "/framework/runtime/lifecycle.js";
+import { onMount as _onMount } from "@opentf/web";
 import { signal as _signal } from "@preact/signals-core";
 class CustomInputElement extends HTMLElement {
   static observedAttributes = [];
@@ -39,7 +38,7 @@ class CustomInputElement extends HTMLElement {
     this._onCleanups.forEach(fn => fn());
   }
 }
-customElements.define("mwaf-custominput", CustomInputElement);
+customElements.define("web-custominput", CustomInputElement);
 class RefTestElement extends HTMLElement {
   static observedAttributes = [];
   constructor() {
@@ -76,7 +75,7 @@ class RefTestElement extends HTMLElement {
         const text2 = document.createTextNode("Ref Test");
         el1.appendChild(text2);
         el0.appendChild(el1);
-        const el3 = document.createElement("mwaf-custominput");
+        const el3 = document.createElement("web-custominput");
         myInput.value = el3;
         el0.appendChild(el3);
         const el4 = document.createElement("button");
@@ -94,5 +93,5 @@ class RefTestElement extends HTMLElement {
     this._onCleanups.forEach(fn => fn());
   }
 }
-customElements.define("mwaf-reftest", RefTestElement);
+customElements.define("web-reftest", RefTestElement);
 export default RefTestElement;

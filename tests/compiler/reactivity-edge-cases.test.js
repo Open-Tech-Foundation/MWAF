@@ -1,6 +1,6 @@
 import { expect, test, describe } from "bun:test";
 import * as babel from "@babel/core";
-import plugin from "../../framework/compiler/babel-plugin.cjs";
+import plugin from "../../packages/web/compiler/babel-plugin.cjs";
 
 function compile(code) {
   return babel.transform(code, {
@@ -11,7 +11,7 @@ function compile(code) {
   }).code;
 }
 
-describe("MWAF Compiler > Reactivity Edge Cases", () => {
+describe("Web App Framework Compiler > Reactivity Edge Cases", () => {
   test("Handles nested .map() calls", () => {
     const code = `
       export function NestedList() {

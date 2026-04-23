@@ -1,7 +1,6 @@
-import { withInstance as _withInstance } from "/framework/runtime/lifecycle.js";
-import { createPropsProxy as _createPropsProxy } from "/framework/runtime/props.js";
+import { createPropsProxy as _createPropsProxy, withInstance as _withInstance } from "@opentf/web";
 import { signal as _signal } from "@preact/signals-core";
-import { applySpread as _applySpread } from "/framework/runtime/props.js";
+import { applySpread as _applySpread } from "@opentf/web";
 class SpreadTestElement extends HTMLElement {
   static observedAttributes = [];
   constructor() {
@@ -45,5 +44,5 @@ class SpreadTestElement extends HTMLElement {
     this._onCleanups.forEach(fn => fn());
   }
 }
-customElements.define("mwaf-spreadtest", SpreadTestElement);
+customElements.define("web-spreadtest", SpreadTestElement);
 export default SpreadTestElement;

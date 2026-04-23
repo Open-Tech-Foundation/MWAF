@@ -1,4 +1,4 @@
-import { Link, router } from "@opentf/mwaf-core";
+import { Link, router } from "@opentf/web";
 
 export default function GlobalLayout(props) {
   return (

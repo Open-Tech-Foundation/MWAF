@@ -1,5 +1,4 @@
-import { withInstance as _withInstance } from "/framework/runtime/lifecycle.js";
-import { createPropsProxy as _createPropsProxy } from "/framework/runtime/props.js";
+import { createPropsProxy as _createPropsProxy, withInstance as _withInstance } from "@opentf/web";
 import { signal as _signal } from "@preact/signals-core";
 class WrapperElement extends HTMLElement {
   static observedAttributes = [];
@@ -40,5 +39,5 @@ class WrapperElement extends HTMLElement {
     this._onCleanups.forEach(fn => fn());
   }
 }
-customElements.define("mwaf-wrapper", WrapperElement);
+customElements.define("web-wrapper", WrapperElement);
 export default WrapperElement;
