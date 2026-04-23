@@ -30,12 +30,12 @@ class StylingTestElement extends HTMLElement {
         el0.className = "static-classname";
         const el1 = document.createElement("span");
         _effect(() => el1.className = active.value ? "active" : "inactive");
-        const text2 = document.createTextNode("Reactive Class");
+        const text2 = document.createTextNode(" Reactive Class ");
         el1.appendChild(text2);
         el0.appendChild(el1);
         const el3 = document.createElement("button");
         _effect(() => el3.className = props.theme);
-        const text4 = document.createTextNode("Reactive ClassName from Props");
+        const text4 = document.createTextNode(" Reactive ClassName from Props ");
         el3.appendChild(text4);
         el0.appendChild(el3);
         return el0;

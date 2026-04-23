@@ -7,7 +7,7 @@ export function render(root, props) {
     el0.appendChild(el1);
     const el3 = document.createElement("p");
     el3.className = "foo";
-    const text4 = document.createTextNode("Content");
+    const text4 = document.createTextNode(" Content ");
     el3.appendChild(text4);
     el0.appendChild(el3);
     return el0;

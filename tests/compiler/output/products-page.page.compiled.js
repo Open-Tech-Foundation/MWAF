@@ -32,13 +32,13 @@ export function render(root, props) {
     const el5 = document.createElement("button");
     el5.onclick = shuffle;
     el5.className = "bg-indigo-600 px-4 py-2 rounded text-white hover:bg-indigo-500 transition-colors";
-    const text6 = document.createTextNode("Shuffle List");
+    const text6 = document.createTextNode(" Shuffle List ");
     el5.appendChild(text6);
     el4.appendChild(el5);
     const el7 = document.createElement("button");
     el7.onclick = reverse;
     el7.className = "bg-slate-700 px-4 py-2 rounded text-white hover:bg-slate-600 transition-colors";
-    const text8 = document.createTextNode("Reverse List");
+    const text8 = document.createTextNode(" Reverse List ");
     el7.appendChild(text8);
     el4.appendChild(el7);
     el1.appendChild(el4);

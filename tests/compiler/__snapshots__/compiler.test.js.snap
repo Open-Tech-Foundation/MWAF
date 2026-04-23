@@ -74,7 +74,7 @@ class ComplexExpressionsElement extends HTMLElement {
           el0.appendChild(el1);
           const el2 = document.createElement("button");
           el2.onclick = () => console.log(props.logMessage);
-          const text3 = document.createTextNode("Log ");
+          const text3 = document.createTextNode(" Log ");
           el2.appendChild(text3);
           _renderDynamic(el2, () => count.value);
           el0.appendChild(el2);
@@ -542,12 +542,12 @@ class StylingTestElement extends HTMLElement {
         el0.className = "static-classname";
         const el1 = document.createElement("span");
         _effect(() => el1.className = active.value ? "active" : "inactive");
-        const text2 = document.createTextNode("Reactive Class");
+        const text2 = document.createTextNode(" Reactive Class ");
         el1.appendChild(text2);
         el0.appendChild(el1);
         const el3 = document.createElement("button");
         _effect(() => el3.className = props.theme);
-        const text4 = document.createTextNode("Reactive ClassName from Props");
+        const text4 = document.createTextNode(" Reactive ClassName from Props ");
         el3.appendChild(text4);
         el0.appendChild(el3);
         return el0;
@@ -696,13 +696,13 @@ export function render(root, props) {
     const el5 = document.createElement("button");
     el5.onclick = shuffle;
     el5.className = "bg-indigo-600 px-4 py-2 rounded text-white hover:bg-indigo-500 transition-colors";
-    const text6 = document.createTextNode("Shuffle List");
+    const text6 = document.createTextNode(" Shuffle List ");
     el5.appendChild(text6);
     el4.appendChild(el5);
     const el7 = document.createElement("button");
     el7.onclick = reverse;
     el7.className = "bg-slate-700 px-4 py-2 rounded text-white hover:bg-slate-600 transition-colors";
-    const text8 = document.createTextNode("Reverse List");
+    const text8 = document.createTextNode(" Reverse List ");
     el7.appendChild(text8);
     el4.appendChild(el7);
     el1.appendChild(el4);
@@ -747,7 +747,7 @@ exports[`Web App Framework Compiler Compiles comments.page.jsx 1`] = `
     el0.appendChild(el1);
     const el3 = document.createElement("p");
     el3.className = "foo";
-    const text4 = document.createTextNode("Content");
+    const text4 = document.createTextNode(" Content ");
     el3.appendChild(text4);
     el0.appendChild(el3);
     return el0;
@@ -1067,7 +1067,7 @@ export function render(root, props) {
     el0.appendChild(el5);
     const el7 = document.createElement("div");
     el7.className = "mt-4 p-4 bg-slate-800 rounded";
-    const text8 = document.createTextNode("Full path: ");
+    const text8 = document.createTextNode(" Full path: ");
     el7.appendChild(text8);
     const el9 = document.createElement("span");
     el9.className = "text-indigo-400 font-mono";
@@ -1111,12 +1111,12 @@ class StyleTestElement extends HTMLElement {
         _effect(() => Object.assign(el1.style, {
           color: color.value
         }));
-        const text2 = document.createTextNode("Reactive Style");
+        const text2 = document.createTextNode(" Reactive Style ");
         el1.appendChild(text2);
         el0.appendChild(el1);
         const el3 = document.createElement("div");
         el3.style = "font-weight: bold;";
-        const text4 = document.createTextNode("Static Style String");
+        const text4 = document.createTextNode(" Static Style String ");
         el3.appendChild(text4);
         el0.appendChild(el3);
         return el0;
@@ -1220,7 +1220,7 @@ class ListRenderingElement extends HTMLElement {
         el0.appendChild(el1);
         const el3 = document.createElement("button");
         el3.onclick = () => items.value = [...items.value, 'D'];
-        const text4 = document.createTextNode("Add");
+        const text4 = document.createTextNode(" Add ");
         el3.appendChild(text4);
         el0.appendChild(el3);
         return el0;
@@ -1336,7 +1336,7 @@ export function render(root, props) {
     el1.appendChild(text3);
     el0.appendChild(el1);
     const el4 = document.createElement("p");
-    const text5 = document.createTextNode("Line 1Line 2");
+    const text5 = document.createTextNode(" Line 1 Line 2 ");
     el4.appendChild(text5);
     el0.appendChild(el4);
     const el6 = document.createElement("div");

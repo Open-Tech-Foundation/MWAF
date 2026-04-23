@@ -639,7 +639,8 @@ module.exports = function (babel) {
         });
         return elId;
       } else if (t.isJSXText(n)) {
-        const text = n.value.replace(/\n\s*/g, "");
+        if (n.value.includes("\n") && n.value.trim() === "") return null;
+        const text = n.value.replace(/\n\s*/g, " ");
         if (!text) return null;
         const textId = nextId("text");
         statements.push(t.variableDeclaration("const", [t.variableDeclarator(textId, t.callExpression(t.memberExpression(t.identifier("document"), t.identifier("createTextNode")), [t.stringLiteral(text)]))]));

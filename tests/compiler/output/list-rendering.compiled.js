@@ -30,7 +30,7 @@ class ListRenderingElement extends HTMLElement {
         el0.appendChild(el1);
         const el3 = document.createElement("button");
         el3.onclick = () => items.value = [...items.value, 'D'];
-        const text4 = document.createTextNode("Add");
+        const text4 = document.createTextNode(" Add ");
         el3.appendChild(text4);
         el0.appendChild(el3);
         return el0;

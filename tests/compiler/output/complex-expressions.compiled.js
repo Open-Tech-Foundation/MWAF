@@ -71,7 +71,7 @@ class ComplexExpressionsElement extends HTMLElement {
           el0.appendChild(el1);
           const el2 = document.createElement("button");
           el2.onclick = () => console.log(props.logMessage);
-          const text3 = document.createTextNode("Log ");
+          const text3 = document.createTextNode(" Log ");
           el2.appendChild(text3);
           _renderDynamic(el2, () => count.value);
           el0.appendChild(el2);

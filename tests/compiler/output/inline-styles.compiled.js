@@ -26,12 +26,12 @@ class StyleTestElement extends HTMLElement {
         _effect(() => Object.assign(el1.style, {
           color: color.value
         }));
-        const text2 = document.createTextNode("Reactive Style");
+        const text2 = document.createTextNode(" Reactive Style ");
         el1.appendChild(text2);
         el0.appendChild(el1);
         const el3 = document.createElement("div");
         el3.style = "font-weight: bold;";
-        const text4 = document.createTextNode("Static Style String");
+        const text4 = document.createTextNode(" Static Style String ");
         el3.appendChild(text4);
         el0.appendChild(el3);
         return el0;

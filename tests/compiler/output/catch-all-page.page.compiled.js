@@ -23,7 +23,7 @@ export function render(root, props) {
     el0.appendChild(el5);
     const el7 = document.createElement("div");
     el7.className = "mt-4 p-4 bg-slate-800 rounded";
-    const text8 = document.createTextNode("Full path: ");
+    const text8 = document.createTextNode(" Full path: ");
     el7.appendChild(text8);
     const el9 = document.createElement("span");
     el9.className = "text-indigo-400 font-mono";

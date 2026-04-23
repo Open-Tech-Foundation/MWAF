@@ -11,7 +11,7 @@ export function render(root, props) {
     el1.appendChild(text3);
     el0.appendChild(el1);
     const el4 = document.createElement("p");
-    const text5 = document.createTextNode("Line 1Line 2");
+    const text5 = document.createTextNode(" Line 1 Line 2 ");
     el4.appendChild(text5);
     el0.appendChild(el4);
     const el6 = document.createElement("div");
