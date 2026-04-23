@@ -2,15 +2,22 @@
   "name": "@opentf/web",
   "version": "0.1.0",
   "description": "The core engine of the Web App Framework, including the zero-VDOM compiler and signal-based runtime.",
-  "main": "index.js",
-  "module": "index.js",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
   "type": "module",
-  "exports": {
-    ".": "./index.js",
-    "./compiler": "./compiler/babel-plugin.cjs",
-    "./runtime": "./runtime/index.js",
-    "./router": "./router/index.js"
+  "scripts": {
+    "build": "babel . --out-dir dist --extensions .js,.jsx --copy-files --config-file ./babel.config.cjs --ignore \"node_modules,dist,package.json,bun.lock,*.md\"",
+    "prepublishOnly": "npm run build"
   },
+  "exports": {
+    ".": "./dist/index.js",
+    "./compiler": "./dist/compiler/babel-plugin.cjs",
+    "./runtime": "./dist/runtime/index.js",
+    "./router": "./dist/router/index.js"
+  },
+  "files": [
+    "dist"
+  ],
   "dependencies": {
     "@preact/signals-core": "^1.14.1",
     "@babel/core": "^7.29.0",

@@ -9,6 +9,7 @@ module.exports = function (babel) {
     visitor: {
       Program: {
         enter(p, state) {
+          state.runtimeSource = state.opts.runtimeSource || "@opentf/web";
           state.importsNeeded = new Map();
           state.importSources = new Map();
           state.components = new Map(); // name -> { path, isDefault, isPage }
@@ -134,11 +135,11 @@ module.exports = function (babel) {
             path.get("callee").replaceWith(t.memberExpression(t.identifier("Object"), t.identifier("assign")));
             path.node.arguments.unshift(t.thisExpression());
           } else if (name === "onMount") {
-            path.get("callee").replaceWith(getImport("onMount", "@opentf/web"));
+            path.get("callee").replaceWith(getImport("onMount", state.runtimeSource));
           } else if (name === "onCleanup") {
-            path.get("callee").replaceWith(getImport("onCleanup", "@opentf/web"));
+            path.get("callee").replaceWith(getImport("onCleanup", state.runtimeSource));
           } else if (name === "$renderDynamic") {
-            path.get("callee").replaceWith(getImport("renderDynamic", "@opentf/web"));
+            path.get("callee").replaceWith(getImport("renderDynamic", state.runtimeSource));
           }
         }
       },
@@ -360,7 +361,7 @@ module.exports = function (babel) {
       const tagName = "web-" + name.toLowerCase();
       const observedAttributes = Array.from(allSignals);
       const signalId = getImport("signal", "@preact/signals-core");
-      const createPropsProxyId = getImport("createPropsProxy", "@opentf/web");
+      const createPropsProxyId = getImport("createPropsProxy", state.runtimeSource);
       const classId = t.identifier(name + "Element");
 
       const classDecl = t.classDeclaration(
@@ -429,7 +430,7 @@ module.exports = function (babel) {
             t.whileStatement(t.memberExpression(t.thisExpression(), t.identifier("firstChild")), t.expressionStatement(t.callExpression(t.memberExpression(t.thisExpression(), t.identifier("removeChild")), [t.memberExpression(t.thisExpression(), t.identifier("firstChild"))]))),
 
             // Wrap setup in withInstance(this, () => { ... })
-            t.expressionStatement(t.callExpression(getImport("withInstance", "@opentf/web"), [
+            t.expressionStatement(t.callExpression(getImport("withInstance", state.runtimeSource), [
               t.thisExpression(),
               t.arrowFunctionExpression([], t.blockStatement([
                 ...originalStatements,
@@ -526,7 +527,7 @@ module.exports = function (babel) {
           
           n.openingElement.attributes.forEach(attr => {
             if (t.isJSXSpreadAttribute(attr)) {
-              const applySpreadId = getImport("applySpread", "@opentf/web");
+              const applySpreadId = getImport("applySpread", state.runtimeSource);
               statements.push(t.expressionStatement(t.callExpression(applySpreadId, [elId, attr.argument])));
               return;
             }
@@ -578,7 +579,7 @@ module.exports = function (babel) {
 
         n.openingElement.attributes.forEach(attr => {
           if (t.isJSXSpreadAttribute(attr)) {
-            const applySpreadId = getImport("applySpread", "@opentf/web");
+            const applySpreadId = getImport("applySpread", state.runtimeSource);
             statements.push(t.expressionStatement(t.callExpression(applySpreadId, [elId, attr.argument])));
             return;
           }
@@ -684,7 +685,7 @@ module.exports = function (babel) {
                      t.isMemberExpression(child.callee) && 
                      t.isIdentifier(child.callee.property, { name: "map" })) {
               
-              const mappedId = getImport("mapped", "@opentf/web");
+              const mappedId = getImport("mapped", state.runtimeSource);
               const sourceArray = child.callee.object;
               const mapFn = child.arguments[0];
               
@@ -710,7 +711,7 @@ module.exports = function (babel) {
         transformExpression(wrapper);
         const finalExpression = wrapper.expr;
 
-        const renderDynamicId = getImport("renderDynamic", "@opentf/web");
+        const renderDynamicId = getImport("renderDynamic", state.runtimeSource);
         statements.push(t.expressionStatement(t.callExpression(renderDynamicId, [
           parentElId,
           t.arrowFunctionExpression([], finalExpression)

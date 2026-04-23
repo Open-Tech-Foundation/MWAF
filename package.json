@@ -23,6 +23,7 @@
     "release": "changeset publish"
   },
   "devDependencies": {
+    "@babel/cli": "^7.28.6",
     "@babel/preset-react": "^7.28.5",
     "@changesets/cli": "^2.31.0",
     "@cloudflare/vite-plugin": "^1.33.1",
