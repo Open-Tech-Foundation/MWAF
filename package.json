@@ -17,10 +17,14 @@
     "website:dev": "vite website",
     "website:build": "vite build website",
     "test": "bun test",
-    "deploy": "bun run website:build && wrangler deploy"
+    "deploy": "bun run website:build && wrangler deploy",
+    "changeset": "changeset",
+    "version-packages": "changeset version",
+    "release": "changeset publish"
   },
   "devDependencies": {
     "@babel/preset-react": "^7.28.5",
+    "@changesets/cli": "^2.31.0",
     "@cloudflare/vite-plugin": "^1.33.1",
     "@rollup/plugin-babel": "^7.0.0",
     "@types/bun": "latest",

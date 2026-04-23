@@ -1,8 +1,8 @@
 # Web App Framework
 
-A project of the [Open Tech Foundation](https://github.com/Open-Tech-Foundation/Web-App-Framework).
+A project of the [Open Tech Foundation](https://github.com/Open-Tech-Foundation).
 
-**[🚀 Try the Web App Framework Documentation & Playground](https://mwaf.opentf.workers.dev/)**
+**[🚀 Try the Web App Framework Documentation & Playground](https://web.opentf.workers.dev/)**
 
 > [!CAUTION]
 > **EXPERIMENTAL PRE-RELEASE**

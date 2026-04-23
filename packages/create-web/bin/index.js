@@ -66,13 +66,6 @@ async function init() {
           active: 'yes',
           inactive: 'no'
         },
-        {
-          type: 'toggle',
-          name: 'includeUI',
-          message: reset(`Add ${cyan("Framework's UI Components")}?`),
-          initial: false,
-          active: 'yes',
-          inactive: 'no'
         }
       ],
       {
@@ -125,10 +118,7 @@ async function init() {
       
       // Dynamic Feature Injection
       if (includeForms) {
-        pkg.dependencies["@opentf/web-form"] = "^1.0.0";
-      }
-      if (includeUI) {
-        pkg.dependencies["@opentf/web-ui"] = "^0.1.0";
+        pkg.dependencies["@opentf/web-form"] = "^0.1.0-alpha.1";
       }
 
       // LOCAL DEV HACK: If we are in the monorepo, link packages locally so the user can test
@@ -171,14 +161,6 @@ async function init() {
     copyDir(formTemplateApp, path.join(root, 'app/form-example'));
     
     // Update layout to include link if we want (optional, but good for DX)
-  }
-
-  if (includeUI) {
-    // Placeholder for UI example
-    fs.mkdirSync(path.join(root, 'app/ui-demo'), { recursive: true });
-    fs.writeFileSync(path.join(root, 'app/ui-demo/page.jsx'), 
-      `export default function UIDemo() {\n  return <div>Web App Framework UI Components coming soon!</div>\n}`
-    );
   }
 
   // If Tailwind, create the CSS file

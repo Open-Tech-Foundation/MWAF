@@ -9,7 +9,7 @@ export default function WebsiteLayout(props) {
           <span className="font-bold tracking-tight text-lg">Web App Framework</span>
           <span className="px-2 py-0.5 bg-[#ff851b]/10 text-[#ff851b] rounded text-[10px] uppercase tracking-wider font-bold">v0.1.0-alpha.1</span>
         </div>
-        
+
         <nav className="flex gap-8 text-sm font-medium text-slate-500">
           <Link href="/" className="hover:text-black transition-colors">Home</Link>
           <Link href="/docs" className="hover:text-black transition-colors">Docs</Link>
@@ -26,7 +26,7 @@ export default function WebsiteLayout(props) {
           <div className="font-bold text-slate-900 flex items-center gap-2">
             Web App Framework
           </div>
-          <div>© 2026 <a href="https://github.com/Open-Tech-Foundation" target="_blank" className="hover:text-slate-900 transition-colors">Open-Tech-Foundation</a>.</div>
+          <div>© 2026 <a href="https://github.com/Open-Tech-Foundation" target="_blank" className="hover:text-slate-900 transition-colors">Open Tech Foundation</a>.</div>
         </div>
 
         <div className="flex flex-col items-center md:items-end gap-4 mt-6 md:mt-0">

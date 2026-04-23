@@ -1,7 +1,7 @@
 {
   "name": "@opentf/create-web",
   "version": "0.1.0-alpha.1",
-  "description": "The official scaffolding tool for the Web App Framework framework.",
+  "description": "The official scaffolding tool for the Web App Framework.",
   "bin": {
     "create-web": "./bin/index.js"
   },

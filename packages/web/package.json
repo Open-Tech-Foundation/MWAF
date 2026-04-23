@@ -1,7 +1,7 @@
 {
   "name": "@opentf/web",
-  "version": "0.1.0-alpha.1",
-  "description": "The core engine of the Web App Framework framework, including the zero-VDOM compiler and signal-based runtime.",
+  "version": "0.1.0",
+  "description": "The core engine of the Web App Framework, including the zero-VDOM compiler and signal-based runtime.",
   "main": "index.js",
   "module": "index.js",
   "type": "module",

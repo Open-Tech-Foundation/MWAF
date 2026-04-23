@@ -9,7 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@opentf/web": "^1.0.0"
+    "@opentf/web": "^0.1.0-alpha.1"
   },
   "devDependencies": {
     "vite": "^8.0.8",
