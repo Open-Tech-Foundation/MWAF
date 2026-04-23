@@ -1,7 +1,7 @@
 {
   "name": "web-bare-app",
   "private": true,
-  "version": "0.1.0-alpha.1",
+  "version": "0.1.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -9,9 +9,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@opentf/web": "^0.1.0-alpha.1"
+    "@opentf/web": "^0.1.0"
   },
   "devDependencies": {
+    "@babel/plugin-syntax-jsx": "^7.28.6",
     "vite": "^8.0.8",
     "@rollup/plugin-babel": "^7.0.0",
     "@babel/core": "^7.29.0"

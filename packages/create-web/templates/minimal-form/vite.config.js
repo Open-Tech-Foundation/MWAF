@@ -1,6 +1,5 @@
 import { defineConfig } from 'vite'
 import { babel } from '@rollup/plugin-babel'
-import webCompiler from '@opentf/web/compiler'
 
 export default defineConfig({
   esbuild: {
@@ -14,7 +13,7 @@ export default defineConfig({
       configFile: false,
       plugins: [
         "@babel/plugin-syntax-jsx",
-        [webCompiler]
+        ["@opentf/web/compiler"]
       ]
     })
   ]

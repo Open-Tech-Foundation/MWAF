@@ -117,7 +117,7 @@ async function init() {
       
       // Dynamic Feature Injection
       if (includeForms) {
-        pkg.dependencies["@opentf/web-form"] = "^0.1.0-alpha.1";
+        pkg.dependencies["@opentf/web-form"] = "^0.1.0";
       }
 
       // LOCAL DEV HACK: If we are in the monorepo, link packages locally so the user can test

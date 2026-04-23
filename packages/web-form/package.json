@@ -1,6 +1,6 @@
 {
   "name": "@opentf/web-form",
-  "version": "0.1.0-alpha.1",
+  "version": "0.1.0",
   "description": "A high-performance, path-based reactive forms library for Web App Framework and beyond.",
   "main": "index.js",
   "module": "index.js",
