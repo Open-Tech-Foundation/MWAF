@@ -8,8 +8,9 @@ on:
       - '**/CHANGELOG.md'
   pull_request:
     branches: [main]
-    branches-ignore:
-      - 'changeset-release/**'
+    paths-ignore:
+      - '.changeset/**'
+      - '**/CHANGELOG.md'
 
 jobs:
   test:
