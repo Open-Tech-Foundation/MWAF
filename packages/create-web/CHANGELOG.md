@@ -1,5 +1,11 @@
 # @opentf/create-web
 
+## 0.2.1
+
+### Patch Changes
+
+- b624031: Fix Vite 8 / Rolldown compatibility in scaffolding templates and ensure proper JSX parsing by adding @babel/plugin-syntax-jsx to devDependencies.
+
 ## 0.2.0
 
 ### Minor Changes
