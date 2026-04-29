@@ -1,10 +1,21 @@
 import CodeBlock from "../components/CodeBlock.jsx";
+import Tabs from "../components/Tabs.jsx";
 
 export default function DocsPage() {
-  const installationCode = `npm create @opentf/web@latest my-app
+  const installNpm = `npm create @opentf/web@latest my-app
 cd my-app
 npm install
 npm run dev`;
+
+  const installPnpm = `pnpm create @opentf/web my-app
+cd my-app
+pnpm install
+pnpm run dev`;
+
+  const installBun = `bun create @opentf/web my-app
+cd my-app
+bun install
+bun run dev`;
 
   const webComponentsCode = `// This Web App Framework component:
 export function UserCard() { 
@@ -142,7 +153,13 @@ export function Signup() {
             <a href="#installation" className="opacity-0 group-hover:opacity-100 text-accent text-sm transition-opacity">#</a>
           </h2>
           <p className="text-slate-600">Start a new project instantly using our official scaffolding tool:</p>
-          <CodeBlock code={installationCode} language="bash" />
+          
+          <Tabs tabs={[
+            { label: 'npm', content: <CodeBlock code={installNpm} language="bash" /> },
+            { label: 'pnpm', content: <CodeBlock code={installPnpm} language="bash" /> },
+            { label: 'bun', content: <CodeBlock code={installBun} language="bash" /> }
+          ]} />
+
           <p className="text-slate-600 italic">This interactive tool will guide you through choosing a styling solution and including optional framework modules.</p>
         </div>
 
@@ -389,15 +406,6 @@ export function Signup() {
           <CodeBlock code={formsCode} />
         </div>
 
-        <div id="ui-libs" className="space-y-4 scroll-mt-24 group">
-          <h2 className="text-2xl font-bold border-b border-slate-100 pb-2 flex items-center gap-2">
-            🎨 Future Libraries
-            <a href="#ui-libs" className="opacity-0 group-hover:opacity-100 text-accent text-sm transition-opacity">#</a>
-          </h2>
-          <p className="text-slate-600 leading-relaxed italic">
-            Official Web App Framework UI components and other ecosystem libraries are currently in development.
-          </p>
-        </div>
       </section>
 
       {/* 7. ⚙️ API REFERENCE */}
