@@ -307,6 +307,173 @@ customElements.define("web-reactivity", ReactivityElement);
 export default ReactivityElement;"
 `;
 
+exports[`Web App Framework Compiler Compiles react-patterns.jsx 1`] = `
+"import { effect as _effect, renderDynamic as _renderDynamic, applySpread as _applySpread, signal as _signal, createPropsProxy as _createPropsProxy, withInstance as _withInstance } from "@opentf/web";
+import { UI } from './ui-lib';
+class ReactPatternsElement extends HTMLElement {
+  static observedAttributes = ["user", "notifications"];
+  set user(val) {
+    this._propsSignals["user"].value = val;
+  }
+  set notifications(val) {
+    this._propsSignals["notifications"].value = val;
+  }
+  get user() {
+    return this._propsSignals["user"].value;
+  }
+  get notifications() {
+    return this._propsSignals["notifications"].value;
+  }
+  constructor() {
+    super();
+    this._propsSignals = {
+      user: _signal(null),
+      notifications: _signal(null)
+    };
+  }
+  attributeChangedCallback(name, _, value) {
+    this._propsSignals[name].value = value;
+  }
+  connectedCallback() {
+    this._onMounts = [];
+    this._onCleanups = [];
+    const props = _createPropsProxy(this);
+    this._children = Array.from(this.childNodes);
+    while (this.firstChild) this.removeChild(this.firstChild);
+    _withInstance(this, () => {
+      const Tag = props.isHeader ? 'h1' : 'h2';
+      const items = ['A', 'B'];
+      const rootElement = (() => {
+        const el0 = document.createElement("div");
+        el0.className = "container";
+        el0.setAttribute("data-testid", "main-div");
+        const el1 = document.createElement("input");
+        el1.setAttribute("disabled", true);
+        _effect(() => el1.setAttribute("tab-index", -1));
+        _effect(() => el1.setAttribute("max-length", 5));
+        el0.appendChild(el1);
+        const el2 = document.createElement(Tag);
+        const text3 = document.createTextNode("Dynamic Heading");
+        el2.appendChild(text3);
+        el0.appendChild(el2);
+        const el4 = document.createElement("web-ui-button");
+        el4.variant = "primary";
+        const text5 = document.createTextNode("Click Me");
+        el4.appendChild(text5);
+        el0.appendChild(el4);
+        const el6 = document.createElement("p");
+        const text7 = document.createTextNode(" Welcome, ");
+        el6.appendChild(text7);
+        const el8 = document.createElement("strong");
+        _renderDynamic(el8, () => props.user.name);
+        el6.appendChild(el8);
+        const text9 = document.createTextNode("!  You have ");
+        el6.appendChild(text9);
+        _renderDynamic(el6, () => props.notifications.length);
+        const text10 = document.createTextNode(" new messages. ");
+        el6.appendChild(text10);
+        el0.appendChild(el6);
+        const el11 = document.createElement("div");
+        _applySpread(el11, props.extra);
+        el11.className = "override";
+        el11.id = "constant";
+        const text12 = document.createTextNode(" Spread Test ");
+        el11.appendChild(text12);
+        el0.appendChild(el11);
+        const el13 = document.createElement("ul");
+        _renderDynamic(el13, () => [(() => {
+          const el0 = document.createElement("li");
+          el0._key = "1";
+          const text1 = document.createTextNode("One");
+          el0.appendChild(text1);
+          return el0;
+        })(), (() => {
+          const el0 = document.createElement("li");
+          el0._key = "2";
+          const text1 = document.createTextNode("Two");
+          el0.appendChild(text1);
+          return el0;
+        })()]);
+        el0.appendChild(el13);
+        const el14 = document.createElement("web-dataprovider");
+        _renderDynamic(el14, () => data => (() => {
+          const el0 = document.createElement("div");
+          const text1 = document.createTextNode("Data: ");
+          el0.appendChild(text1);
+          _renderDynamic(el0, () => data.value);
+          return el0;
+        })());
+        el0.appendChild(el14);
+        const el15 = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        el15.setAttribute("viewBox", "0 0 100 100");
+        el15.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+        const el16 = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+        el16.setAttribute("cx", "50");
+        el16.setAttribute("cy", "50");
+        el16.setAttribute("r", "40");
+        el16.setAttribute("strokeWidth", "2");
+        el16.setAttribute("fill", "red");
+        el15.appendChild(el16);
+        el0.appendChild(el15);
+        const el17 = document.createElement("web-customcomponent");
+        el0.appendChild(el17);
+        const el18 = document.createElement("br");
+        el0.appendChild(el18);
+        const el19 = document.createElement("hr");
+        el0.appendChild(el19);
+        return el0;
+      })();
+      this.appendChild(rootElement);
+    });
+    this._onMounts.forEach(fn => fn());
+  }
+  disconnectedCallback() {
+    this._onCleanups.forEach(fn => fn());
+  }
+}
+customElements.define("web-reactpatterns", ReactPatternsElement);
+export default ReactPatternsElement;
+function DataProvider({
+  children
+}) {
+  const data = {
+    value: 'Secret'
+  };
+  return typeof children === 'function' ? children(data) : children;
+}
+class CustomComponentElement extends HTMLElement {
+  static observedAttributes = [];
+  constructor() {
+    super();
+    this._propsSignals = {};
+  }
+  attributeChangedCallback(name, _, value) {
+    this._propsSignals[name].value = value;
+  }
+  connectedCallback() {
+    this._onMounts = [];
+    this._onCleanups = [];
+    const props = _createPropsProxy(this);
+    this._children = Array.from(this.childNodes);
+    while (this.firstChild) this.removeChild(this.firstChild);
+    _withInstance(this, () => {
+      const rootElement = (() => {
+        const el0 = document.createElement("div");
+        const text1 = document.createTextNode("Custom");
+        el0.appendChild(text1);
+        return el0;
+      })();
+      this.appendChild(rootElement);
+    });
+    this._onMounts.forEach(fn => fn());
+  }
+  disconnectedCallback() {
+    this._onCleanups.forEach(fn => fn());
+  }
+}
+customElements.define("web-customcomponent", CustomComponentElement);"
+`;
+
 exports[`Web App Framework Compiler Compiles nested-reactivity.jsx 1`] = `
 "import { signal as _signal, effect as _effect, renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy, withInstance as _withInstance } from "@opentf/web";
 class NestedReactivityElement extends HTMLElement {
@@ -779,19 +946,19 @@ class SvgTestElement extends HTMLElement {
         const el0 = document.createElementNS("http://www.w3.org/2000/svg", "svg");
         el0.setAttribute("width", "100");
         el0.setAttribute("height", "100");
-        el0.setAttribute("view-box", "0 0 100 100");
+        el0.setAttribute("viewBox", "0 0 100 100");
         const el1 = document.createElementNS("http://www.w3.org/2000/svg", "circle");
         el1.setAttribute("cx", "50");
         el1.setAttribute("cy", "50");
         el1.setAttribute("r", "40");
         el1.setAttribute("stroke", "red");
-        _effect(() => el1.setAttribute("stroke-width", strokeWidth.value));
+        _effect(() => el1.setAttribute("strokeWidth", strokeWidth.value));
         el1.setAttribute("fill", "transparent");
         el0.appendChild(el1);
         const el2 = document.createElementNS("http://www.w3.org/2000/svg", "path");
         el2.setAttribute("d", "M 10 10 L 90 90");
         el2.setAttribute("stroke", "blue");
-        el2.setAttribute("stroke-linecap", "round");
+        el2.setAttribute("strokeLinecap", "round");
         el0.appendChild(el2);
         return el0;
       })();
@@ -1235,6 +1402,224 @@ class ListRenderingElement extends HTMLElement {
 }
 customElements.define("web-listrendering", ListRenderingElement);
 export default ListRenderingElement;"
+`;
+
+exports[`Web App Framework Compiler Compiles icon-library.jsx 1`] = `
+"import { effect as _effect, applySpread as _applySpread, signal as _signal, createPropsProxy as _createPropsProxy, withInstance as _withInstance } from "@opentf/web";
+class IconGalleryElement extends HTMLElement {
+  static observedAttributes = [];
+  constructor() {
+    super();
+    this._propsSignals = {};
+  }
+  attributeChangedCallback(name, _, value) {
+    this._propsSignals[name].value = value;
+  }
+  connectedCallback() {
+    this._onMounts = [];
+    this._onCleanups = [];
+    const props = _createPropsProxy(this);
+    this._children = Array.from(this.childNodes);
+    while (this.firstChild) this.removeChild(this.firstChild);
+    _withInstance(this, () => {
+      const rootElement = (() => {
+        const el0 = document.createElement("div");
+        el0.className = "flex gap-4";
+        const el1 = document.createElement("web-cameraicon");
+        _effect(() => el1.size = 32);
+        el1.color = "red";
+        el0.appendChild(el1);
+        const el2 = document.createElement("web-usericon");
+        _effect(() => el2.size = 24);
+        el2.className = "text-blue-500";
+        el0.appendChild(el2);
+        const el3 = document.createElement("web-settingsicon");
+        _effect(() => el3.strokeWidth = 3);
+        el0.appendChild(el3);
+        return el0;
+      })();
+      this.appendChild(rootElement);
+    });
+    this._onMounts.forEach(fn => fn());
+  }
+  disconnectedCallback() {
+    this._onCleanups.forEach(fn => fn());
+  }
+}
+customElements.define("web-icongallery", IconGalleryElement);
+export default IconGalleryElement;
+class CameraIconElement extends HTMLElement {
+  static observedAttributes = ["size", "color"];
+  set size(val) {
+    this._propsSignals["size"].value = val;
+  }
+  set color(val) {
+    this._propsSignals["color"].value = val;
+  }
+  get size() {
+    return this._propsSignals["size"].value;
+  }
+  get color() {
+    return this._propsSignals["color"].value;
+  }
+  constructor() {
+    super();
+    this._propsSignals = {
+      size: _signal(null),
+      color: _signal(null)
+    };
+  }
+  attributeChangedCallback(name, _, value) {
+    this._propsSignals[name].value = value;
+  }
+  connectedCallback() {
+    this._onMounts = [];
+    this._onCleanups = [];
+    const props = _createPropsProxy(this);
+    this._children = Array.from(this.childNodes);
+    while (this.firstChild) this.removeChild(this.firstChild);
+    _withInstance(this, () => {
+      const rootElement = (() => {
+        const el0 = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        el0.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+        _effect(() => el0.setAttribute("width", props.size));
+        _effect(() => el0.setAttribute("height", props.size));
+        el0.setAttribute("viewBox", "0 0 24 24");
+        el0.setAttribute("fill", "none");
+        _effect(() => el0.setAttribute("stroke", props.color));
+        el0.setAttribute("strokeWidth", "2");
+        el0.setAttribute("strokeLinecap", "round");
+        el0.setAttribute("strokeLinejoin", "round");
+        _applySpread(el0, props);
+        const el1 = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        el1.setAttribute("d", "M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z");
+        el0.appendChild(el1);
+        const el2 = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+        el2.setAttribute("cx", "12");
+        el2.setAttribute("cy", "13");
+        el2.setAttribute("r", "4");
+        el0.appendChild(el2);
+        return el0;
+      })();
+      this.appendChild(rootElement);
+    });
+    this._onMounts.forEach(fn => fn());
+  }
+  disconnectedCallback() {
+    this._onCleanups.forEach(fn => fn());
+  }
+}
+customElements.define("web-cameraicon", CameraIconElement);
+class UserIconElement extends HTMLElement {
+  static observedAttributes = ["size"];
+  set size(val) {
+    this._propsSignals["size"].value = val;
+  }
+  get size() {
+    return this._propsSignals["size"].value;
+  }
+  constructor() {
+    super();
+    this._propsSignals = {
+      size: _signal(null)
+    };
+  }
+  attributeChangedCallback(name, _, value) {
+    this._propsSignals[name].value = value;
+  }
+  connectedCallback() {
+    this._onMounts = [];
+    this._onCleanups = [];
+    const props = _createPropsProxy(this);
+    this._children = Array.from(this.childNodes);
+    while (this.firstChild) this.removeChild(this.firstChild);
+    _withInstance(this, () => {
+      const rootElement = (() => {
+        const el0 = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        el0.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+        _effect(() => el0.setAttribute("width", props.size));
+        _effect(() => el0.setAttribute("height", props.size));
+        el0.setAttribute("viewBox", "0 0 24 24");
+        el0.setAttribute("fill", "none");
+        el0.setAttribute("stroke", "currentColor");
+        el0.setAttribute("strokeWidth", "2");
+        el0.setAttribute("strokeLinecap", "round");
+        el0.setAttribute("strokeLinejoin", "round");
+        _applySpread(el0, props);
+        const el1 = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        el1.setAttribute("d", "M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2");
+        el0.appendChild(el1);
+        const el2 = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+        el2.setAttribute("cx", "12");
+        el2.setAttribute("cy", "7");
+        el2.setAttribute("r", "4");
+        el0.appendChild(el2);
+        return el0;
+      })();
+      this.appendChild(rootElement);
+    });
+    this._onMounts.forEach(fn => fn());
+  }
+  disconnectedCallback() {
+    this._onCleanups.forEach(fn => fn());
+  }
+}
+customElements.define("web-usericon", UserIconElement);
+class SettingsIconElement extends HTMLElement {
+  static observedAttributes = ["strokeWidth"];
+  set strokeWidth(val) {
+    this._propsSignals["strokeWidth"].value = val;
+  }
+  get strokeWidth() {
+    return this._propsSignals["strokeWidth"].value;
+  }
+  constructor() {
+    super();
+    this._propsSignals = {
+      strokeWidth: _signal(null)
+    };
+  }
+  attributeChangedCallback(name, _, value) {
+    this._propsSignals[name].value = value;
+  }
+  connectedCallback() {
+    this._onMounts = [];
+    this._onCleanups = [];
+    const props = _createPropsProxy(this);
+    this._children = Array.from(this.childNodes);
+    while (this.firstChild) this.removeChild(this.firstChild);
+    _withInstance(this, () => {
+      const rootElement = (() => {
+        const el0 = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        el0.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+        el0.setAttribute("width", "24");
+        el0.setAttribute("height", "24");
+        el0.setAttribute("viewBox", "0 0 24 24");
+        el0.setAttribute("fill", "none");
+        el0.setAttribute("stroke", "currentColor");
+        _effect(() => el0.setAttribute("strokeWidth", props.strokeWidth));
+        el0.setAttribute("strokeLinecap", "round");
+        el0.setAttribute("strokeLinejoin", "round");
+        _applySpread(el0, props);
+        const el1 = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+        el1.setAttribute("cx", "12");
+        el1.setAttribute("cy", "12");
+        el1.setAttribute("r", "3");
+        el0.appendChild(el1);
+        const el2 = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        el2.setAttribute("d", "M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z");
+        el0.appendChild(el2);
+        return el0;
+      })();
+      this.appendChild(rootElement);
+    });
+    this._onMounts.forEach(fn => fn());
+  }
+  disconnectedCallback() {
+    this._onCleanups.forEach(fn => fn());
+  }
+}
+customElements.define("web-settingsicon", SettingsIconElement);"
 `;
 
 exports[`Web App Framework Compiler Compiles nested-fragments.jsx 1`] = `

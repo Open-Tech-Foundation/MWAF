@@ -1,6 +1,17 @@
 const { addNamed } = require("@babel/helper-module-imports");
 const path = require("path");
 
+const SVG_TAGS = ['svg', 'path', 'polyline', 'line', 'circle', 'rect', 'ellipse', 'polygon', 'g', 'text', 'tspan', 'defs', 'lineargradient', 'stop'];
+
+const SVG_CAMEL_CASE = [
+  "allowReorder", "attributeName", "attributeType", "autoReverse", "baseFrequency", "baseProfile", "calcMode", "clipPathUnits", "contentScriptType", "contentStyleType", "cursor", "cx", "cy", "d", "diffuseConstant", "direction", "display", "divisor", "dominantBaseline", "dur", "dx", "dy", "edgeMode", "elevation", "enableBackground", "externalResourcesRequired", "fill", "fillOpacity", "fillRule", "filter", "filterRes", "filterUnits", "floodColor", "floodOpacity", "focusable", "fontFamily", "fontSize", "fontSizeAdjust", "fontStretch", "fontStyle", "fontVariant", "fontWeight", "format", "from", "fx", "fy", "g1", "g2", "glyphName", "glyphOrientationHorizontal", "glyphOrientationVertical", "glyphRef", "gradientTransform", "gradientUnits", "hanging", "horizAdvX", "horizOriginX", "ideographic", "imageRendering", "in", "in2", "intercept", "k", "k1", "k2", "k3", "k4", "kernelMatrix", "kernelUnitLength", "kerning", "keyPoints", "keySplines", "keyTimes", "lengthAdjust", "letterSpacing", "lightingColor", "limitingConeAngle", "local", "markerEnd", "markerMid", "markerStart", "markerHeight", "markerUnits", "markerWidth", "mask", "maskContentUnits", "maskUnits", "mathematical", "mode", "numOctaves", "offset", "opacity", "operator", "order", "orient", "orientation", "origin", "overflow", "overlinePosition", "overlineThickness", "panose1", "paintOrder", "pathLength", "patternContentUnits", "patternTransform", "patternUnits", "pointerEvents", "points", "pointsAtX", "pointsAtY", "pointsAtZ", "preserveAlpha", "preserveAspectRatio", "primitiveUnits", "r", "radius", "refX", "refY", "renderingIntent", "repeatCount", "repeatDur", "requiredExtensions", "requiredFeatures", "restart", "result", "rotate", "rx", "ry", "scale", "seed", "shapeRendering", "slope", "spacing", "specularConstant", "specularExponent", "speed", "spreadMethod", "startOffset", "stdDeviation", "stemh", "stemv", "stitchTiles", "stopColor", "stopOpacity", "strikethroughPosition", "strikethroughThickness", "string", "stroke", "strokeDasharray", "strokeDashoffset", "strokeLinecap", "strokeLinejoin", "strokeMiterlimit", "strokeOpacity", "strokeWidth", "surfaceScale", "systemLanguage", "tableValues", "targetX", "targetY", "textAnchor", "textDecoration", "textLength", "textRendering", "to", "transform", "u1", "u2", "underlinePosition", "underlineThickness", "unicode", "unicodeBidi", "unicodeRange", "unitsPerEm", "vAlphabetic", "vHanging", "vIdeographic", "vMathematical", "values", "version", "vertAdvY", "vertOriginX", "vertOriginY", "viewBox", "viewTarget", "visibility", "widths", "wordSpacing", "writingMode", "x", "x1", "x2", "xChannelSelector", "xHeight", "xlinkActuate", "xlinkArcrole", "xlinkHref", "xlinkRole", "xlinkShow", "xlinkTitle", "xlinkType", "xmlBase", "xmlLang", "xmlSpace", "y", "y1", "y2", "yChannelSelector", "z", "zoomAndPan"
+];
+
+const IS_PROPERTY = ["className", "style", "value", "checked", "id", "title", "href", "src", "key"];
+
+const STANDARD_TAGS = ["div", "span", "p", "a", "ul", "li", "button", "input", "img", "h1", "h2", "h3", "h4", "h5", "h6", "section", "article", "nav", "header", "footer", "main", "aside", "form", "label", "select", "option", "textarea", "table", "tr", "td", "th", "thead", "tbody", "tfoot", "canvas", "video", "audio", "svg"];
+
+
 module.exports = function (babel) {
   const { types: t } = babel;
 
@@ -515,15 +526,63 @@ module.exports = function (babel) {
 
     function processNode(n, parentElId) {
       if (t.isJSXElement(n)) {
-        const tagName = n.openingElement.name.name;
-        const isComponent = /^[A-Z]/.test(tagName);
+        const tagNameNode = n.openingElement.name;
+        let tagName = "";
+        let isDynamic = false;
+        
+        if (t.isJSXIdentifier(tagNameNode)) {
+          tagName = tagNameNode.name;
+          // If it's an identifier that starts with Uppercase, it might be a component.
+          // But if it's NOT a globally defined component or a local function, it might be a dynamic tag variable.
+          // For now, let's assume if it's not a standard HTML tag and it's Uppercase, it's a component.
+          // BUT, if it's in scope as a variable, it might be dynamic.
+        } else if (t.isJSXMemberExpression(tagNameNode)) {
+          const getMemberName = (node) => {
+            if (t.isJSXIdentifier(node)) return node.name;
+            if (t.isJSXMemberExpression(node)) {
+              return `${getMemberName(node.object)}.${getMemberName(node.property)}`;
+            }
+            return "";
+          };
+          tagName = getMemberName(tagNameNode);
+        }
+
+        const isComponent = /^[A-Z]/.test(tagName) || tagName.includes(".");
         const elId = nextId();
 
         if (isComponent) {
-          const componentTagName = "web-" + tagName.toLowerCase();
-          statements.push(t.variableDeclaration("const", [
-            t.variableDeclarator(elId, t.callExpression(t.memberExpression(t.identifier("document"), t.identifier("createElement")), [t.stringLiteral(componentTagName)]))
-          ]));
+          // Check if the identifier is actually in scope (not a global component)
+          // This is a heuristic: if it's Uppercase and NOT a standard tag, we treat it as a component.
+          // For dynamic tags like <Tag />, we need to check if 'Tag' is a variable.
+          const binding = path.scope.getBinding(tagName);
+          const isStandardTag = /^[a-z]/.test(tagName) && STANDARD_TAGS.includes(tagName.toLowerCase());
+          
+          let componentTagName = tagName;
+          if (tagName.includes(".")) {
+             componentTagName = "web-" + tagName.replace(/\./g, "-").toLowerCase();
+          } else if (!isStandardTag) {
+             componentTagName = "web-" + tagName.toLowerCase();
+          }
+
+          const isFunction = binding && (t.isFunctionDeclaration(binding.path.node) || t.isFunctionExpression(binding.path.node) || t.isArrowFunctionExpression(binding.path.node));
+          const isImport = binding && binding.kind === "module";
+          const isVariable = binding && t.isVariableDeclarator(binding.path.node);
+
+          if (isFunction || isImport || (!binding && !isStandardTag)) {
+             statements.push(t.variableDeclaration("const", [
+               t.variableDeclarator(elId, t.callExpression(t.memberExpression(t.identifier("document"), t.identifier("createElement")), [t.stringLiteral(componentTagName)]))
+             ]));
+          } else if (isVariable) {
+             // Truly dynamic tag from local variable
+             statements.push(t.variableDeclaration("const", [
+               t.variableDeclarator(elId, t.callExpression(t.memberExpression(t.identifier("document"), t.identifier("createElement")), [t.identifier(tagName)]))
+             ]));
+          } else {
+            statements.push(t.variableDeclaration("const", [
+              t.variableDeclarator(elId, t.callExpression(t.memberExpression(t.identifier("document"), t.identifier("createElement")), [t.stringLiteral(componentTagName)]))
+            ]));
+          }
+
           
           n.openingElement.attributes.forEach(attr => {
             if (t.isJSXSpreadAttribute(attr)) {
@@ -532,7 +591,7 @@ module.exports = function (babel) {
               return;
             }
             const name = attr.name.name;
-            const value = attr.value;
+            const value = attr.value || t.booleanLiteral(true);
             const targetProp = name === "class" || name === "className" ? "className" : name;
 
             if (t.isJSXExpressionContainer(value)) {
@@ -565,8 +624,7 @@ module.exports = function (babel) {
           return elId;
         }
 
-        const svgTags = ['svg', 'path', 'polyline', 'line', 'circle', 'rect', 'ellipse', 'polygon', 'g', 'text', 'tspan', 'defs', 'lineargradient', 'stop'];
-        const isSvg = svgTags.includes(tagName.toLowerCase());
+        const isSvg = SVG_TAGS.includes(tagName.toLowerCase());
 
         statements.push(t.variableDeclaration("const", [
           t.variableDeclarator(
@@ -577,6 +635,7 @@ module.exports = function (babel) {
           )
         ]));
 
+
         n.openingElement.attributes.forEach(attr => {
           if (t.isJSXSpreadAttribute(attr)) {
             const applySpreadId = getImport("applySpread", state.runtimeSource);
@@ -585,7 +644,7 @@ module.exports = function (babel) {
           }
           const originalName = attr.name.name;
           const name = originalName.toLowerCase();
-          const value = attr.value;
+          const value = attr.value || t.booleanLiteral(true);
 
           if (name.startsWith("on")) {
             if (t.isJSXExpressionContainer(value) && t.isJSXEmptyExpression(value.expression)) return;
@@ -610,26 +669,33 @@ module.exports = function (babel) {
             const effectId = getImport("effect", state.runtimeSource);
             const attrProp = (name === "class" || name === "classname") ? "className" : name;
             const isStyle = attrProp === "style";
-            const isProperty = ["className", "style", "value", "checked", "id", "title", "href", "src", "key"].includes(attrProp);
+            const isProperty = IS_PROPERTY.includes(attrProp);
             
+            const isSvgCamel = isSvg && SVG_CAMEL_CASE.includes(originalName);
+            const finalAttrName = isSvgCamel ? originalName : (attrProp === "className" ? "class" : toKebabCase(originalName));
+
             if (attrProp === "key") {
               statements.push(t.expressionStatement(t.assignmentExpression("=", t.memberExpression(elId, t.identifier("_key")), value.expression)));
             } else {
               statements.push(t.expressionStatement(t.callExpression(effectId, [t.arrowFunctionExpression([], 
                 isStyle ? t.callExpression(t.memberExpression(t.identifier("Object"), t.identifier("assign")), [t.memberExpression(elId, t.identifier("style")), value.expression])
                 : (isProperty && (!isSvg || attrProp !== "className")) ? t.assignmentExpression("=", t.memberExpression(elId, t.identifier(attrProp)), value.expression)
-                : t.callExpression(t.memberExpression(elId, t.identifier("setAttribute")), [t.stringLiteral(attrProp === "className" ? "class" : toKebabCase(originalName)), value.expression])
+                : t.callExpression(t.memberExpression(elId, t.identifier("setAttribute")), [t.stringLiteral(finalAttrName), value.expression])
               )])));
             }
+
           } else {
             const attrProp = (name === "class" || name === "classname") ? "className" : name;
-            const isProperty = ["className", "style", "value", "checked", "id", "title", "href", "src", "key"].includes(attrProp);
+            const isProperty = IS_PROPERTY.includes(attrProp);
+            const isSvgCamel = isSvg && SVG_CAMEL_CASE.includes(originalName);
+            const finalAttrName = isSvgCamel ? originalName : (attrProp === "className" ? "class" : toKebabCase(originalName));
             
             if (isProperty && (!isSvg || attrProp !== "className")) {
               statements.push(t.expressionStatement(t.assignmentExpression("=", t.memberExpression(elId, t.identifier(attrProp === "key" ? "_key" : attrProp)), value)));
             } else {
-              statements.push(t.expressionStatement(t.callExpression(t.memberExpression(elId, t.identifier("setAttribute")), [t.stringLiteral(attrProp === "className" ? "class" : toKebabCase(originalName)), value])));
+              statements.push(t.expressionStatement(t.callExpression(t.memberExpression(elId, t.identifier("setAttribute")), [t.stringLiteral(finalAttrName), value])));
             }
+
           }
         });
 

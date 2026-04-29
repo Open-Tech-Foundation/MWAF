@@ -66,7 +66,7 @@ function matchRoute(path) {
       .replace(/\[\.\.\.([^\]]+)\]/g, '(?<$1>.+)')
       .replace(/\[([^\]]+)\]/g, '(?<$1>[^/]+)');
     
-    const regex = new RegExp(`^${pattern}$`);
+    const regex = new RegExp(`^${pattern}/?$`);
     const match = path.match(regex);
     if (match) {
       const params = { ...(match.groups || {}) };
