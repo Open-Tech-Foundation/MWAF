@@ -16,12 +16,12 @@ export default function BasicForm({ onSubmit }) {
       <div>
         <label for="username">Username</label>
         <input {...form.register("username")} id="username" data-testid="username" />
-        {form.errors.value.username && <span data-testid="username-error">{form.errors.value.username}</span>}
+        {form.errors.username && <span data-testid="username-error">{form.errors.username}</span>}
       </div>
       <div>
         <label for="email">Email</label>
         <input {...form.register("email")} id="email" data-testid="email" />
-        {form.errors.value.email && <span data-testid="email-error">{form.errors.value.email}</span>}
+        {form.errors.email && <span data-testid="email-error">{form.errors.email}</span>}
       </div>
       <button type="submit" data-testid="submit">Submit</button>
     </form>

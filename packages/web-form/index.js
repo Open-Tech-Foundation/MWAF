@@ -69,7 +69,7 @@ export function createForm({ initialValues = {}, validate, schema, validator } =
     const currentValues = values.value;
     if (validator) {
       const result = validator(currentValues, schema);
-      errors.value = result.errors || {};
+      errors.value = (result && result.errors) || result || {};
     } else if (validate) {
       errors.value = validate(currentValues) || {};
     }
@@ -103,11 +103,12 @@ export function createForm({ initialValues = {}, validate, schema, validator } =
       const currentValues = values.value;
       let currentErrors = {};
       if (validator) {
-        currentErrors = validator(currentValues, schema).errors || {};
+        const result = validator(currentValues, schema);
+        currentErrors = (result && result.errors) || result || {};
       } else if (validate) {
         currentErrors = validate(currentValues) || {};
       }
-      
+
       errors.value = currentErrors;
       
       if (Object.keys(currentErrors).length === 0) {
@@ -154,7 +155,19 @@ export function createForm({ initialValues = {}, validate, schema, validator } =
         } : undefined;
       }
     }),
-    errors,
+    errors: new Proxy({}, {
+      get: (_, key) => errors.value[key],
+      ownKeys: (_) => Object.keys(errors.value),
+      getOwnPropertyDescriptor: (_, key) => {
+        const val = errors.value[key];
+        return val !== undefined ? {
+          enumerable: true,
+          configurable: true,
+          value: val,
+          writable: true
+        } : undefined;
+      }
+    }),
     touched: new Proxy({}, {
       get: (_, key) => touched[key]
     }),

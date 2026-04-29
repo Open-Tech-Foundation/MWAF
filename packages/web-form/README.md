@@ -60,7 +60,7 @@ const zodValidator = (values, schema) => {
 const form = createForm({
   initialValues: { username: '', email: '' },
   schema,
-  validator: zodValidator
+  validator: zodValidator // Can return { errors: ... } or direct errors object
 });
 
 const onSubmit = (values) => {
@@ -71,16 +71,31 @@ const onSubmit = (values) => {
 <form onsubmit={form.handleSubmit(onSubmit)}>
   <div>
     <input {...form.register('username')} placeholder="Username" />
-    <span className="error">{form.errors.value.username}</span>
+    <span className="error">{form.errors.username}</span>
   </div>
   
   <div>
     <input {...form.register('email')} placeholder="Email" />
-    <span className="error">{form.errors.value.email}</span>
+    <span className="error">{form.errors.email}</span>
   </div>
 
   <button type="submit">Submit</button>
 </form>
+```
+
+## Custom Validation
+
+For simpler cases, you can use the `validate` function which expects you to return the errors object directly.
+
+```javascript
+const form = createForm({
+  initialValues: { age: 0 },
+  validate: (values) => {
+    const errors = {};
+    if (values.age < 18) errors.age = 'Too young';
+    return errors;
+  }
+});
 ```
 
 ## License

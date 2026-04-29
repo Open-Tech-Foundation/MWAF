@@ -65,4 +65,28 @@ describe("Web App Framework Forms Library - Pure Logic", () => {
     form.values.age = 20;
     expect(form.errors.age).toBeUndefined();
   });
+
+  test("errors proxy supports direct access", () => {
+    const form = createForm({
+      initialValues: { username: "" },
+      validate: (v) => (v.username ? {} : { username: "Required" }),
+    });
+
+    expect(form.errors.username).toBe("Required");
+
+    form.values.username = "Alice";
+    expect(form.errors.username).toBeUndefined();
+  });
+
+
+  test("supports Zod-style validator returning { errors }", () => {
+    const form = createForm({
+      initialValues: { email: "invalid" },
+      validator: (v) => {
+        return { errors: { email: "Invalid email" } };
+      },
+    });
+
+    expect(form.errors.email).toBe("Invalid email");
+  });
 });
