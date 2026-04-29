@@ -39,7 +39,7 @@ export default function DocsLayout(props) {
       'zero-vdom', 'web-components', 'props', 
       'state', 'derived', 'effect', 
       'file-routing', 'layouts', 'dynamic-routes', 'router-api',
-      'lists', 'conditionals', 'lifecycle', 'refs', 'global-state', 'forms',
+      'lists', 'conditionals', 'lifecycle', 'refs', 'global-state', 'forms', 'testing',
       'api-macros', 'api-hooks', 'api-router', 'api-attributes'
     ];
     
@@ -118,6 +118,7 @@ export default function DocsLayout(props) {
             <h4 className="font-bold text-slate-900 mb-3 px-2 text-xs uppercase tracking-wider opacity-50">Libraries</h4>
             <div className="flex flex-col space-y-1">
               {navLink({ href: "/docs#forms", children: "Forms (web-form)" })}
+              {navLink({ href: "/docs#testing", children: "Testing (web-test)" })}
             </div>
           </div>
 

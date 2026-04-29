@@ -1,4 +1,4 @@
-import { signal as _signal, mapped as _mapped, renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy, withInstance as _withInstance } from "@opentf/web";
+import { signal as _signal, _mapped, renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy, withInstance as _withInstance } from "@opentf/web";
 class ListRenderingElement extends HTMLElement {
   static observedAttributes = [];
   constructor() {
@@ -23,7 +23,7 @@ class ListRenderingElement extends HTMLElement {
           const el0 = document.createElement("li");
           const text1 = document.createTextNode("Item ");
           el0.appendChild(text1);
-          _renderDynamic(el0, () => item);
+          _renderDynamic(el0, () => item.value);
           return el0;
         })());
         _renderDynamic(el1, () => mapped2());

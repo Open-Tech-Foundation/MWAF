@@ -829,7 +829,7 @@ export default RefTestElement;"
 `;
 
 exports[`Web App Framework Compiler Compiles products-page.page.jsx 1`] = `
-"import { signal as _signal, mapped as _mapped, effect as _effect, renderDynamic as _renderDynamic } from "@opentf/web";
+"import { signal as _signal, _mapped, effect as _effect, renderDynamic as _renderDynamic } from "@opentf/web";
 export function render(root, props) {
   let products = _signal(Array.from({
     length: 1000
@@ -878,17 +878,17 @@ export function render(root, props) {
     el9.className = "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4";
     const mapped10 = _mapped(() => products.value, p => (() => {
       const el0 = document.createElement("div");
-      el0._key = p.id;
+      el0._key = p.value.id;
       el0.className = "p-4 bg-slate-800 rounded border border-slate-700 hover:border-indigo-500 transition-all";
       const el1 = document.createElement("div");
       el1.className = "font-bold text-white";
-      _renderDynamic(el1, () => p.name);
+      _renderDynamic(el1, () => p.value.name);
       el0.appendChild(el1);
       const el2 = document.createElement("div");
       el2.className = "text-slate-400 mt-1";
       const text3 = document.createTextNode("$");
       el2.appendChild(text3);
-      _renderDynamic(el2, () => p.price);
+      _renderDynamic(el2, () => p.value.price);
       el0.appendChild(el2);
       const el4 = document.createElement("input");
       el4.setAttribute("placeholder", "Add note...");
@@ -1209,7 +1209,7 @@ export function render(root, props) {
 `;
 
 exports[`Web App Framework Compiler Compiles catch-all-page.page.jsx 1`] = `
-"import { mapped as _mapped, renderDynamic as _renderDynamic } from "@opentf/web";
+"import { _mapped, renderDynamic as _renderDynamic } from "@opentf/web";
 export function render(root, props) {
   const rootElement = (() => {
     const el0 = document.createElement("div");
@@ -1227,7 +1227,7 @@ export function render(root, props) {
     el5.className = "list-disc ml-6 mt-2";
     const mapped6 = _mapped(() => props.params.slug, segment => (() => {
       const el0 = document.createElement("li");
-      _renderDynamic(el0, () => segment);
+      _renderDynamic(el0, () => segment.value);
       return el0;
     })());
     _renderDynamic(el5, () => mapped6());
@@ -1355,7 +1355,7 @@ export default MacroTestElement;"
 `;
 
 exports[`Web App Framework Compiler Compiles list-rendering.jsx 1`] = `
-"import { signal as _signal, mapped as _mapped, renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy, withInstance as _withInstance } from "@opentf/web";
+"import { signal as _signal, _mapped, renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy, withInstance as _withInstance } from "@opentf/web";
 class ListRenderingElement extends HTMLElement {
   static observedAttributes = [];
   constructor() {
@@ -1380,7 +1380,7 @@ class ListRenderingElement extends HTMLElement {
           const el0 = document.createElement("li");
           const text1 = document.createTextNode("Item ");
           el0.appendChild(text1);
-          _renderDynamic(el0, () => item);
+          _renderDynamic(el0, () => item.value);
           return el0;
         })());
         _renderDynamic(el1, () => mapped2());

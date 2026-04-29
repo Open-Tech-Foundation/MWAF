@@ -382,9 +382,16 @@ export function transformJSX(node, t, state, getImport, path) {
             exprNode[key] = t.callExpression(t.arrowFunctionExpression([], t.blockStatement([...innerStatements, t.returnStatement(innerRootId)])), []);
             exprNode[key]._processed = true;
           } else if (t.isCallExpression(child) && t.isMemberExpression(child.callee) && t.isIdentifier(child.callee.property, { name: "map" })) {
-            const mappedId = getImport("mapped", state.runtimeSource);
+            const mappedId = getImport("_mapped", state.runtimeSource);
             const sourceArray = child.callee.object;
             const mapFn = child.arguments[0];
+
+            // If the map function is an arrow function or regular function,
+            // treat its parameters as signals.
+            if (t.isFunction(mapFn)) {
+              mapFn._isMapCallback = true;
+            }
+
             const mappedInstanceId = nextId(t, "mapped");
             statements.push(t.variableDeclaration("const", [t.variableDeclarator(mappedInstanceId, t.callExpression(mappedId, [t.arrowFunctionExpression([], sourceArray), mapFn]))]));
             exprNode[key] = t.callExpression(mappedInstanceId, []);

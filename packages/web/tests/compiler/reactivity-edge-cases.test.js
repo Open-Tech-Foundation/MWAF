@@ -1,6 +1,6 @@
 import { expect, test, describe } from "bun:test";
 import * as babel from "@babel/core";
-import plugin from "../../packages/web/compiler/index.js";
+import plugin from "../../compiler/index.js";
 
 function compile(code) {
   return babel.transform(code, {
@@ -31,7 +31,7 @@ describe("Web App Framework Compiler > Reactivity Edge Cases", () => {
       }
     `;
     const output = compile(code);
-    expect(output).toContain("_mapped(() => cat.items");
+    expect(output).toContain("_mapped(() => cat.value.items");
     expect(output).toContain("_mapped(() => categories.value");
   });
 
@@ -69,6 +69,6 @@ describe("Web App Framework Compiler > Reactivity Edge Cases", () => {
     `;
     const output = compile(code);
     // The className should be wrapped in an effect inside the mapped function
-    expect(output).toContain("_effect(() => el0.className = item.active ? \"active\" : \"inactive\")");
+    expect(output).toContain("_effect(() => el0.className = item.value.active ? \"active\" : \"inactive\")");
   });
 });

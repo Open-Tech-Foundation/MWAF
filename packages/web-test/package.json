@@ -1,0 +1,15 @@
+{
+  "name": "@opentf/web-test",
+  "version": "0.0.1",
+  "description": "DOM testing utilities for Web App Framework",
+  "type": "module",
+  "main": "index.js",
+  "peerDependencies": {
+    "@opentf/web": "*"
+  },
+  "dependencies": {
+    "@testing-library/dom": "^10.4.1",
+    "@testing-library/user-event": "^14.6.1",
+    "happy-dom": "^20.9.0"
+  }
+}

@@ -13,9 +13,8 @@ export default defineConfig(({ mode }) => {
     },
     resolve: {
       alias: isDev ? {
-        '@opentf/web': path.resolve(__dirname, '../packages/web'),
+        '@opentf/web': path.resolve(__dirname, '../packages/web/index.js'),
         '@opentf/web-form': path.resolve(__dirname, '../packages/web-form'),
-        '@opentf/web-ui': path.resolve(__dirname, '../packages/web-ui')
       } : {}
     },
     plugins: [
@@ -27,7 +26,7 @@ export default defineConfig(({ mode }) => {
         configFile: false,
         plugins: [
           "@babel/plugin-syntax-jsx",
-          [isDev ? path.resolve(__dirname, '../packages/web/dist/compiler/babel-plugin.cjs') : "@opentf/web/compiler"]
+          [isDev ? path.resolve(__dirname, '../packages/web/compiler/index.js') : "@opentf/web/compiler"]
         ]
       })
     ],

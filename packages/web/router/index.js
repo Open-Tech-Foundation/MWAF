@@ -7,10 +7,12 @@ export const routes = {
   notFound: null
 }
 
+const isBrowser = typeof window !== 'undefined';
+
 const routerSignals = {
-  pathname: signal(window.location.pathname),
-  searchParams: signal(new URLSearchParams(window.location.search)),
-  hash: signal(window.location.hash),
+  pathname: signal(isBrowser ? window.location.pathname : '/'),
+  searchParams: signal(new URLSearchParams(isBrowser ? window.location.search : '')),
+  hash: signal(isBrowser ? window.location.hash : ''),
   isGuarding: signal(false),
   guard: null
 };

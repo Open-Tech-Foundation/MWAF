@@ -1,5 +1,3 @@
-import { mapped } from "@opentf/web";
-
 export default function ProductsPage() {
   let productsNaive = $state([]);
   let productsOptimized = $state([]);
@@ -33,7 +31,7 @@ export default function ProductsPage() {
   return (
     <div className="min-h-screen bg-slate-900 text-slate-300 p-8">
       <h1 className="text-3xl font-bold text-white mb-8">Performance Benchmark: 5000 Items</h1>
-      
+
       <div className="grid grid-cols-2 gap-8">
         {/* Naive List */}
         <div className="bg-slate-800 p-6 rounded-2xl border border-slate-700">
@@ -42,14 +40,14 @@ export default function ProductsPage() {
               <h2 className="text-xl font-bold text-white">Naive Re-render</h2>
               <p className="text-sm text-slate-400">Recreates DOM nodes</p>
             </div>
-            <button 
+            <button
               onclick={shuffleNaive}
               className="px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg text-white font-medium transition-colors"
             >
               Shuffle
             </button>
           </div>
-          
+
           <div className="mb-4 p-4 bg-slate-900 rounded-xl flex justify-between items-center">
             <span className="text-sm font-medium text-slate-400">Render Time:</span>
             <div className="text-red-400 font-mono font-bold text-lg">{naiveTime}ms</div>
@@ -72,14 +70,14 @@ export default function ProductsPage() {
               <h2 className="text-xl font-bold text-white">Optimized (Keyed)</h2>
               <p className="text-sm text-slate-400">Moves existing DOM nodes</p>
             </div>
-            <button 
+            <button
               onclick={shuffleOptimized}
               className="px-4 py-2 bg-indigo-500 hover:bg-indigo-600 rounded-lg text-white font-medium transition-colors"
             >
               Shuffle
             </button>
           </div>
-          
+
           <div className="mb-4 p-4 bg-slate-900 rounded-xl flex justify-between items-center">
             <span className="text-sm font-medium text-slate-400">Render Time:</span>
             <div className="text-emerald-400 font-mono font-bold text-lg">{optimizedTime}ms</div>

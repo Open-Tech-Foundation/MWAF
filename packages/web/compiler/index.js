@@ -132,10 +132,35 @@ export default function (babel) {
         }
       },
 
+      Function: {
+        enter(path, state) {
+          if (path.node._isMapCallback) {
+            if (!state.stateVars) state.stateVars = new Set();
+            path.node.params.forEach(param => {
+              if (t.isIdentifier(param)) {
+                state.stateVars.add(param.name);
+              }
+            });
+          }
+        },
+        exit(path, state) {
+          if (path.node._isMapCallback) {
+            path.node.params.forEach(param => {
+              if (t.isIdentifier(param)) {
+                state.stateVars.delete(param.name);
+              }
+            });
+          }
+        }
+      },
+
       Identifier(path, state) {
         if (!state.stateVars || !state.stateVars.has(path.node.name)) return;
         if (path.node._processed) return;
         
+        // Skip if it's a parameter of the function we are currently in
+        if (path.parentPath.isFunction() && path.parentPath.node.params.includes(path.node)) return;
+
         if (path.parentPath.isMemberExpression() && !path.parentPath.node.computed) {
           if (t.isIdentifier(path.parentPath.node.property, { name: "value" })) {
             throw path.parentPath.buildCodeFrameError(

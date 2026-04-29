@@ -1,4 +1,4 @@
-import { mapped as _mapped, renderDynamic as _renderDynamic } from "@opentf/web";
+import { _mapped, renderDynamic as _renderDynamic } from "@opentf/web";
 export function render(root, props) {
   const rootElement = (() => {
     const el0 = document.createElement("div");
@@ -16,7 +16,7 @@ export function render(root, props) {
     el5.className = "list-disc ml-6 mt-2";
     const mapped6 = _mapped(() => props.params.slug, segment => (() => {
       const el0 = document.createElement("li");
-      _renderDynamic(el0, () => segment);
+      _renderDynamic(el0, () => segment.value);
       return el0;
     })());
     _renderDynamic(el5, () => mapped6());

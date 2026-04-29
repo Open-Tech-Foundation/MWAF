@@ -76,12 +76,16 @@ export function applySpread(el, props) {
       effect(() => {
         const val = value.value;
         if (isProperty) {
-          if (attrProp === "style" && val && typeof val === "object") {
+          let targetProp = attrProp;
+          if (targetProp === "value" && el.type === "checkbox") {
+            targetProp = "checked";
+          }
+          if (targetProp === "style" && val && typeof val === "object") {
             Object.assign(el.style, val);
-          } else if (attrProp === "className" && el instanceof SVGElement) {
+          } else if (targetProp === "className" && el instanceof SVGElement) {
             el.setAttribute("class", val);
           } else {
-            el[attrProp] = val;
+            el[targetProp] = val;
           }
         } else {
           if (val === null || val === undefined || val === false) {
@@ -95,12 +99,16 @@ export function applySpread(el, props) {
       if (isEvent) {
         el[name] = value;
       } else if (isProperty) {
-        if (attrProp === "style" && value && typeof value === "object") {
+        let targetProp = attrProp;
+        if (targetProp === "value" && el.type === "checkbox") {
+          targetProp = "checked";
+        }
+        if (targetProp === "style" && value && typeof value === "object") {
           Object.assign(el.style, value);
-        } else if (attrProp === "className" && el instanceof SVGElement) {
+        } else if (targetProp === "className" && el instanceof SVGElement) {
           el.setAttribute("class", value);
         } else {
-          el[attrProp] = value;
+          el[targetProp] = value;
         }
       } else {
         if (value === null || value === undefined || value === false) {

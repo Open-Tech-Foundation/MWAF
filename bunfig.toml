@@ -1,0 +1,3 @@
+[test]
+env = "happy-dom"
+preload = ["./packages/web-test/setup.js"]

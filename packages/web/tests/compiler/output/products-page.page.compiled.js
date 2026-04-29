@@ -1,4 +1,4 @@
-import { signal as _signal, mapped as _mapped, effect as _effect, renderDynamic as _renderDynamic } from "@opentf/web";
+import { signal as _signal, _mapped, effect as _effect, renderDynamic as _renderDynamic } from "@opentf/web";
 export function render(root, props) {
   let products = _signal(Array.from({
     length: 1000
@@ -47,17 +47,17 @@ export function render(root, props) {
     el9.className = "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4";
     const mapped10 = _mapped(() => products.value, p => (() => {
       const el0 = document.createElement("div");
-      el0._key = p.id;
+      el0._key = p.value.id;
       el0.className = "p-4 bg-slate-800 rounded border border-slate-700 hover:border-indigo-500 transition-all";
       const el1 = document.createElement("div");
       el1.className = "font-bold text-white";
-      _renderDynamic(el1, () => p.name);
+      _renderDynamic(el1, () => p.value.name);
       el0.appendChild(el1);
       const el2 = document.createElement("div");
       el2.className = "text-slate-400 mt-1";
       const text3 = document.createTextNode("$");
       el2.appendChild(text3);
-      _renderDynamic(el2, () => p.price);
+      _renderDynamic(el2, () => p.value.price);
       el0.appendChild(el2);
       const el4 = document.createElement("input");
       el4.setAttribute("placeholder", "Add note...");

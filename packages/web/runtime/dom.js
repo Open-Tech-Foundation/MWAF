@@ -1,4 +1,4 @@
-import { effect } from "@preact/signals-core";
+import { effect, signal } from "@preact/signals-core";
 
 export function renderDynamic(parent, fn) {
   const anchor = document.createComment("dynamic");
@@ -24,8 +24,8 @@ export function renderDynamic(parent, fn) {
   });
 }
 
-export function mapped(source, fn) {
-  let cache = new Map(); // key -> { node }
+export function _mapped(source, fn) {
+  let cache = new Map(); // key -> { node, itemSignal, indexSignal }
   
   return () => {
     const list = (typeof source === "function" ? source() : source.value) || [];
@@ -36,18 +36,20 @@ export function mapped(source, fn) {
       const key = item.key ?? item.id ?? index;
       let cached = cache.get(key);
       
-      // If the item exists and the reference is identical OR it's a primitive at the same key/index, reuse the node
-      if (cached && (cached.item === item || typeof item !== 'object')) {
-        // Update the cached item reference so future checks have the latest primitive value
-        cached.item = item;
+      if (cached) {
+        // Reuse node and update signals
+        cached.itemSignal.value = item;
+        cached.indexSignal.value = index;
         nextNodes.push(cached.node);
         nextCache.set(key, cached);
       } else {
-        // If it's a new item OR the object data changed (new reference), re-render
-        const node = fn(item, index);
+        // Create new node and signals
+        const itemSignal = signal(item);
+        const indexSignal = signal(index);
+        const node = fn(itemSignal, indexSignal);
         node._key = key;
         nextNodes.push(node);
-        nextCache.set(key, { node, item });
+        nextCache.set(key, { node, itemSignal, indexSignal });
       }
     });
 

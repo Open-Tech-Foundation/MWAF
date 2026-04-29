@@ -96,6 +96,18 @@ export function Timer() {
   return <div>Time: {time}</div>;
 }`;
 
+  const testingCode = `import { expect, test } from "bun:test";
+import { render, userEvent } from "@opentf/web-test";
+import MyComponent from "./MyComponent.jsx";
+
+test("increment counter", async () => {
+  const { getByText } = render(MyComponent);
+  const user = userEvent.setup();
+  const btn = getByText("Count: 0");
+  await user.click(btn);
+  expect(btn.textContent).toBe("Count: 1");
+});`;
+
   const refsCode = `function CustomInput() {
   const input = $ref();
   const focus = () => input.focus();
@@ -408,7 +420,37 @@ export function Signup() {
 
       </section>
 
-      {/* 7. ⚙️ API REFERENCE */}
+      {/* 7. 🧪 TESTING */}
+      <section id="testing" className="space-y-8 border-t border-slate-100 pt-12 scroll-mt-24">
+        <div className="space-y-4">
+          <h2 className="text-3xl font-bold text-slate-900">Testing 🧪</h2>
+          <p className="text-slate-600 leading-relaxed">
+            Reliable applications require reliable tests. The official <code className="text-accent">@opentf/web-test</code> package provides a lightweight, "React Testing Library" style utility for testing framework components.
+          </p>
+          <p className="text-slate-600 leading-relaxed">
+            It integrates with <strong>Bun's test runner</strong> and uses <strong>Happy DOM</strong> for a high-performance virtual browser environment.
+          </p>
+          
+          <div className="bg-slate-50 p-6 rounded-xl border border-slate-100 space-y-4">
+            <h4 className="font-bold text-slate-800">Quick Setup</h4>
+            <div className="space-y-2">
+              <p className="text-sm text-slate-500">1. Install dependencies:</p>
+              <pre className="bg-slate-900 text-slate-300 p-3 rounded-lg text-xs">bun add -d @opentf/web-test</pre>
+            </div>
+            <div className="space-y-2">
+              <p className="text-sm text-slate-500">2. Add to your <code className="text-accent">bunfig.toml</code>:</p>
+              <pre className="bg-slate-900 text-slate-300 p-3 rounded-lg text-xs">
+{`[test]
+preload = ["@opentf/web-test/setup"]`}
+              </pre>
+            </div>
+          </div>
+
+          <CodeBlock code={testingCode} />
+        </div>
+      </section>
+
+      {/* 8. ⚙️ API REFERENCE */}
       <section className="space-y-12 border-t border-slate-100 pt-12">
         <h2 className="text-3xl font-bold text-slate-900">API Reference 📖</h2>
 
