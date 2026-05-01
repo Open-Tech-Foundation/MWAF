@@ -1,4 +1,4 @@
-# Web App Framework
+# The native-first framework for modern web apps.
 
 A project of the [Open Tech Foundation](https://github.com/Open-Tech-Foundation).
 
@@ -7,11 +7,11 @@ A project of the [Open Tech Foundation](https://github.com/Open-Tech-Foundation)
 > [!CAUTION]
 > **EXPERIMENTAL PRE-RELEASE**
 >
-> Web App Framework is currently in an experimental, pre-release state. The framework architecture and APIs are subject to breaking changes as we optimize for production readiness.
+> This framework is currently in an experimental, pre-release state. The architecture and APIs are subject to breaking changes as we optimize for production readiness.
 
 ## Overview
 
->**Web App Framework** is a modern, high-performance UI framework that compiles JSX directly into optimized, imperative native DOM operations. 
+>**Web App Framework** is a high-performance, native-first UI framework that compiles JSX directly into optimized, imperative native DOM operations. 
 
 Unlike traditional frameworks, Web App Framework has **Zero-VDOM**. There is no Virtual DOM diffing or reconciliation loop. Instead, our compiler statically analyzes your components and generates the exact `document.createElement` and DOM property assignments needed. Every component you write is compiled into a **Standard Web Component**, ensuring perfect isolation and native performance.
 
