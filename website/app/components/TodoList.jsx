@@ -16,23 +16,23 @@ export default function TodoList() {
   };
 
   return (
-    <div className="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 w-full max-w-sm">
+    <div className="bg-[var(--bg-main)] p-5 rounded-2xl shadow-sm border border-[var(--border)] w-full max-w-sm">
       <input 
         type="text" 
         placeholder="What needs to be done?" 
         onkeyup={addTodo}
-        className="w-full px-4 py-2.5 rounded-xl border border-slate-200 mb-4 text-sm focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent"
+        className="w-full px-4 py-2.5 rounded-xl border border-[var(--border)] mb-4 text-sm focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent"
       />
       <ul className="space-y-2">
         {todos.map(todo => (
-          <li key={todo.id} className="flex items-center gap-3 p-2 hover:bg-slate-50 rounded-lg transition-colors">
+          <li key={todo.id} className="flex items-center gap-3 p-2 hover:bg-[var(--bg-surface)] rounded-lg transition-colors">
             <input 
               type="checkbox" 
               checked={todo.done} 
               onchange={() => toggleTodo(todo.id)} 
               className="w-5 h-5 accent-[#ff851b] rounded cursor-pointer"
             />
-            <span className={todo.done ? "line-through text-slate-400" : "text-slate-700 font-medium"}>
+            <span className={todo.done ? "line-through text-[var(--text-muted)]" : "text-[var(--text-main)] font-medium"}>
               {todo.text}
             </span>
           </li>

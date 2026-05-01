@@ -8,6 +8,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@opentf/web": "latest"
+    "@opentf/std": "^0.13.0",
+    "@opentf/web": "latest",
+    "@opentf/web-form": "^0.1.0",
+    "zod": "^4.4.1"
   }
 }

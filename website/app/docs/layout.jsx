@@ -1,19 +1,30 @@
 import { Link, router } from "@opentf/web";
 
 const navLink = (props) => {
-  const id = props.href.split('#')[1];
+  const isHashLink = props.href.includes('#');
+  const path = isHashLink ? props.href.split('#')[0] : props.href;
+  const hash = isHashLink ? props.href.split('#')[1] : null;
+
   const isActive = $derived(() => {
-    const currentHash = router.hash || "#introduction";
-    return currentHash === `#${id}`;
+    if (isHashLink && hash) {
+      const currentHash = router.hash || "#introduction";
+      return currentHash === `#${hash}` && router.pathname === path;
+    }
+    return router.pathname === path;
   });
   
   const handleClick = (e) => {
-    e.preventDefault();
-    window._isProgrammaticScroll = true;
-    router.hash = `#${id}`;
-    const el = document.getElementById(id);
-    if (el) el.scrollIntoView({ behavior: 'smooth' });
-    setTimeout(() => window._isProgrammaticScroll = false, 1000);
+    if (isHashLink && hash && router.pathname === path) {
+      e.preventDefault();
+      window._isProgrammaticScroll = true;
+      router.hash = `#${hash}`;
+      const el = document.getElementById(hash);
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
+      setTimeout(() => window._isProgrammaticScroll = false, 1000);
+    } else {
+      // Standard navigation
+      router.push(props.href);
+    }
   };
   
   return (
@@ -22,7 +33,7 @@ const navLink = (props) => {
       onclick={handleClick}
       className={isActive 
         ? "px-2 py-1.5 text-sm font-bold text-accent bg-accent/10 rounded-md transition-all block w-full text-left cursor-pointer" 
-        : "px-2 py-1.5 text-sm text-slate-500 hover:text-accent hover:bg-accent/5 rounded-md transition-all block w-full text-left cursor-pointer"
+        : "px-2 py-1.5 text-sm text-[var(--text-muted)] hover:text-accent hover:bg-accent/5 rounded-md transition-all block w-full text-left cursor-pointer"
       }
     >
       {props.children}
@@ -67,7 +78,7 @@ export default function DocsLayout(props) {
         <div className="sticky top-24 space-y-8 max-h-[calc(100vh-120px)] overflow-y-auto pr-4 scrollbar-hide hover:scrollbar-default">
           
           <div>
-            <h4 className="font-bold text-slate-900 mb-3 px-2 text-xs uppercase tracking-wider opacity-50">Getting Started</h4>
+            <h4 className="font-bold text-[var(--text-main)] mb-3 px-2 text-xs uppercase tracking-wider opacity-50">Getting Started</h4>
             <div className="flex flex-col space-y-1">
               {navLink({ href: "/docs#introduction", children: "Introduction" })}
               {navLink({ href: "/docs#installation", children: "Installation" })}
@@ -76,7 +87,7 @@ export default function DocsLayout(props) {
           </div>
 
           <div>
-            <h4 className="font-bold text-slate-900 mb-3 px-2 text-xs uppercase tracking-wider opacity-50">Core Concepts</h4>
+            <h4 className="font-bold text-[var(--text-main)] mb-3 px-2 text-xs uppercase tracking-wider opacity-50">Core Concepts</h4>
             <div className="flex flex-col space-y-1">
               {navLink({ href: "/docs#zero-vdom", children: "Zero-VDOM" })}
               {navLink({ href: "/docs#web-components", children: "Web Components" })}
@@ -85,7 +96,7 @@ export default function DocsLayout(props) {
           </div>
 
           <div>
-            <h4 className="font-bold text-slate-900 mb-3 px-2 text-xs uppercase tracking-wider opacity-50">Reactivity</h4>
+            <h4 className="font-bold text-[var(--text-main)] mb-3 px-2 text-xs uppercase tracking-wider opacity-50">Reactivity</h4>
             <div className="flex flex-col space-y-1">
               {navLink({ href: "/docs#state", children: "$state Macro" })}
               {navLink({ href: "/docs#derived", children: "$derived Macro" })}
@@ -94,7 +105,7 @@ export default function DocsLayout(props) {
           </div>
 
           <div>
-            <h4 className="font-bold text-slate-900 mb-3 px-2 text-xs uppercase tracking-wider opacity-50">Routing</h4>
+            <h4 className="font-bold text-[var(--text-main)] mb-3 px-2 text-xs uppercase tracking-wider opacity-50">Routing</h4>
             <div className="flex flex-col space-y-1">
               {navLink({ href: "/docs#file-routing", children: "File-based Routing" })}
               {navLink({ href: "/docs#layouts", children: "Layouts" })}
@@ -104,7 +115,7 @@ export default function DocsLayout(props) {
           </div>
 
           <div>
-            <h4 className="font-bold text-slate-900 mb-3 px-2 text-xs uppercase tracking-wider opacity-50">Advanced</h4>
+            <h4 className="font-bold text-[var(--text-main)] mb-3 px-2 text-xs uppercase tracking-wider opacity-50">Advanced</h4>
             <div className="flex flex-col space-y-1">
               {navLink({ href: "/docs#lists", children: "List Rendering" })}
               {navLink({ href: "/docs#conditionals", children: "Conditional Rendering" })}
@@ -115,20 +126,21 @@ export default function DocsLayout(props) {
           </div>
 
           <div>
-            <h4 className="font-bold text-slate-900 mb-3 px-2 text-xs uppercase tracking-wider opacity-50">Libraries</h4>
+            <h4 className="font-bold text-[var(--text-main)] mb-3 px-2 text-xs uppercase tracking-wider opacity-50">Libraries</h4>
             <div className="flex flex-col space-y-1">
-              {navLink({ href: "/docs#forms", children: "Forms (web-form)" })}
+              {navLink({ href: "/docs/web-form", children: "Forms (web-form)" })}
               {navLink({ href: "/docs#testing", children: "Testing (web-test)" })}
             </div>
           </div>
 
           <div>
-            <h4 className="font-bold text-slate-900 mb-3 px-2 text-xs uppercase tracking-wider opacity-50">API Reference</h4>
+            <h4 className="font-bold text-[var(--text-main)] mb-3 px-2 text-xs uppercase tracking-wider opacity-50">API Reference</h4>
             <div className="flex flex-col space-y-1">
               {navLink({ href: "/docs#api-macros", children: "Macros" })}
               {navLink({ href: "/docs#api-hooks", children: "Hooks" })}
               {navLink({ href: "/docs#api-router", children: "Router" })}
               {navLink({ href: "/docs#api-attributes", children: "Elements" })}
+              {navLink({ href: "/docs/web-form/api", children: "Web Form API" })}
             </div>
           </div>
 

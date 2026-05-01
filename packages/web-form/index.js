@@ -90,8 +90,8 @@ function _createForm(options = {}) {
     }
   }
 
-  const getMode = () => untracked(() => (options.mode instanceof Object ? options.mode.value : options.mode) || "onBlur");
-  const getReValidateMode = () => untracked(() => (options.reValidateMode instanceof Object ? options.reValidateMode.value : options.reValidateMode) || "onChange");
+  const getMode = () => (options.mode instanceof Object ? options.mode.value : options.mode) || "onBlur";
+  const getReValidateMode = () => (options.reValidateMode instanceof Object ? options.reValidateMode.value : options.reValidateMode) || "onChange";
   const activeValidator = options.validator || options.validate;
 
   function hasErrors(obj) {
@@ -175,19 +175,35 @@ function _createForm(options = {}) {
         set(newTouched, path, true);
         touchedSig.value = newTouched;
         notifySignals("t", path, touchedSig.value);
-        if (getMode() === "onBlur") runValidation(path);
+        const mode = getMode();
+        if (mode === "onBlur") runValidation(path);
       },
     };
   };
 
+  function markAllTouched(obj) {
+    if (!obj || typeof obj !== "object") return true;
+    const res = Array.isArray(obj) ? [] : {};
+    Object.keys(obj).forEach((key) => {
+      res[key] = markAllTouched(obj[key]);
+    });
+    return res;
+  }
+
   const handleSubmit = (fn) => async (e) => {
     if (e && e.preventDefault) e.preventDefault();
+    touchedSig.value = markAllTouched(valuesSig.value);
+    notifySignals("t");
     isSubmittingSig.value = true;
     submitCountSig.value++;
     await runValidation();
     if (isValidSig.value) {
-      try { await fn(valuesSig.value); isSubmittedSig.value = true; }
-      finally { isSubmittingSig.value = false; }
+      try {
+        await fn(valuesSig.value);
+        isSubmittedSig.value = true;
+      } finally {
+        isSubmittingSig.value = false;
+      }
     } else {
       isSubmittingSig.value = false;
     }

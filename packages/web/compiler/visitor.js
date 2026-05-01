@@ -96,7 +96,7 @@ export function transformComponent(componentPath, name, isRenderFn, t, state) {
           const child = node[key];
           if (t.isIdentifier(child) && propNames.has(child.name)) {
             if (t.isObjectProperty(node) && key === "key" && !node.computed) continue;
-            if (t.isMemberExpression(node) && key === "property" && !node.computed) continue;
+            if ((t.isMemberExpression(node) || t.isOptionalMemberExpression(node)) && key === "property" && !node.computed) continue;
             if (t.isClassMethod(node) && key === "key") continue;
             if (t.isJSXAttribute(node) && key === "name") continue;
             node[key] = t.memberExpression(t.identifier("props"), t.identifier(child.name));

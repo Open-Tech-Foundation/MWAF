@@ -16,20 +16,43 @@ web-navlink, web-link, web-counter, web-todolist {
 }
 
 :root {
+  --bg-main: #ffffff;
+  --bg-surface: #f8fafc;
+  --text-main: #0f172a;
+  --text-muted: #64748b;
+  --border: #e2e8f0;
   --accent: #ff851b;
+  --accent-soft: rgba(255, 133, 27, 0.1);
+  --code-bg: #0f172a;
+  --selection-bg: rgba(255, 133, 27, 0.2);
+  --selection-text: #c2610d;
+}
+
+[data-theme='dark'] {
+  --bg-main: #020617;
+  --bg-surface: #0f172a;
+  --text-main: #f1f5f9;
+  --text-muted: #94a3b8;
+  --border: #1e293b;
+  --accent: #ff851b;
+  --accent-soft: rgba(255, 133, 27, 0.2);
+  --code-bg: #000000;
+  --selection-bg: rgba(255, 133, 27, 0.3);
+  --selection-text: #ff851b;
 }
 
 body {
   margin: 0;
   font-family: 'Geist', sans-serif;
-  background-color: #ffffff;
-  color: #0f172a;
+  background-color: var(--bg-main);
+  color: var(--text-main);
+  transition: background-color 0.3s ease, color 0.3s ease;
   -webkit-font-smoothing: antialiased;
 }
 
 ::selection {
-  background: rgba(255, 133, 27, 0.2);
-  color: #c2610d;
+  background: var(--selection-bg);
+  color: var(--selection-text);
 }
 
 .custom-scrollbar::-webkit-scrollbar {
