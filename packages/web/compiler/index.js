@@ -26,6 +26,21 @@ export default function (babel) {
         }
       },
 
+      VariableDeclarator(path, state) {
+        if (!t.isIdentifier(path.node.id) || !/^[A-Z]/.test(path.node.id.name)) return;
+        const name = path.node.id.name;
+        
+        let hasJSX = false;
+        path.traverse({
+          JSXElement() { hasJSX = true; },
+          JSXFragment() { hasJSX = true; }
+        });
+
+        if (hasJSX) {
+          state.components.set(name, { path, isDefault: false });
+        }
+      },
+
       FunctionDeclaration(path, state) {
         if (!path.node.id) return;
         const name = path.node.id.name;

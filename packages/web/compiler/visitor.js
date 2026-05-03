@@ -38,20 +38,31 @@ export function handleJSXVisitor(path, state, t) {
 }
 
 export function transformComponent(componentPath, name, isRenderFn, t, state) {
-  const node = componentPath.node;
+  let node = componentPath.node;
+  if (t.isVariableDeclarator(node)) {
+    node = node.init;
+  }
   const body = node.body;
   const getImport = getImportHelper(t, componentPath, state);
 
   let jsxNode = null;
   const originalStatements = [];
 
-  body.body.forEach(stmt => {
-    if (t.isReturnStatement(stmt)) {
-      jsxNode = stmt.argument;
+  const processBody = (bodyNode) => {
+    if (t.isBlockStatement(bodyNode)) {
+      bodyNode.body.forEach(stmt => {
+        if (t.isReturnStatement(stmt)) {
+          jsxNode = stmt.argument;
+        } else {
+          originalStatements.push(stmt);
+        }
+      });
     } else {
-      originalStatements.push(stmt);
+      jsxNode = bodyNode;
     }
-  });
+  };
+
+  processBody(body);
 
   if (!jsxNode) return;
 
@@ -185,9 +196,18 @@ export function transformComponent(componentPath, name, isRenderFn, t, state) {
       parent.replaceWith(t.exportNamedDeclaration(exportedClass, []));
       parent.insertAfter(t.expressionStatement(t.callExpression(t.memberExpression(t.identifier("customElements"), t.identifier("define")), [t.stringLiteral(tagName), t.identifier(name)])));
     } else {
-      componentPath.insertBefore(classDecl);
-      componentPath.insertBefore(t.expressionStatement(t.callExpression(t.memberExpression(t.identifier("customElements"), t.identifier("define")), [t.stringLiteral(tagName), classId])));
-      componentPath.remove();
+      let targetPath = componentPath;
+      if (componentPath.isVariableDeclarator() && componentPath.parentPath.isVariableDeclaration()) {
+        targetPath = componentPath.parentPath;
+      }
+      targetPath.insertBefore(classDecl);
+      targetPath.insertBefore(t.expressionStatement(t.callExpression(t.memberExpression(t.identifier("customElements"), t.identifier("define")), [t.stringLiteral(tagName), classId])));
+      
+      if (componentPath.isVariableDeclarator()) {
+        componentPath.get("init").replaceWith(classId);
+      } else {
+        targetPath.remove();
+      }
     }
   }
 }
@@ -239,6 +259,8 @@ export function transformComponent(componentPath, name, isRenderFn, t, state) {
           if (t.isMemberExpression(exprNode) && t.isIdentifier(exprNode.property, { name: "value" }) && !exprNode.computed) return;
           // Don't transform if it's an object property key
           if (t.isObjectProperty(exprNode) && key === "key" && !exprNode.computed) return;
+          // Don't transform if it's a non-computed member expression property
+          if (t.isMemberExpression(exprNode) && key === "property" && !exprNode.computed) return;
           
           child._processed = true;
           exprNode[key] = t.memberExpression(child, t.identifier("value"));
@@ -276,7 +298,7 @@ export function transformComponent(componentPath, name, isRenderFn, t, state) {
         const isImport = binding && binding.kind === "module";
         const isVariable = binding && t.isVariableDeclarator(binding.path.node);
 
-        if (isFunction || isImport || (!binding && !isStandardTag)) {
+        if (isFunction || isImport || state.components.has(tagName) || (!binding && !isStandardTag)) {
            statements.push(t.variableDeclaration("const", [t.variableDeclarator(elId, t.callExpression(t.memberExpression(t.identifier("document"), t.identifier("createElement")), [t.stringLiteral(componentTagName)]))]));
         } else if (isVariable) {
            statements.push(t.variableDeclaration("const", [t.variableDeclarator(elId, t.callExpression(t.memberExpression(t.identifier("document"), t.identifier("createElement")), [t.identifier(tagName)]))]));
