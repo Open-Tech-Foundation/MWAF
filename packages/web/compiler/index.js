@@ -95,6 +95,11 @@ export default function (babel) {
           } else {
             state.components.set("_default", { path: path.get("declaration"), isDefault: true });
           }
+        } else if (t.isIdentifier(decl)) {
+          const name = decl.name;
+          if (state.components.has(name)) {
+            state.components.get(name).isDefault = true;
+          }
         }
       },
 
@@ -137,7 +142,20 @@ export default function (babel) {
               path.get("callee").replaceWith(getImport("signal", state.runtimeSource));
             }
           } else if (name === "$effect") {
-            path.get("callee").replaceWith(getImport("effect", state.runtimeSource));
+            const effectId = getImport("effect", state.runtimeSource);
+            const isSSGId = getImport("isSSG", state.runtimeSource);
+            const parent = path.parentPath;
+            const effectCall = t.callExpression(effectId, path.node.arguments);
+            const ifStmt = t.ifStatement(
+              t.unaryExpression("!", isSSGId),
+              t.expressionStatement(effectCall)
+            );
+            
+            if (parent.isExpressionStatement()) {
+              parent.replaceWith(ifStmt);
+            } else {
+              path.replaceWith(effectCall); // Fallback for nested expressions (rare)
+            }
           } else if (name === "$expose") {
             path.get("callee").replaceWith(t.memberExpression(t.identifier("Object"), t.identifier("assign")));
             path.node.arguments.unshift(t.thisExpression());

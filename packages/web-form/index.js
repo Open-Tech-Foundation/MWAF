@@ -124,12 +124,14 @@ function _createForm(options = {}) {
   function runValidation(fieldPath) {
     if (!activeValidator) return;
 
-    const results = activeValidator(valuesSig.peek());
-    if (results instanceof Promise) {
-      isValidatingSig.value = true;
-      return results.then((res) => updateErrors(res, fieldPath)).finally(() => isValidatingSig.value = false);
-    }
-    updateErrors(results, fieldPath);
+    untracked(() => {
+      const results = activeValidator(valuesSig.peek());
+      if (results instanceof Promise) {
+        isValidatingSig.value = true;
+        return results.then((res) => updateErrors(res, fieldPath)).finally(() => isValidatingSig.value = false);
+      }
+      updateErrors(results, fieldPath);
+    });
   }
 
   function updateValue(path, val) {
@@ -163,9 +165,11 @@ function _createForm(options = {}) {
   }
   const register = (path) => {
     const subSig = getSignal("v", path);
+    const val = getSafe(subSig);
     return {
       name: path,
-      value: getSafe(subSig),
+      value: val,
+      checked: !!val,
       oninput: (e) => {
         const val = e.target.type === "checkbox" ? e.target.checked : e.target.value;
         updateValue(path, val);

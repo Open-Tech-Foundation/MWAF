@@ -1,4 +1,4 @@
-import { navigate } from "./index"
+import { navigate, router } from "./index.js"
 
 export default function Link(props) {
   return (
@@ -7,7 +7,10 @@ export default function Link(props) {
       className={props.className}
       style={props.style}
       onclick={(e) => {
+        const isMPA = router.config.mode?.navigation === 'mpa';
+        
         if (
+          isMPA ||
           e.defaultPrevented ||
           e.metaKey ||
           e.ctrlKey ||

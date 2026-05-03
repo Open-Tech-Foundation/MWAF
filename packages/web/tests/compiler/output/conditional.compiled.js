@@ -1,38 +1,71 @@
-import { renderDynamic as _renderDynamic, signal as _signal, createPropsProxy as _createPropsProxy, withInstance as _withInstance } from "@opentf/web";
+import { setProperty as _setProperty, renderDynamic as _renderDynamic, signal as _signal, createPropsProxy as _createPropsProxy, _clearChildren, withInstance as _withInstance } from "@opentf/web";
 class ItemElement extends HTMLElement {
   static observedAttributes = ["name", "isPacked"];
   set name(val) {
+    if (!this._propsSignals["name"]) this._propsSignals["name"] = _signal(val);
     this._propsSignals["name"].value = val;
   }
   set isPacked(val) {
+    if (!this._propsSignals["isPacked"]) this._propsSignals["isPacked"] = _signal(val);
     this._propsSignals["isPacked"].value = val;
   }
   get name() {
-    return this._propsSignals["name"].value;
+    const _sig = this._propsSignals["name"];
+    return _sig ? _sig.value : undefined;
   }
   get isPacked() {
-    return this._propsSignals["isPacked"].value;
+    const _sig = this._propsSignals["isPacked"];
+    return _sig ? _sig.value : undefined;
   }
   constructor() {
     super();
-    this._propsSignals = {
-      name: _signal(null),
-      isPacked: _signal(null)
-    };
+    Object.defineProperty(this, "_propsSignals", {
+      value: {
+        name: _signal(null),
+        isPacked: _signal(null)
+      },
+      enumerable: false,
+      writable: true,
+      configurable: true
+    });
+    Object.defineProperty(this, "_onMounts", {
+      value: [],
+      enumerable: false,
+      writable: true,
+      configurable: true
+    });
+    Object.defineProperty(this, "_onCleanups", {
+      value: [],
+      enumerable: false,
+      writable: true,
+      configurable: true
+    });
+    Object.defineProperty(this, "_children", {
+      value: [],
+      enumerable: false,
+      writable: true,
+      configurable: true
+    });
+    Object.defineProperty(this, "_mounted", {
+      value: false,
+      enumerable: false,
+      writable: true,
+      configurable: true
+    });
   }
   attributeChangedCallback(name, _, value) {
-    this._propsSignals[name].value = value;
+    if (this._propsSignals[name]) this._propsSignals[name].value = value;
   }
   connectedCallback() {
-    this._onMounts = [];
-    this._onCleanups = [];
+    if (this._mounted) return;
+    this._mounted = true;
     const props = _createPropsProxy(this);
     this._children = Array.from(this.childNodes);
-    while (this.firstChild) this.removeChild(this.firstChild);
+    _clearChildren(this);
     _withInstance(this, () => {
       const rootElement = (() => {
         const el0 = document.createElement("li");
-        el0.className = "item";
+        _setProperty(el0, "className", "item");
         _renderDynamic(el0, () => props.isPacked ? (() => {
           const el0 = document.createElement("del");
           _renderDynamic(el0, () => props.name + ' ✅');

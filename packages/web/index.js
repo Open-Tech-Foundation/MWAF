@@ -1,4 +1,6 @@
-export * from '@preact/signals-core';
+export * from './core/signals.js';
+
+// ─── Public API Re-exports ───
 export { mountApp } from './core/mount.js';
 export * from './runtime/dom.js';
 export * from './runtime/lifecycle.js';

@@ -12,7 +12,7 @@ const frameworkJSXPlugin = {
         filename: args.path,
         plugins: [
           '@babel/plugin-syntax-jsx',
-          [frameworkCompiler, { runtimeSource: '../runtime/index.js' }]
+          [frameworkCompiler, { runtimeSource: '../index.js' }]
         ],
         sourceMaps: true,
         configFile: false,
@@ -29,9 +29,11 @@ export default defineConfig({
     'compiler/babel-plugin': 'compiler/index.js',
     'router/index': 'router/index.js',
     'runtime/index': 'runtime/index.js',
+    'ssg/index': 'ssg/index.js',
+    'ssg/render': 'ssg/render.js',
   },
   format: ['esm', 'cjs'],
-  dts: true,
+  dts: false,
   clean: true,
   shims: true,
   esbuildPlugins: [frameworkJSXPlugin],

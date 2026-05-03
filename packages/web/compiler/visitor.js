@@ -1,25 +1,97 @@
-import { addNamed } from "@babel/helper-module-imports";
 import { SVG_TAGS, SVG_CAMEL_CASE, IS_PROPERTY, STANDARD_TAGS } from "./constants.js";
 import { getMemberName, getImportHelper, createIdGenerator } from "./helpers.js";
 
+function getHelpers(t) {
+  return {
+    h: t.memberExpression(t.identifier("document"), t.identifier("createElement")),
+    t: t.memberExpression(t.identifier("document"), t.identifier("createTextNode")),
+    s: t.memberExpression(t.identifier("document"), t.identifier("createElementNS")),
+    f: t.memberExpression(t.identifier("document"), t.identifier("createDocumentFragment")),
+  };
+}
+
+function makeAppendStatement(t, targetExpr, rootIdExpr) {
+  return t.expressionStatement(
+    t.callExpression(
+      t.memberExpression(targetExpr, t.identifier("appendChild")),
+      [rootIdExpr]
+    )
+  );
+}
+
+function collectMapParams(path, t) {
+  const mapParams = new Set();
+  path.traverse({
+    CallExpression(p) {
+      const { callee, arguments: args } = p.node;
+      if (
+        t.isMemberExpression(callee) &&
+        t.isIdentifier(callee.property, { name: "map" }) &&
+        args.length > 0 &&
+        t.isFunction(args[0])
+      ) {
+        args[0].params.forEach(param => {
+          if (t.isIdentifier(param)) mapParams.add(param.name);
+          else if (t.isObjectPattern(param)) {
+            param.properties.forEach(prop => {
+              if (t.isObjectProperty(prop) && t.isIdentifier(prop.value))
+                mapParams.add(prop.value.name);
+            });
+          } else if (t.isArrayPattern(param)) {
+            param.elements.forEach(el => {
+              if (t.isIdentifier(el)) mapParams.add(el.name);
+            });
+          }
+        });
+      }
+    },
+  });
+  return mapParams;
+}
+
+function extractPropsInfo(t, node) {
+  const propNames = new Set();
+  let propsId = t.identifier("props");
+  const param = node.params[0];
+  if (!param) return { propNames, propsId };
+
+  if (t.isIdentifier(param)) {
+    propsId = param;
+  } else if (t.isObjectPattern(param)) {
+    param.properties.forEach(prop => {
+      if (t.isObjectProperty(prop) && t.isIdentifier(prop.key))
+        propNames.add(prop.key.name);
+      if (t.isObjectProperty(prop) && t.isIdentifier(prop.value) && prop.value.name !== prop.key.name)
+        propNames.add(prop.value.name);
+    });
+  }
+  return { propNames, propsId };
+}
+
 export function handleJSXVisitor(path, state, t) {
   if (path.node._processed) return;
+
+  const runtimeSource = state.runtimeSource || "@opentf/web";
   const getImport = getImportHelper(t, path, state);
+  const helpers = getHelpers(t);
+  const mapParams = collectMapParams(path, t);
 
-  const { statements, rootId, signals } = transformJSX(path.node, t, state, getImport, path);
+  const { statements, rootId, signals } = transformJSX(
+    path.node, t, state, getImport, path, helpers,
+    null, mapParams, runtimeSource
+  );
 
-  const parentFunc = path.findParent(p => 
-    p.isFunctionDeclaration() && (
-      /^[A-Z]/.test(p.node.id?.name) || 
+  const parentFunc = path.findParent(p =>
+    p.isFunctionDeclaration() &&
+    (
+      /^[A-Z]/.test(p.node.id?.name) ||
       (p.parentPath.isExportDefaultDeclaration() && state.isPageFile)
     )
   );
-
   if (parentFunc) {
-    let compName = parentFunc.node.id?.name;
-    if (!compName && parentFunc.parentPath.isExportDefaultDeclaration()) {
-      compName = "_default";
-    }
+    const compName =
+      parentFunc.node.id?.name ||
+      (parentFunc.parentPath.isExportDefaultDeclaration() ? "_default" : null);
     if (compName) {
       const info = state.components.get(compName);
       if (info) {
@@ -29,256 +101,373 @@ export function handleJSXVisitor(path, state, t) {
     }
   }
 
-  const iife = t.callExpression(t.arrowFunctionExpression([], t.blockStatement([
-    ...statements,
-    t.returnStatement(rootId)
-  ])), []);
+  const iife = t.callExpression(
+    t.arrowFunctionExpression([], t.blockStatement([...statements, t.returnStatement(rootId)])),
+    []
+  );
   iife._processed = true;
   path.replaceWith(iife);
 }
 
 export function transformComponent(componentPath, name, isRenderFn, t, state) {
   let node = componentPath.node;
-  if (t.isVariableDeclarator(node)) {
-    node = node.init;
-  }
+  if (t.isVariableDeclarator(node)) node = node.init;
+
   const body = node.body;
+  const runtimeSource = state.runtimeSource || "@opentf/web";
   const getImport = getImportHelper(t, componentPath, state);
 
   let jsxNode = null;
   const originalStatements = [];
-
-  const processBody = (bodyNode) => {
-    if (t.isBlockStatement(bodyNode)) {
-      bodyNode.body.forEach(stmt => {
-        if (t.isReturnStatement(stmt)) {
-          jsxNode = stmt.argument;
-        } else {
-          originalStatements.push(stmt);
-        }
-      });
-    } else {
-      jsxNode = bodyNode;
-    }
-  };
-
-  processBody(body);
-
+  if (t.isBlockStatement(body)) {
+    body.body.forEach(stmt => {
+      if (t.isReturnStatement(stmt)) jsxNode = stmt.argument;
+      else originalStatements.push(stmt);
+    });
+  } else {
+    jsxNode = body;
+  }
   if (!jsxNode) return;
 
-  const res = transformJSX(jsxNode, t, state, getImport, componentPath);
-  let statements = res.statements;
-  let rootId = res.rootId;
-  let signals = res.signals;
+  const { propNames, propsId } = extractPropsInfo(t, node);
 
-  const rootVar = t.identifier("rootElement");
-  statements.push(t.variableDeclaration("const", [t.variableDeclarator(rootVar, rootId)]));
-  rootId = rootVar;
+  if (propNames.size > 0) {
+    componentPath.traverse({
+      Identifier(p) {
+        if (!propNames.has(p.node.name) || p.node._processed) return;
+        if (p.parentPath.isObjectProperty({ key: p.node }) && !p.parentPath.node.computed) return;
+        if (p.parentPath.isMemberExpression({ property: p.node }) && !p.parentPath.node.computed) return;
+        if (p.parentPath.isOptionalMemberExpression({ property: p.node }) && !p.parentPath.node.computed) return;
+        if (p.parentPath.isClassMethod({ key: p.node })) return;
+        if (p.parentPath.isJSXAttribute()) return;
+        if (p.parentPath.isObjectProperty() && p.parentPath.parentPath.isObjectPattern()) return;
 
-  const componentInfo = state.components.get(name);
-  
-  if (!isRenderFn) {
-    const propsNode = node.params[0];
-    if (t.isObjectPattern(propsNode)) {
-      const propNames = new Set();
-      propsNode.properties.forEach(prop => {
-        if (t.isObjectProperty(prop) && t.isIdentifier(prop.key)) {
-          propNames.add(prop.key.name);
-        }
-      });
-
-      node.params[0] = t.identifier("props");
-
-      const replaceProps = (node) => {
-        if (!node || typeof node !== "object") return;
-        if (Array.isArray(node)) {
-          for (let i = 0; i < node.length; i++) {
-            const child = node[i];
-            if (t.isIdentifier(child) && propNames.has(child.name)) {
-              node[i] = t.memberExpression(t.identifier("props"), t.identifier(child.name));
-            } else {
-              replaceProps(child);
-            }
-          }
-          return;
-        }
-
-        for (const key in node) {
-          const child = node[key];
-          if (t.isIdentifier(child) && propNames.has(child.name)) {
-            if (t.isObjectProperty(node) && key === "key" && !node.computed) continue;
-            if ((t.isMemberExpression(node) || t.isOptionalMemberExpression(node)) && key === "property" && !node.computed) continue;
-            if (t.isClassMethod(node) && key === "key") continue;
-            if (t.isJSXAttribute(node) && key === "name") continue;
-            node[key] = t.memberExpression(t.identifier("props"), t.identifier(child.name));
-          } else {
-            replaceProps(child);
-          }
-        }
-      };
-
-      replaceProps(originalStatements);
-      replaceProps(statements);
-    }
+        const repl = t.memberExpression(propsId, t.identifier(p.node.name));
+        repl._processed = true;
+        p.replaceWith(repl);
+      },
+    });
   }
 
+  const mapParams = collectMapParams(componentPath, t);
+  const helpers = getHelpers(t);
+  const res = transformJSX(
+    jsxNode, t, state, getImport, componentPath, helpers,
+    isRenderFn ? t.identifier("root") : t.thisExpression(),
+    mapParams, runtimeSource
+  );
+  const statements = res.statements;
+  const signals = res.signals;
+
+  const rootVar = t.identifier("rootElement");
+  statements.push(t.variableDeclaration("const", [t.variableDeclarator(rootVar, res.rootId)]));
+  const rootId = rootVar;
+
+  const componentInfo = state.components.get(name);
   const allSignals = new Set([...signals, ...(componentInfo?.observedAttributes || [])]);
 
   if (isRenderFn) {
     const renderFn = t.functionDeclaration(
       t.identifier("render"),
-      [t.identifier("root"), t.identifier("props")],
+      [t.identifier("root"), propsId],
       t.blockStatement([
-        ...(t.isObjectPattern(node.params[0]) ? [t.variableDeclaration("const", [t.variableDeclarator(node.params[0], t.identifier("props"))])] : []),
+        ...(t.isObjectPattern(node.params[0])
+          ? [t.variableDeclaration("const", [t.variableDeclarator(node.params[0], propsId)])]
+          : []),
         ...originalStatements,
         ...statements,
-        t.expressionStatement(t.callExpression(t.memberExpression(t.identifier("root"), t.identifier("appendChild")), [rootId]))
+        makeAppendStatement(t, t.identifier("root"), rootId),
       ])
     );
-    
+
     const parent = componentPath.parentPath;
     if (parent.isExportDefaultDeclaration()) {
       parent.replaceWith(t.exportNamedDeclaration(renderFn));
     } else {
       componentPath.replaceWith(renderFn);
     }
-  } else {
-    const tagName = "web-" + name.toLowerCase();
-    const observedAttributes = Array.from(allSignals);
-    const signalId = getImport("signal", state.runtimeSource);
-    const createPropsProxyId = getImport("createPropsProxy", state.runtimeSource);
-    const classId = t.identifier(name + "Element");
+    return;
+  }
 
-    const classDecl = t.classDeclaration(
-      classId,
-      t.identifier("HTMLElement"),
-      t.classBody([
-        t.classProperty(t.identifier("observedAttributes"), t.arrayExpression(observedAttributes.map(s => t.stringLiteral(s))), null, null, false, true),
-        ...observedAttributes.map(s => t.classMethod(
-          "set",
-          t.identifier(s),
-          [t.identifier("val")],
-          t.blockStatement([
-            t.expressionStatement(t.assignmentExpression("=", t.memberExpression(t.memberExpression(t.memberExpression(t.thisExpression(), t.identifier("_propsSignals")), t.stringLiteral(s), true), t.identifier("value")), t.identifier("val"))),
-            ...(s === "className" ? [t.expressionStatement(t.callExpression(t.memberExpression(t.thisExpression(), t.identifier("setAttribute")), [t.stringLiteral("class"), t.identifier("val")]))] : s === "style" ? [t.ifStatement(t.logicalExpression("&&", t.identifier("val"), t.binaryExpression("===", t.unaryExpression("typeof", t.identifier("val"), false), t.stringLiteral("object"))), t.expressionStatement(t.callExpression(t.memberExpression(t.identifier("Object"), t.identifier("assign")), [t.memberExpression(t.thisExpression(), t.identifier("style")), t.identifier("val")])))] : [])
-          ])
-        )),
-        ...observedAttributes.map(s => t.classMethod("get", t.identifier(s), [], t.blockStatement([t.returnStatement(t.memberExpression(t.memberExpression(t.memberExpression(t.thisExpression(), t.identifier("_propsSignals")), t.stringLiteral(s), true), t.identifier("value")))]))),
-        t.classMethod("constructor", t.identifier("constructor"), [], t.blockStatement([
-          t.expressionStatement(t.callExpression(t.super(), [])),
-          t.expressionStatement(t.assignmentExpression("=", t.memberExpression(t.thisExpression(), t.identifier("_propsSignals")), t.objectExpression(observedAttributes.map(s => t.objectProperty(t.identifier(s), t.callExpression(signalId, [t.nullLiteral()]))) )))
-        ])),
-        t.classMethod("method", t.identifier("attributeChangedCallback"), [t.identifier("name"), t.identifier("_"), t.identifier("value")], t.blockStatement([
-          t.expressionStatement(t.assignmentExpression("=", t.memberExpression(t.memberExpression(t.memberExpression(t.thisExpression(), t.identifier("_propsSignals")), t.identifier("name"), true), t.identifier("value")), t.identifier("value")))
-        ])),
-        t.classMethod("method", t.identifier("connectedCallback"), [], t.blockStatement([
-          t.expressionStatement(t.assignmentExpression("=", t.memberExpression(t.thisExpression(), t.identifier("_onMounts")), t.arrayExpression([]))),
-          t.expressionStatement(t.assignmentExpression("=", t.memberExpression(t.thisExpression(), t.identifier("_onCleanups")), t.arrayExpression([]))),
-          t.variableDeclaration("const", [t.variableDeclarator(t.identifier("props"), t.callExpression(createPropsProxyId, [t.thisExpression()]))]),
-          t.expressionStatement(t.assignmentExpression("=", t.memberExpression(t.thisExpression(), t.identifier("_children")), t.callExpression(t.memberExpression(t.identifier("Array"), t.identifier("from")), [t.memberExpression(t.thisExpression(), t.identifier("childNodes"))]))),
-          t.whileStatement(t.memberExpression(t.thisExpression(), t.identifier("firstChild")), t.expressionStatement(t.callExpression(t.memberExpression(t.thisExpression(), t.identifier("removeChild")), [t.memberExpression(t.thisExpression(), t.identifier("firstChild"))]))),
-          t.expressionStatement(t.callExpression(getImport("withInstance", state.runtimeSource), [t.thisExpression(), t.arrowFunctionExpression([], t.blockStatement([...originalStatements, ...statements, t.expressionStatement(t.callExpression(t.memberExpression(t.thisExpression(), t.identifier("appendChild")), [rootId]))]))])),
-          t.expressionStatement(t.callExpression(t.memberExpression(t.memberExpression(t.thisExpression(), t.identifier("_onMounts")), t.identifier("forEach")), [t.arrowFunctionExpression([t.identifier("fn")], t.callExpression(t.identifier("fn"), []))]))
-        ])),
-        t.classMethod("method", t.identifier("disconnectedCallback"), [], t.blockStatement([
-          t.expressionStatement(t.callExpression(t.memberExpression(t.memberExpression(t.thisExpression(), t.identifier("_onCleanups")), t.identifier("forEach")), [t.arrowFunctionExpression([t.identifier("fn")], t.callExpression(t.identifier("fn"), []))]))
-        ]))
+  const tagName = "web-" + name.toLowerCase();
+  const observedAttributes = Array.from(allSignals).filter(
+    s => s.toLowerCase() !== "children" && !s.startsWith("on")
+  );
+
+  const signalId = getImport("signal", runtimeSource);
+  const createPropsProxy = getImport("createPropsProxy", runtimeSource);
+  const classId = t.identifier(name + "Element");
+
+  // Helper to define internal properties as non-enumerable with an initial value
+  const defineInternalProp = (prop, value) => t.expressionStatement(t.callExpression(
+    t.memberExpression(t.identifier("Object"), t.identifier("defineProperty")),
+    [
+      t.thisExpression(),
+      t.stringLiteral(prop),
+      t.objectExpression([
+        t.objectProperty(t.identifier("value"), value),
+        t.objectProperty(t.identifier("enumerable"), t.booleanLiteral(false)),
+        t.objectProperty(t.identifier("writable"), t.booleanLiteral(true)),
+        t.objectProperty(t.identifier("configurable"), t.booleanLiteral(true))
       ])
+    ]
+  ));
+
+  const classDecl = t.classDeclaration(
+    classId,
+    t.identifier("HTMLElement"),
+    t.classBody([
+      t.classProperty(
+        t.identifier("observedAttributes"),
+        t.arrayExpression(observedAttributes.map(s => t.stringLiteral(s))),
+        null, null, false, true
+      ),
+      ...observedAttributes.map(s =>
+        t.classMethod("set", t.identifier(s), [t.identifier("val")],
+          t.blockStatement([
+            t.ifStatement(
+              t.unaryExpression("!", t.memberExpression(t.memberExpression(t.thisExpression(), t.identifier("_propsSignals")), t.stringLiteral(s), true)),
+              t.expressionStatement(
+                t.assignmentExpression("=", t.memberExpression(t.memberExpression(t.thisExpression(), t.identifier("_propsSignals")), t.stringLiteral(s), true),
+                  t.callExpression(signalId, [t.identifier("val")])
+                )
+              )
+            ),
+            t.expressionStatement(
+              t.assignmentExpression(
+                "=",
+                t.memberExpression(t.memberExpression(t.memberExpression(t.thisExpression(), t.identifier("_propsSignals")), t.stringLiteral(s), true), t.identifier("value")),
+                t.identifier("val")
+              )
+            ),
+          ])
+        )
+      ),
+      ...observedAttributes.map(s =>
+        t.classMethod("get", t.identifier(s), [],
+          t.blockStatement([
+            t.variableDeclaration("const", [
+              t.variableDeclarator(t.identifier("_sig"), t.memberExpression(t.memberExpression(t.thisExpression(), t.identifier("_propsSignals")), t.stringLiteral(s), true)),
+            ]),
+            t.returnStatement(
+              t.conditionalExpression(
+                t.identifier("_sig"),
+                t.memberExpression(t.identifier("_sig"), t.identifier("value")),
+                t.identifier("undefined")
+              )
+            ),
+          ])
+        )
+      ),
+      t.classMethod("constructor", t.identifier("constructor"), [],
+        t.blockStatement([
+          t.expressionStatement(t.callExpression(t.super(), [])),
+          defineInternalProp("_propsSignals", t.objectExpression(
+            observedAttributes.map(s => t.objectProperty(t.identifier(s), t.callExpression(signalId, [t.nullLiteral()])))
+          )),
+          defineInternalProp("_onMounts", t.arrayExpression([])),
+          defineInternalProp("_onCleanups", t.arrayExpression([])),
+          defineInternalProp("_children", t.arrayExpression([])),
+          defineInternalProp("_mounted", t.booleanLiteral(false))
+        ])
+      ),
+      t.classMethod(
+        "method", t.identifier("attributeChangedCallback"),
+        [t.identifier("name"), t.identifier("_"), t.identifier("value")],
+        t.blockStatement([
+          t.ifStatement(
+            t.memberExpression(
+              t.memberExpression(t.thisExpression(), t.identifier("_propsSignals")),
+              t.identifier("name"),
+              true
+            ),
+            t.expressionStatement(
+              t.assignmentExpression(
+                "=",
+                t.memberExpression(
+                  t.memberExpression(
+                    t.memberExpression(t.thisExpression(), t.identifier("_propsSignals")),
+                    t.identifier("name"),
+                    true
+                  ),
+                  t.identifier("value")
+                ),
+                t.identifier("value")
+              )
+            )
+          ),
+        ])
+      ),
+      t.classMethod("method", t.identifier("connectedCallback"), [],
+        t.blockStatement([
+          t.ifStatement(
+            t.memberExpression(t.thisExpression(), t.identifier("_mounted")),
+            t.returnStatement()
+          ),
+          t.expressionStatement(
+            t.assignmentExpression(
+              "=",
+              t.memberExpression(t.thisExpression(), t.identifier("_mounted")),
+              t.booleanLiteral(true)
+            )
+          ),
+          t.variableDeclaration("const", [
+            t.variableDeclarator(
+              t.identifier("props"),
+              t.callExpression(createPropsProxy, [t.thisExpression()])
+            ),
+          ]),
+          t.expressionStatement(
+            t.assignmentExpression(
+              "=",
+              t.memberExpression(t.thisExpression(), t.identifier("_children")),
+              t.callExpression(
+                t.memberExpression(t.identifier("Array"), t.identifier("from")),
+                [t.memberExpression(t.thisExpression(), t.identifier("childNodes"))]
+              )
+            )
+          ),
+          t.expressionStatement(
+            t.callExpression(getImport("_clearChildren", runtimeSource), [t.thisExpression()])
+          ),
+          t.expressionStatement(
+            t.callExpression(
+              getImport("withInstance", runtimeSource),
+              [
+                t.thisExpression(),
+                t.arrowFunctionExpression([], t.blockStatement([
+                  ...originalStatements,
+                  ...statements,
+                  makeAppendStatement(t, t.thisExpression(), rootId),
+                ])),
+              ]
+            )
+          ),
+          t.expressionStatement(
+            t.callExpression(
+              t.memberExpression(
+                t.memberExpression(t.thisExpression(), t.identifier("_onMounts")),
+                t.identifier("forEach")
+              ),
+              [t.arrowFunctionExpression([t.identifier("fn")], t.callExpression(t.identifier("fn"), []))]
+            )
+          ),
+        ])
+      ),
+      t.classMethod("method", t.identifier("disconnectedCallback"), [],
+        t.blockStatement([
+          t.expressionStatement(
+            t.callExpression(
+              t.memberExpression(
+                t.memberExpression(t.thisExpression(), t.identifier("_onCleanups")),
+                t.identifier("forEach")
+              ),
+              [t.arrowFunctionExpression([t.identifier("fn")], t.callExpression(t.identifier("fn"), []))]
+            )
+          ),
+        ])
+      ),
+    ])
+  );
+
+  const defineCall = t.expressionStatement(
+    t.callExpression(
+      t.memberExpression(t.identifier("customElements"), t.identifier("define")),
+      [t.stringLiteral(tagName), classId]
+    )
+  );
+
+  const parent = componentPath.parentPath;
+  if (parent.isExportDefaultDeclaration()) {
+    parent.insertBefore(classDecl);
+    parent.insertBefore(defineCall);
+    parent.replaceWith(t.exportDefaultDeclaration(classId));
+  } else if (parent.isExportNamedDeclaration()) {
+    const exportedClass = t.classDeclaration(
+      t.identifier(name), t.identifier("HTMLElement"), classDecl.body
     );
-    
-    const parent = componentPath.parentPath;
-    if (parent.isExportDefaultDeclaration()) {
-      componentPath.parentPath.insertBefore(classDecl);
-      componentPath.parentPath.insertBefore(t.expressionStatement(t.callExpression(t.memberExpression(t.identifier("customElements"), t.identifier("define")), [t.stringLiteral(tagName), classId])));
-      parent.replaceWith(t.exportDefaultDeclaration(classId));
-    } else if (parent.isExportNamedDeclaration()) {
-      const exportedClass = t.classDeclaration(t.identifier(name), t.identifier("HTMLElement"), classDecl.body);
-      parent.replaceWith(t.exportNamedDeclaration(exportedClass, []));
-      parent.insertAfter(t.expressionStatement(t.callExpression(t.memberExpression(t.identifier("customElements"), t.identifier("define")), [t.stringLiteral(tagName), t.identifier(name)])));
+    parent.replaceWith(t.exportNamedDeclaration(exportedClass, []));
+    parent.insertAfter(
+      t.expressionStatement(
+        t.callExpression(
+          t.memberExpression(t.identifier("customElements"), t.identifier("define")),
+          [t.stringLiteral(tagName), t.identifier(name)]
+        )
+      )
+    );
+  } else {
+    let targetPath = componentPath;
+    if (componentPath.isVariableDeclarator() && componentPath.parentPath.isVariableDeclaration())
+      targetPath = componentPath.parentPath;
+
+    targetPath.insertBefore(classDecl);
+    targetPath.insertBefore(defineCall);
+
+    if (componentPath.isVariableDeclarator()) {
+      componentPath.get("init").replaceWith(classId);
     } else {
-      let targetPath = componentPath;
-      if (componentPath.isVariableDeclarator() && componentPath.parentPath.isVariableDeclaration()) {
-        targetPath = componentPath.parentPath;
-      }
-      targetPath.insertBefore(classDecl);
-      targetPath.insertBefore(t.expressionStatement(t.callExpression(t.memberExpression(t.identifier("customElements"), t.identifier("define")), [t.stringLiteral(tagName), classId])));
-      
-      if (componentPath.isVariableDeclarator()) {
-        componentPath.get("init").replaceWith(classId);
-      } else {
-        targetPath.remove();
-      }
+      targetPath.remove();
     }
   }
 }
 
-  function transformJSX(node, t, state, getImport, path) {
-    if (node._processed) return { statements: [], rootId: node, signals: new Set() };
-    node._processed = true;
-    const statements = [];
-    const signals = new Set();
-    const mapParams = new Set();
-    const nextId = createIdGenerator();
-    const toKebabCase = (str) => str.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
+function transformJSX(node, t, state, getImport, path, helpers, rootIdentifier, mapParams, runtimeSource) {
+  if (node._processed) return { statements: [], rootId: node, signals: new Set() };
+  node._processed = true;
 
-    function collectSignals(exprNode) {
-      if (!exprNode || typeof exprNode !== "object") return;
-      if (Array.isArray(exprNode)) {
-        exprNode.forEach(collectSignals);
-        return;
-      }
-      if (t.isMemberExpression(exprNode) && t.isIdentifier(exprNode.object, { name: "props" }) && t.isIdentifier(exprNode.property)) {
-        signals.add(exprNode.property.name);
-      }
-      if (t.isIdentifier(exprNode)) {
-        // Check if this identifier is a map callback parameter
-        const binding = path.scope.getBinding(exprNode.name);
-        if (binding && t.isFunction(binding.path.parent) && binding.path.parent._isMapCallback) {
-          signals.add(exprNode.name);
-          mapParams.add(exprNode.name);
-        }
-      }
-      Object.keys(exprNode).forEach(key => {
-        if (key === "property" && t.isMemberExpression(exprNode) && !exprNode.computed) return;
-        collectSignals(exprNode[key]);
-      });
+  const statements = [];
+  const signals = new Set();
+  const nextId = createIdGenerator();
+  const toKebabCase = str => str.replace(/([a-z0-9])([A-Z])/g, "$1-$2").toLowerCase();
+  const { h: hId, t: tId, s: sId, f: fId } = helpers;
+
+  function collectSignals(exprNode) {
+    if (!exprNode || typeof exprNode !== "object") return;
+    if (Array.isArray(exprNode)) { exprNode.forEach(collectSignals); return; }
+    if (
+      t.isMemberExpression(exprNode) &&
+      t.isIdentifier(exprNode.object, { name: "props" }) &&
+      t.isIdentifier(exprNode.property)
+    ) {
+      signals.add(exprNode.property.name);
     }
+    Object.keys(exprNode).forEach(key => {
+      if (key === "property" && t.isMemberExpression(exprNode) && !exprNode.computed) return;
+      collectSignals(exprNode[key]);
+    });
+  }
 
-    const transformNoValue = (exprNode) => {
-      if (!exprNode || typeof exprNode !== "object") return;
-      if (Array.isArray(exprNode)) {
-        exprNode.forEach(transformNoValue);
-        return;
+  function transformNoValue(exprNode) {
+    if (!exprNode || typeof exprNode !== "object") return;
+    if (Array.isArray(exprNode)) { exprNode.forEach(transformNoValue); return; }
+    Object.keys(exprNode).forEach(key => {
+      const child = exprNode[key];
+      if (
+        t.isIdentifier(child) &&
+        !child._processed &&
+        (mapParams.has(child.name) || state.stateVars?.has(child.name) || state.refVars?.has(child.name))
+      ) {
+        if (t.isFunction(exprNode) && exprNode.params.includes(child)) return;
+        if (t.isMemberExpression(exprNode) && t.isIdentifier(exprNode.property, { name: "value" }) && !exprNode.computed) return;
+        if (t.isObjectProperty(exprNode) && key === "key" && !exprNode.computed) return;
+        if (t.isMemberExpression(exprNode) && key === "property" && !exprNode.computed) return;
+
+        child._processed = true;
+        const newNode = t.memberExpression(child, t.identifier("value"));
+        newNode._processed = true;
+        exprNode[key] = newNode;
+      } else {
+        transformNoValue(child);
       }
-      Object.keys(exprNode).forEach(key => {
-        const child = exprNode[key];
-        if (t.isIdentifier(child) && (mapParams.has(child.name) || state.stateVars?.has(child.name) || state.refVars?.has(child.name))) {
-          // Don't transform the parameter definition itself
-          if (t.isFunction(exprNode) && exprNode.params.includes(child)) return;
-          // Don't transform if it's already part of a .value access
-          if (t.isMemberExpression(exprNode) && t.isIdentifier(exprNode.property, { name: "value" }) && !exprNode.computed) return;
-          // Don't transform if it's an object property key
-          if (t.isObjectProperty(exprNode) && key === "key" && !exprNode.computed) return;
-          // Don't transform if it's a non-computed member expression property
-          if (t.isMemberExpression(exprNode) && key === "property" && !exprNode.computed) return;
-          
-          child._processed = true;
-          exprNode[key] = t.memberExpression(child, t.identifier("value"));
-        } else {
-          transformNoValue(child);
-        }
-      });
-    };
+    });
+  }
 
   function processNode(n, parentElId) {
     if (t.isJSXElement(n)) {
       const tagNameNode = n.openingElement.name;
       let tagName = "";
-      if (t.isJSXIdentifier(tagNameNode)) {
-        tagName = tagNameNode.name;
-      } else if (t.isJSXMemberExpression(tagNameNode)) {
-        tagName = getMemberName(t, tagNameNode);
-      }
+      if (t.isJSXIdentifier(tagNameNode)) tagName = tagNameNode.name;
+      else if (t.isJSXMemberExpression(tagNameNode)) tagName = getMemberName(t, tagNameNode);
 
       const isComponent = /^[A-Z]/.test(tagName) || tagName.includes(".");
       const elId = nextId(t);
@@ -286,174 +475,280 @@ export function transformComponent(componentPath, name, isRenderFn, t, state) {
       if (isComponent) {
         const binding = path.scope.getBinding(tagName);
         const isStandardTag = /^[a-z]/.test(tagName) && STANDARD_TAGS.includes(tagName.toLowerCase());
-        
-        let componentTagName = tagName;
-        if (tagName.includes(".")) {
-           componentTagName = "web-" + tagName.replace(/\./g, "-").toLowerCase();
-        } else if (!isStandardTag) {
-           componentTagName = "web-" + tagName.toLowerCase();
-        }
 
-        const isFunction = binding && (t.isFunctionDeclaration(binding.path.node) || t.isFunctionExpression(binding.path.node) || t.isArrowFunctionExpression(binding.path.node));
+        let componentTagName = tagName;
+        if (tagName.includes("."))
+          componentTagName = "web-" + tagName.replace(/\./g, "-").toLowerCase();
+        else if (!isStandardTag)
+          componentTagName = "web-" + tagName.toLowerCase();
+
+        const isFunction = binding && (
+          t.isFunctionDeclaration(binding.path.node) ||
+          t.isFunctionExpression(binding.path.node) ||
+          t.isArrowFunctionExpression(binding.path.node)
+        );
         const isImport = binding && binding.kind === "module";
         const isVariable = binding && t.isVariableDeclarator(binding.path.node);
 
         if (isFunction || isImport || state.components.has(tagName) || (!binding && !isStandardTag)) {
-           statements.push(t.variableDeclaration("const", [t.variableDeclarator(elId, t.callExpression(t.memberExpression(t.identifier("document"), t.identifier("createElement")), [t.stringLiteral(componentTagName)]))]));
+          statements.push(t.variableDeclaration("const", [
+            t.variableDeclarator(elId, t.callExpression(hId, [t.stringLiteral(componentTagName)])),
+          ]));
         } else if (isVariable) {
-           statements.push(t.variableDeclaration("const", [t.variableDeclarator(elId, t.callExpression(t.memberExpression(t.identifier("document"), t.identifier("createElement")), [t.identifier(tagName)]))]));
+          statements.push(t.variableDeclaration("const", [
+            t.variableDeclarator(elId, t.callExpression(hId, [t.identifier(tagName)])),
+          ]));
         } else {
-          statements.push(t.variableDeclaration("const", [t.variableDeclarator(elId, t.callExpression(t.memberExpression(t.identifier("document"), t.identifier("createElement")), [t.stringLiteral(componentTagName)]))]));
+          statements.push(t.variableDeclaration("const", [
+            t.variableDeclarator(elId, t.callExpression(hId, [t.stringLiteral(componentTagName)])),
+          ]));
         }
 
         n.openingElement.attributes.forEach(attr => {
           if (t.isJSXSpreadAttribute(attr)) {
-            const applySpreadId = getImport("applySpread", state.runtimeSource);
-            const effectId = getImport("effect", state.runtimeSource);
-            statements.push(t.expressionStatement(t.callExpression(effectId, [t.arrowFunctionExpression([], t.callExpression(applySpreadId, [elId, attr.argument]))])));
+            const effectId = getImport("effect", runtimeSource);
+            const applySpread = getImport("applySpread", runtimeSource);
+            statements.push(t.expressionStatement(
+              t.callExpression(effectId, [
+                t.arrowFunctionExpression([], t.callExpression(applySpread, [elId, attr.argument])),
+              ])
+            ));
             return;
           }
-          const name = attr.name.name;
+
+          const attrName = attr.name.name;
           const value = attr.value || t.booleanLiteral(true);
-          const targetProp = name === "class" || name === "className" ? "className" : name;
 
           if (t.isJSXExpressionContainer(value)) {
-            if (name === "ref" && t.isIdentifier(value.expression) && state.refVars?.has(value.expression.name)) {
-              const refName = value.expression.name;
-              const innerId = t.identifier(refName);
+            if (attrName === "ref" && t.isIdentifier(value.expression) && state.refVars?.has(value.expression.name)) {
+              const innerId = t.identifier(value.expression.name);
               innerId._processed = true;
-              statements.push(t.expressionStatement(t.assignmentExpression("=", t.memberExpression(innerId, t.identifier("value")), elId)));
+              statements.push(t.expressionStatement(
+                t.assignmentExpression("=", t.memberExpression(innerId, t.identifier("value")), elId)
+              ));
               return;
             }
-            collectSignals(value.expression);
-            const effectId = getImport("effect", state.runtimeSource);
-            statements.push(t.expressionStatement(t.callExpression(effectId, [t.arrowFunctionExpression([], t.assignmentExpression("=", t.memberExpression(elId, t.identifier(targetProp)), value.expression))])));
+            transformNoValue(value);
+            const setProperty = getImport("setProperty", runtimeSource);
+            const effectId = getImport("effect", runtimeSource);
+            statements.push(t.expressionStatement(
+              t.callExpression(effectId, [
+                t.arrowFunctionExpression([], t.callExpression(setProperty, [
+                  elId,
+                  t.stringLiteral(attrName),
+                  value.expression
+                ])),
+              ])
+            ));
           } else {
-            statements.push(t.expressionStatement(t.assignmentExpression("=", t.memberExpression(elId, t.identifier(targetProp)), value)));
+            const setProperty = getImport("setProperty", runtimeSource);
+            statements.push(t.expressionStatement(
+              t.callExpression(setProperty, [elId, t.stringLiteral(attrName), value])
+            ));
           }
         });
 
         n.children.forEach(child => {
           const childId = processNode(child, elId);
-          if (childId) statements.push(t.expressionStatement(t.callExpression(t.memberExpression(elId, t.identifier("appendChild")), [childId])));
+          if (childId) statements.push(t.expressionStatement(
+            t.callExpression(t.memberExpression(elId, t.identifier("appendChild")), [childId])
+          ));
         });
         return elId;
       }
 
       const isSvg = SVG_TAGS.includes(tagName.toLowerCase());
-      statements.push(t.variableDeclaration("const", [t.variableDeclarator(elId, isSvg ? t.callExpression(t.memberExpression(t.identifier("document"), t.identifier("createElementNS")), [t.stringLiteral("http://www.w3.org/2000/svg"), t.stringLiteral(tagName)]) : t.callExpression(t.memberExpression(t.identifier("document"), t.identifier("createElement")), [t.stringLiteral(tagName)]))]));
+      statements.push(t.variableDeclaration("const", [
+        t.variableDeclarator(
+          elId,
+          isSvg
+            ? t.callExpression(sId, [t.stringLiteral("http://www.w3.org/2000/svg"), t.stringLiteral(tagName)])
+            : t.callExpression(hId, [t.stringLiteral(tagName)])
+        ),
+      ]));
 
       n.openingElement.attributes.forEach(attr => {
         if (t.isJSXSpreadAttribute(attr)) {
-          const applySpreadId = getImport("applySpread", state.runtimeSource);
-          const effectId = getImport("effect", state.runtimeSource);
-          statements.push(t.expressionStatement(t.callExpression(effectId, [t.arrowFunctionExpression([], t.callExpression(applySpreadId, [elId, attr.argument]))])));
+          const effectId = getImport("effect", runtimeSource);
+          const applySpread = getImport("applySpread", runtimeSource);
+          statements.push(t.expressionStatement(
+            t.callExpression(effectId, [
+              t.arrowFunctionExpression([], t.callExpression(applySpread, [elId, attr.argument])),
+            ])
+          ));
           return;
         }
+
         const originalName = attr.name.name;
-        const name = originalName.toLowerCase();
+        const nameLower = originalName.toLowerCase();
         const value = attr.value || t.booleanLiteral(true);
 
-        if (name.startsWith("on")) {
+        if (nameLower.startsWith("on")) {
           if (t.isJSXExpressionContainer(value) && t.isJSXEmptyExpression(value.expression)) return;
-          statements.push(t.expressionStatement(t.assignmentExpression("=", t.memberExpression(elId, t.identifier(name)), t.isJSXExpressionContainer(value) ? value.expression : value)));
-        } else if (t.isJSXExpressionContainer(value)) {
+          statements.push(t.expressionStatement(
+            t.assignmentExpression(
+              "=",
+              t.memberExpression(elId, t.identifier(nameLower)),
+              t.isJSXExpressionContainer(value) ? value.expression : value
+            )
+          ));
+          return;
+        }
+
+        if (t.isJSXExpressionContainer(value)) {
           if (t.isJSXEmptyExpression(value.expression)) return;
+
           if (originalName === "ref" && t.isIdentifier(value.expression) && state.refVars?.has(value.expression.name)) {
-            const refName = value.expression.name;
-            const innerId = t.identifier(refName);
+            const innerId = t.identifier(value.expression.name);
             innerId._processed = true;
-            statements.push(t.expressionStatement(t.assignmentExpression("=", t.memberExpression(innerId, t.identifier("value")), elId)));
+            statements.push(t.expressionStatement(
+              t.assignmentExpression("=", t.memberExpression(innerId, t.identifier("value")), elId)
+            ));
             return;
           }
+
+          transformNoValue(value);
+
           collectSignals(value.expression);
-          const effectId = getImport("effect", state.runtimeSource);
-          const attrProp = (name === "class" || name === "classname") ? "className" : name;
+
+          const attrProp = (nameLower === "class" || nameLower === "classname") ? "className" : nameLower;
           const isStyle = attrProp === "style";
           const isProperty = IS_PROPERTY.includes(attrProp);
           const isSvgCamel = isSvg && SVG_CAMEL_CASE.includes(originalName);
-          const finalAttrName = isSvgCamel ? originalName : (attrProp === "className" ? "class" : toKebabCase(originalName));
+          const finalAttrName = isSvgCamel
+            ? originalName
+            : (attrProp === "className" ? "class" : toKebabCase(originalName));
+          const effectId = getImport("effect", runtimeSource);
 
           if (attrProp === "key") {
-            statements.push(t.expressionStatement(t.assignmentExpression("=", t.memberExpression(elId, t.identifier("_key")), value.expression)));
+            statements.push(t.expressionStatement(
+              t.assignmentExpression("=", t.memberExpression(elId, t.identifier("_key")), value.expression)
+            ));
           } else {
             let assignment;
+            const valExpr = (t.isArrowFunctionExpression(value.expression) || t.isFunctionExpression(value.expression))
+              ? t.callExpression(value.expression, [])
+              : value.expression;
+
             if (isStyle) {
-              assignment = t.callExpression(t.memberExpression(t.identifier("Object"), t.identifier("assign")), [t.memberExpression(elId, t.identifier("style")), value.expression]);
+              assignment = t.callExpression(
+                t.memberExpression(t.identifier("Object"), t.identifier("assign")),
+                [t.memberExpression(elId, t.identifier("style")), valExpr]
+              );
             } else if (isProperty && (!isSvg || attrProp !== "className")) {
-              assignment = t.assignmentExpression("=", t.memberExpression(elId, t.identifier(attrProp)), value.expression);
+              const setProperty = getImport("setProperty", runtimeSource);
+              assignment = t.callExpression(setProperty, [elId, t.stringLiteral(attrProp), valExpr]);
             } else {
-              assignment = t.callExpression(t.memberExpression(elId, t.identifier("setAttribute")), [t.stringLiteral(finalAttrName), value.expression]);
+              assignment = t.callExpression(
+                t.memberExpression(elId, t.identifier("setAttribute")),
+                [t.stringLiteral(finalAttrName), valExpr]
+              );
             }
-            statements.push(t.expressionStatement(t.callExpression(effectId, [t.arrowFunctionExpression([], assignment)])));
+            statements.push(t.expressionStatement(
+              t.callExpression(effectId, [t.arrowFunctionExpression([], assignment)])
+            ));
           }
         } else {
-          const attrProp = (name === "class" || name === "classname") ? "className" : name;
+          const attrProp = (nameLower === "class" || nameLower === "classname") ? "className" : nameLower;
           const isProperty = IS_PROPERTY.includes(attrProp);
           const isSvgCamel = isSvg && SVG_CAMEL_CASE.includes(originalName);
-          const finalAttrName = isSvgCamel ? originalName : (attrProp === "className" ? "class" : toKebabCase(originalName));
+          const finalAttrName = isSvgCamel
+            ? originalName
+            : (attrProp === "className" ? "class" : toKebabCase(originalName));
+
           if (isProperty && (!isSvg || attrProp !== "className")) {
-            statements.push(t.expressionStatement(t.assignmentExpression("=", t.memberExpression(elId, t.identifier(attrProp === "key" ? "_key" : attrProp)), value)));
+            const setProperty = getImport("setProperty", runtimeSource);
+            statements.push(t.expressionStatement(
+              t.callExpression(setProperty, [elId, t.stringLiteral(attrProp === "key" ? "_key" : attrProp), value])
+            ));
           } else {
-            statements.push(t.expressionStatement(t.callExpression(t.memberExpression(elId, t.identifier("setAttribute")), [t.stringLiteral(finalAttrName), value])));
+            statements.push(t.expressionStatement(
+              t.callExpression(
+                t.memberExpression(elId, t.identifier("setAttribute")),
+                [t.stringLiteral(finalAttrName), value]
+              )
+            ));
           }
         }
       });
 
       n.children.forEach(child => {
         const childId = processNode(child, elId);
-        if (childId) statements.push(t.expressionStatement(t.callExpression(t.memberExpression(elId, t.identifier("appendChild")), [childId])));
+        if (childId) statements.push(t.expressionStatement(
+          t.callExpression(t.memberExpression(elId, t.identifier("appendChild")), [childId])
+        ));
       });
       return elId;
-    } else if (t.isJSXText(n)) {
+    }
+
+    if (t.isJSXText(n)) {
       if (n.value.includes("\n") && n.value.trim() === "") return null;
       const text = n.value.replace(/\n\s*/g, " ");
       if (!text) return null;
       const textId = nextId(t, "text");
-      statements.push(t.variableDeclaration("const", [t.variableDeclarator(textId, t.callExpression(t.memberExpression(t.identifier("document"), t.identifier("createTextNode")), [t.stringLiteral(text)]))]));
+      statements.push(t.variableDeclaration("const", [
+        t.variableDeclarator(textId, t.callExpression(tId, [t.stringLiteral(text)])),
+      ]));
       return textId;
-    } else if (t.isJSXFragment(n)) {
+    }
+
+    if (t.isJSXFragment(n)) {
       const fragId = nextId(t, "frag");
-      statements.push(t.variableDeclaration("const", [t.variableDeclarator(fragId, t.callExpression(t.memberExpression(t.identifier("document"), t.identifier("createDocumentFragment")), []))]));
+      statements.push(t.variableDeclaration("const", [
+        t.variableDeclarator(fragId, t.callExpression(fId, [])),
+      ]));
       n.children.forEach(child => {
         const childId = processNode(child, fragId);
-        if (childId) statements.push(t.expressionStatement(t.callExpression(t.memberExpression(fragId, t.identifier("appendChild")), [childId])));
+        if (childId) statements.push(t.expressionStatement(
+          t.callExpression(t.memberExpression(fragId, t.identifier("appendChild")), [childId])
+        ));
       });
       return fragId;
-    } else if (t.isJSXExpressionContainer(n)) {
+    }
+
+    if (t.isJSXExpressionContainer(n)) {
       if (t.isJSXEmptyExpression(n.expression)) return null;
+
       collectSignals(n.expression);
-      const transformExpression = (exprNode) => {
+
+      const transformExpression = exprNode => {
         if (!exprNode || typeof exprNode !== "object") return;
-        if (Array.isArray(exprNode)) {
-          exprNode.forEach(transformExpression);
-          return;
-        }
+        if (Array.isArray(exprNode)) { exprNode.forEach(transformExpression); return; }
+
         Object.keys(exprNode).forEach(key => {
           const child = exprNode[key];
           if (!child || typeof child !== "object") return;
+
           if (t.isJSXElement(child) || t.isJSXFragment(child)) {
             if (child._processed) return;
-            const { statements: innerStatements, rootId: innerRootId, signals: innerSignals } = transformJSX(child, t, state, getImport, path);
-            innerSignals.forEach(s => signals.add(s));
-            exprNode[key] = t.callExpression(t.arrowFunctionExpression([], t.blockStatement([...innerStatements, t.returnStatement(innerRootId)])), []);
-            exprNode[key]._processed = true;
-          } else if (t.isCallExpression(child) && t.isMemberExpression(child.callee) && t.isIdentifier(child.callee.property, { name: "map" })) {
-            const mappedId = getImport("_mapped", state.runtimeSource);
+            const inner = transformJSX(child, t, state, getImport, path, helpers, rootIdentifier, mapParams, runtimeSource);
+            inner.signals.forEach(s => signals.add(s));
+            const iife = t.callExpression(
+              t.arrowFunctionExpression([], t.blockStatement([...inner.statements, t.returnStatement(inner.rootId)])),
+              []
+            );
+            iife._processed = true;
+            exprNode[key] = iife;
+          } else if (
+            t.isCallExpression(child) &&
+            t.isMemberExpression(child.callee) &&
+            t.isIdentifier(child.callee.property, { name: "map" })
+          ) {
+            const mappedHelper = getImport("_mapped", runtimeSource);
             const sourceArray = child.callee.object;
             const mapFn = child.arguments[0];
+            const mappedId = nextId(t, "mapped");
 
-            // If the map function is an arrow function or regular function,
-            // treat its parameters as signals.
-            if (t.isFunction(mapFn)) {
-              mapFn._isMapCallback = true;
-            }
-
-            const mappedInstanceId = nextId(t, "mapped");
-            statements.push(t.variableDeclaration("const", [t.variableDeclarator(mappedInstanceId, t.callExpression(mappedId, [t.arrowFunctionExpression([], sourceArray), mapFn]))]));
-            exprNode[key] = t.callExpression(mappedInstanceId, []);
+            statements.push(t.variableDeclaration("const", [
+              t.variableDeclarator(
+                mappedId,
+                t.callExpression(mappedHelper, [t.arrowFunctionExpression([], sourceArray), mapFn])
+              ),
+            ]));
+            exprNode[key] = t.callExpression(mappedId, []);
             transformExpression(mapFn);
           } else {
+            transformNoValue(child);
             transformExpression(child);
           }
         });
@@ -461,16 +756,35 @@ export function transformComponent(componentPath, name, isRenderFn, t, state) {
 
       const wrapper = { expr: n.expression };
       transformExpression(wrapper);
-      const finalExpression = wrapper.expr;
-      const renderDynamicId = getImport("renderDynamic", state.runtimeSource);
-      statements.push(t.expressionStatement(t.callExpression(renderDynamicId, [parentElId, t.arrowFunctionExpression([], finalExpression)])));
+
+      const renderDynamic = getImport("renderDynamic", runtimeSource);
+      const parentNode = parentElId || rootIdentifier;
+
+      if (parentNode) {
+        statements.push(t.expressionStatement(
+          t.callExpression(renderDynamic, [
+            parentNode,
+            (t.isArrowFunctionExpression(wrapper.expr) || t.isFunctionExpression(wrapper.expr)) ? wrapper.expr : t.arrowFunctionExpression([], wrapper.expr),
+          ])
+        ));
+      } else {
+        throw componentPath?.buildCodeFrameError
+          ? componentPath.buildCodeFrameError(
+            "WAF: A root-level JSX expression container has no parent element. " +
+            "Wrap your component's return value in a single element or fragment."
+          )
+          : new Error(
+            "WAF: Root-level dynamic expression has no parent element context."
+          );
+      }
       return null;
-    } else if (t.isExpression(n)) {
-      return n;
     }
+
+    if (t.isExpression(n)) return n;
+    return null;
   }
 
-    const rootId = processNode(node, t.identifier("root"));
-    transformNoValue(statements);
-    return { statements, rootId, signals };
-  }
+  const resRootId = processNode(node, rootIdentifier);
+  transformNoValue(statements);
+  return { statements, rootId: resRootId, signals };
+}

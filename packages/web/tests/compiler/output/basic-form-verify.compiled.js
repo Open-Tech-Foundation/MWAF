@@ -1,20 +1,49 @@
-import { computed as _computed, effect as _effect, renderDynamic as _renderDynamic, signal as _signal, createPropsProxy as _createPropsProxy, withInstance as _withInstance } from "@opentf/web";
+import { computed as _computed, effect as _effect, setProperty as _setProperty, renderDynamic as _renderDynamic, signal as _signal, createPropsProxy as _createPropsProxy, _clearChildren, withInstance as _withInstance } from "@opentf/web";
 import { createForm } from "@opentf/web-form";
 export class BasicForm extends HTMLElement {
   static observedAttributes = [];
   constructor() {
     super();
-    this._propsSignals = {};
+    Object.defineProperty(this, "_propsSignals", {
+      value: {},
+      enumerable: false,
+      writable: true,
+      configurable: true
+    });
+    Object.defineProperty(this, "_onMounts", {
+      value: [],
+      enumerable: false,
+      writable: true,
+      configurable: true
+    });
+    Object.defineProperty(this, "_onCleanups", {
+      value: [],
+      enumerable: false,
+      writable: true,
+      configurable: true
+    });
+    Object.defineProperty(this, "_children", {
+      value: [],
+      enumerable: false,
+      writable: true,
+      configurable: true
+    });
+    Object.defineProperty(this, "_mounted", {
+      value: false,
+      enumerable: false,
+      writable: true,
+      configurable: true
+    });
   }
   attributeChangedCallback(name, _, value) {
-    this._propsSignals[name].value = value;
+    if (this._propsSignals[name]) this._propsSignals[name].value = value;
   }
   connectedCallback() {
-    this._onMounts = [];
-    this._onCleanups = [];
+    if (this._mounted) return;
+    this._mounted = true;
     const props = _createPropsProxy(this);
     this._children = Array.from(this.childNodes);
-    while (this.firstChild) this.removeChild(this.firstChild);
+    _clearChildren(this);
     _withInstance(this, () => {
       const form = createForm({
         initialValues: {
@@ -28,8 +57,8 @@ export class BasicForm extends HTMLElement {
         const el0 = document.createElement("section");
         const el1 = document.createElement("button");
         el1.setAttribute("type", "submit");
-        _effect(() => el1.disabled = () => !canSubmit.value);
-        _renderDynamic(el1, () => () => isSubmitting.value ? "Processing..." : "Save Changes");
+        _effect(() => _setProperty(el1, "disabled", (() => !canSubmit.value)()));
+        _renderDynamic(el1, () => isSubmitting.value ? "Processing..." : "Save Changes");
         el0.appendChild(el1);
         return el0;
       })();

@@ -1,11 +1,11 @@
-import { renderDynamic as _renderDynamic } from "@opentf/web";
+import { setProperty as _setProperty, renderDynamic as _renderDynamic } from "@opentf/web";
 export function render(root, props) {
   const rootElement = (() => {
     const el0 = document.createElement("div");
-    el0.className = "root-layout";
+    _setProperty(el0, "className", "root-layout");
     const el1 = document.createElement("nav");
     const el2 = document.createElement("a");
-    el2.href = "/";
+    _setProperty(el2, "href", "/");
     const text3 = document.createTextNode("Home");
     el2.appendChild(text3);
     el1.appendChild(el2);

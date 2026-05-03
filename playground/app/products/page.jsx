@@ -1,18 +1,14 @@
 export default function ProductsPage() {
-  let productsNaive = $state([]);
-  let productsOptimized = $state([]);
+  const initialData = Array.from({ length: 5000 }, (_, i) => ({
+    id: i,
+    name: `Product ${i}`,
+    price: (Math.random() * 100).toFixed(2),
+  }));
+
+  let productsNaive = $state(initialData);
+  let productsOptimized = $state(initialData);
   let naiveTime = $state(0);
   let optimizedTime = $state(0);
-
-  onMount(() => {
-    const data = Array.from({ length: 5000 }, (_, i) => ({
-      id: i,
-      name: `Product ${i}`,
-      price: (Math.random() * 100).toFixed(2),
-    }));
-    productsNaive = [...data];
-    productsOptimized = [...data];
-  });
 
   const shuffleNaive = () => {
     const s1 = performance.now();

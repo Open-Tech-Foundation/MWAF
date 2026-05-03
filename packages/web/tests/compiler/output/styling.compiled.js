@@ -1,40 +1,71 @@
-import { signal as _signal, effect as _effect, createPropsProxy as _createPropsProxy, withInstance as _withInstance } from "@opentf/web";
+import { signal as _signal, setProperty as _setProperty, effect as _effect, createPropsProxy as _createPropsProxy, _clearChildren, withInstance as _withInstance } from "@opentf/web";
 class StylingTestElement extends HTMLElement {
   static observedAttributes = ["theme"];
   set theme(val) {
+    if (!this._propsSignals["theme"]) this._propsSignals["theme"] = _signal(val);
     this._propsSignals["theme"].value = val;
   }
   get theme() {
-    return this._propsSignals["theme"].value;
+    const _sig = this._propsSignals["theme"];
+    return _sig ? _sig.value : undefined;
   }
   constructor() {
     super();
-    this._propsSignals = {
-      theme: _signal(null)
-    };
+    Object.defineProperty(this, "_propsSignals", {
+      value: {
+        theme: _signal(null)
+      },
+      enumerable: false,
+      writable: true,
+      configurable: true
+    });
+    Object.defineProperty(this, "_onMounts", {
+      value: [],
+      enumerable: false,
+      writable: true,
+      configurable: true
+    });
+    Object.defineProperty(this, "_onCleanups", {
+      value: [],
+      enumerable: false,
+      writable: true,
+      configurable: true
+    });
+    Object.defineProperty(this, "_children", {
+      value: [],
+      enumerable: false,
+      writable: true,
+      configurable: true
+    });
+    Object.defineProperty(this, "_mounted", {
+      value: false,
+      enumerable: false,
+      writable: true,
+      configurable: true
+    });
   }
   attributeChangedCallback(name, _, value) {
-    this._propsSignals[name].value = value;
+    if (this._propsSignals[name]) this._propsSignals[name].value = value;
   }
   connectedCallback() {
-    this._onMounts = [];
-    this._onCleanups = [];
+    if (this._mounted) return;
+    this._mounted = true;
     const props = _createPropsProxy(this);
     this._children = Array.from(this.childNodes);
-    while (this.firstChild) this.removeChild(this.firstChild);
+    _clearChildren(this);
     _withInstance(this, () => {
       let active = _signal(true);
       const rootElement = (() => {
         const el0 = document.createElement("div");
-        el0.className = "static-class";
-        el0.className = "static-classname";
+        _setProperty(el0, "className", "static-class");
+        _setProperty(el0, "className", "static-classname");
         const el1 = document.createElement("span");
-        _effect(() => el1.className = active.value ? "active" : "inactive");
+        _effect(() => _setProperty(el1, "className", active.value ? "active" : "inactive"));
         const text2 = document.createTextNode(" Reactive Class ");
         el1.appendChild(text2);
         el0.appendChild(el1);
         const el3 = document.createElement("button");
-        _effect(() => el3.className = props.theme);
+        _effect(() => _setProperty(el3, "className", props.theme));
         const text4 = document.createTextNode(" Reactive ClassName from Props ");
         el3.appendChild(text4);
         el0.appendChild(el3);

@@ -131,19 +131,19 @@ export function StatePreview({ form }) {
 }
 
 export function BasicForm() {
-  const mode = $state("onBlur");
-  const reValidateMode = $state("onChange");
+  let mode = $state("onBlur");
+  let reValidateMode = $state("onChange");
   const schema = z.object({
     username: z.string().min(3, "Username must be at least 3 chars"),
     email: z.string().email("Invalid email address")
   });
 
-  const form = createForm({
+  const form = untracked(() => createForm({
     initialValues: { username: "", email: "" },
     validator: zodResolver(schema),
     mode,
     reValidateMode
-  });
+  }));
 
   const isValid = $derived(form.isValid);
   const isChanged = $derived(form.isChanged);
@@ -208,8 +208,8 @@ export function BasicForm() {
 }
 
 export function ComplexForm() {
-  const mode = $state("onBlur");
-  const reValidateMode = $state("onChange");
+  let mode = $state("onBlur");
+  let reValidateMode = $state("onChange");
   const schema = z.object({
     profile: z.object({
       firstName: z.string().min(1, "First name is required"),
@@ -221,7 +221,7 @@ export function ComplexForm() {
     })
   });
 
-  const form = createForm({
+  const form = untracked(() => createForm({
     initialValues: {
       profile: { firstName: "", lastName: "" },
       skills: ["JavaScript"],
@@ -230,7 +230,7 @@ export function ComplexForm() {
     validator: zodResolver(schema),
     mode,
     reValidateMode
-  });
+  }));
 
   const isValid = $derived(form.isValid);
   const isChanged = $derived(form.isChanged);
@@ -282,7 +282,7 @@ export function ComplexForm() {
             </div>
 
             <div className="space-y-3">
-              {() => form.values.skills.map((_, index) => (
+              {form.values.skills.map((_, index) => (
                 <div className="flex gap-2 animate-in fade-in slide-in-from-left-2 duration-300">
                   <div className="flex-1">
                     <input
@@ -303,7 +303,7 @@ export function ComplexForm() {
                 </div>
               ))}
             </div>
-            {() => form.errors.skills && typeof form.errors.skills === 'string' && (
+            {form.errors.skills && typeof form.errors.skills === 'string' && (
               <p className="text-[10px] text-red-400 font-bold mt-2 ml-1">{form.errors.skills}</p>
             )}
           </div>

@@ -1,19 +1,48 @@
-import { signal as _signal, onMount as _onMount, effect as _effect, createPropsProxy as _createPropsProxy, withInstance as _withInstance } from "@opentf/web";
+import { signal as _signal, onMount as _onMount, effect as _effect, createPropsProxy as _createPropsProxy, _clearChildren, withInstance as _withInstance } from "@opentf/web";
 class CustomInputElement extends HTMLElement {
   static observedAttributes = [];
   constructor() {
     super();
-    this._propsSignals = {};
+    Object.defineProperty(this, "_propsSignals", {
+      value: {},
+      enumerable: false,
+      writable: true,
+      configurable: true
+    });
+    Object.defineProperty(this, "_onMounts", {
+      value: [],
+      enumerable: false,
+      writable: true,
+      configurable: true
+    });
+    Object.defineProperty(this, "_onCleanups", {
+      value: [],
+      enumerable: false,
+      writable: true,
+      configurable: true
+    });
+    Object.defineProperty(this, "_children", {
+      value: [],
+      enumerable: false,
+      writable: true,
+      configurable: true
+    });
+    Object.defineProperty(this, "_mounted", {
+      value: false,
+      enumerable: false,
+      writable: true,
+      configurable: true
+    });
   }
   attributeChangedCallback(name, _, value) {
-    this._propsSignals[name].value = value;
+    if (this._propsSignals[name]) this._propsSignals[name].value = value;
   }
   connectedCallback() {
-    this._onMounts = [];
-    this._onCleanups = [];
+    if (this._mounted) return;
+    this._mounted = true;
     const props = _createPropsProxy(this);
     this._children = Array.from(this.childNodes);
-    while (this.firstChild) this.removeChild(this.firstChild);
+    _clearChildren(this);
     _withInstance(this, () => {
       const input = _signal();
       const focus = () => input.value.focus();
@@ -40,17 +69,46 @@ class RefTestElement extends HTMLElement {
   static observedAttributes = [];
   constructor() {
     super();
-    this._propsSignals = {};
+    Object.defineProperty(this, "_propsSignals", {
+      value: {},
+      enumerable: false,
+      writable: true,
+      configurable: true
+    });
+    Object.defineProperty(this, "_onMounts", {
+      value: [],
+      enumerable: false,
+      writable: true,
+      configurable: true
+    });
+    Object.defineProperty(this, "_onCleanups", {
+      value: [],
+      enumerable: false,
+      writable: true,
+      configurable: true
+    });
+    Object.defineProperty(this, "_children", {
+      value: [],
+      enumerable: false,
+      writable: true,
+      configurable: true
+    });
+    Object.defineProperty(this, "_mounted", {
+      value: false,
+      enumerable: false,
+      writable: true,
+      configurable: true
+    });
   }
   attributeChangedCallback(name, _, value) {
-    this._propsSignals[name].value = value;
+    if (this._propsSignals[name]) this._propsSignals[name].value = value;
   }
   connectedCallback() {
-    this._onMounts = [];
-    this._onCleanups = [];
+    if (this._mounted) return;
+    this._mounted = true;
     const props = _createPropsProxy(this);
     this._children = Array.from(this.childNodes);
-    while (this.firstChild) this.removeChild(this.firstChild);
+    _clearChildren(this);
     _withInstance(this, () => {
       const myDiv = _signal();
       const myInput = _signal();

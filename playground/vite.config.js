@@ -2,21 +2,21 @@ import { defineConfig } from 'vite'
 import { babel } from '@rollup/plugin-babel'
 import path from 'path'
 import tailwindcss from '@tailwindcss/vite'
-
-import { cloudflare } from "@cloudflare/vite-plugin";
+import { ssg } from '../packages/web/ssg/index.js';
 
 export default defineConfig(({ mode }) => {
   const isDev = mode === 'development'
+  const isSSG = mode === 'ssg'
 
   return {
     esbuild: {
       jsx: 'preserve'
     },
     resolve: {
-      alias: isDev ? {
+      alias: {
         '@opentf/web': path.resolve(__dirname, '../packages/web/index.js'),
-        '@opentf/web-form': path.resolve(__dirname, '../packages/web-form'),
-      } : {}
+        '@opentf/web-form': path.resolve(__dirname, '../packages/web-form/index.js'),
+      },
     },
     plugins: [
       tailwindcss(), 
@@ -27,10 +27,10 @@ export default defineConfig(({ mode }) => {
         configFile: false,
         plugins: [
           "@babel/plugin-syntax-jsx",
-          [isDev ? path.resolve(__dirname, '../packages/web/compiler/index.js') : "@opentf/web/compiler"]
+          [path.resolve(__dirname, '../packages/web/compiler/index.js')]
         ]
       }), 
-      cloudflare()
+      ssg()
     ]
   }
 })

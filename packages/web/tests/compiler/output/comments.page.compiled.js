@@ -1,3 +1,4 @@
+import { setProperty as _setProperty } from "@opentf/web";
 export function render(root, props) {
   const rootElement = (() => {
     const el0 = document.createElement("div");
@@ -6,7 +7,7 @@ export function render(root, props) {
     el1.appendChild(text2);
     el0.appendChild(el1);
     const el3 = document.createElement("p");
-    el3.className = "foo";
+    _setProperty(el3, "className", "foo");
     const text4 = document.createTextNode(" Content ");
     el3.appendChild(text4);
     el0.appendChild(el3);

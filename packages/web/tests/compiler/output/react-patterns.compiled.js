@@ -1,44 +1,77 @@
-import { effect as _effect, renderDynamic as _renderDynamic, applySpread as _applySpread, signal as _signal, createPropsProxy as _createPropsProxy, withInstance as _withInstance } from "@opentf/web";
+import { setProperty as _setProperty, effect as _effect, renderDynamic as _renderDynamic, applySpread as _applySpread, signal as _signal, createPropsProxy as _createPropsProxy, _clearChildren, withInstance as _withInstance } from "@opentf/web";
 import { UI } from './ui-lib';
 class ReactPatternsElement extends HTMLElement {
   static observedAttributes = ["user", "notifications"];
   set user(val) {
+    if (!this._propsSignals["user"]) this._propsSignals["user"] = _signal(val);
     this._propsSignals["user"].value = val;
   }
   set notifications(val) {
+    if (!this._propsSignals["notifications"]) this._propsSignals["notifications"] = _signal(val);
     this._propsSignals["notifications"].value = val;
   }
   get user() {
-    return this._propsSignals["user"].value;
+    const _sig = this._propsSignals["user"];
+    return _sig ? _sig.value : undefined;
   }
   get notifications() {
-    return this._propsSignals["notifications"].value;
+    const _sig = this._propsSignals["notifications"];
+    return _sig ? _sig.value : undefined;
   }
   constructor() {
     super();
-    this._propsSignals = {
-      user: _signal(null),
-      notifications: _signal(null)
-    };
+    Object.defineProperty(this, "_propsSignals", {
+      value: {
+        user: _signal(null),
+        notifications: _signal(null)
+      },
+      enumerable: false,
+      writable: true,
+      configurable: true
+    });
+    Object.defineProperty(this, "_onMounts", {
+      value: [],
+      enumerable: false,
+      writable: true,
+      configurable: true
+    });
+    Object.defineProperty(this, "_onCleanups", {
+      value: [],
+      enumerable: false,
+      writable: true,
+      configurable: true
+    });
+    Object.defineProperty(this, "_children", {
+      value: [],
+      enumerable: false,
+      writable: true,
+      configurable: true
+    });
+    Object.defineProperty(this, "_mounted", {
+      value: false,
+      enumerable: false,
+      writable: true,
+      configurable: true
+    });
   }
   attributeChangedCallback(name, _, value) {
-    this._propsSignals[name].value = value;
+    if (this._propsSignals[name]) this._propsSignals[name].value = value;
   }
   connectedCallback() {
-    this._onMounts = [];
-    this._onCleanups = [];
+    if (this._mounted) return;
+    this._mounted = true;
     const props = _createPropsProxy(this);
     this._children = Array.from(this.childNodes);
-    while (this.firstChild) this.removeChild(this.firstChild);
+    _clearChildren(this);
     _withInstance(this, () => {
       const Tag = props.isHeader ? 'h1' : 'h2';
       const items = ['A', 'B'];
       const rootElement = (() => {
         const el0 = document.createElement("div");
-        el0.className = "container";
+        _setProperty(el0, "className", "container");
         el0.setAttribute("data-testid", "main-div");
         const el1 = document.createElement("input");
-        el1.disabled = true;
+        _setProperty(el1, "disabled", true);
         _effect(() => el1.setAttribute("tab-index", -1));
         _effect(() => el1.setAttribute("max-length", 5));
         el0.appendChild(el1);
@@ -47,7 +80,7 @@ class ReactPatternsElement extends HTMLElement {
         el2.appendChild(text3);
         el0.appendChild(el2);
         const el4 = document.createElement("web-ui-button");
-        el4.variant = "primary";
+        _setProperty(el4, "variant", "primary");
         const text5 = document.createTextNode("Click Me");
         el4.appendChild(text5);
         el0.appendChild(el4);
@@ -65,28 +98,28 @@ class ReactPatternsElement extends HTMLElement {
         el0.appendChild(el6);
         const el11 = document.createElement("div");
         _effect(() => _applySpread(el11, props.extra));
-        el11.className = "override";
-        el11.id = "constant";
+        _setProperty(el11, "className", "override");
+        _setProperty(el11, "id", "constant");
         const text12 = document.createTextNode(" Spread Test ");
         el11.appendChild(text12);
         el0.appendChild(el11);
         const el13 = document.createElement("ul");
         _renderDynamic(el13, () => [(() => {
           const el0 = document.createElement("li");
-          el0._key = "1";
+          _setProperty(el0, "_key", "1");
           const text1 = document.createTextNode("One");
           el0.appendChild(text1);
           return el0;
         })(), (() => {
           const el0 = document.createElement("li");
-          el0._key = "2";
+          _setProperty(el0, "_key", "2");
           const text1 = document.createTextNode("Two");
           el0.appendChild(text1);
           return el0;
         })()]);
         el0.appendChild(el13);
         const el14 = document.createElement("web-dataprovider");
-        _renderDynamic(el14, () => data => (() => {
+        _renderDynamic(el14, data => (() => {
           const el0 = document.createElement("div");
           const text1 = document.createTextNode("Data: ");
           el0.appendChild(text1);
@@ -135,17 +168,46 @@ class CustomComponentElement extends HTMLElement {
   static observedAttributes = [];
   constructor() {
     super();
-    this._propsSignals = {};
+    Object.defineProperty(this, "_propsSignals", {
+      value: {},
+      enumerable: false,
+      writable: true,
+      configurable: true
+    });
+    Object.defineProperty(this, "_onMounts", {
+      value: [],
+      enumerable: false,
+      writable: true,
+      configurable: true
+    });
+    Object.defineProperty(this, "_onCleanups", {
+      value: [],
+      enumerable: false,
+      writable: true,
+      configurable: true
+    });
+    Object.defineProperty(this, "_children", {
+      value: [],
+      enumerable: false,
+      writable: true,
+      configurable: true
+    });
+    Object.defineProperty(this, "_mounted", {
+      value: false,
+      enumerable: false,
+      writable: true,
+      configurable: true
+    });
   }
   attributeChangedCallback(name, _, value) {
-    this._propsSignals[name].value = value;
+    if (this._propsSignals[name]) this._propsSignals[name].value = value;
   }
   connectedCallback() {
-    this._onMounts = [];
-    this._onCleanups = [];
+    if (this._mounted) return;
+    this._mounted = true;
     const props = _createPropsProxy(this);
     this._children = Array.from(this.childNodes);
-    while (this.firstChild) this.removeChild(this.firstChild);
+    _clearChildren(this);
     _withInstance(this, () => {
       const rootElement = (() => {
         const el0 = document.createElement("div");

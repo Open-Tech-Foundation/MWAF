@@ -14,13 +14,17 @@ const routerSignals = {
   searchParams: signal(new URLSearchParams(isBrowser ? window.location.search : '')),
   hash: signal(isBrowser ? window.location.hash : ''),
   isGuarding: signal(false),
-  guard: null
+  guard: null,
+  config: signal({
+    navigation: 'spa'
+  })
 };
 
 export const router = new Proxy(routerSignals, {
   get: (target, key) => {
     if (key === "push") return (path) => navigate(path);
     if (key === "replace") return (path) => navigate(path, undefined, true);
+    if (key === "config") return target.config.value;
     
     const s = target[key];
     if (s && typeof s === 'object' && 'value' in s && typeof s.subscribe === 'function') {
@@ -40,6 +44,10 @@ export const router = new Proxy(routerSignals, {
 });
 
 let currentPageInstance = null;
+
+export function setRouterConfig(config) {
+  routerSignals.config.value = { ...routerSignals.config.value, ...config };
+}
 
 export function registerRoutes(pages) {
   for (const path in pages) {
@@ -201,8 +209,10 @@ export async function navigate(path, root = document.getElementById("app"), repl
 
     if (!root) root = document.getElementById("app");
     if (root) {
-      root.innerHTML = '';
-      root.appendChild(content);
+      if (typeof window !== 'undefined') {
+        root.innerHTML = '';
+        root.appendChild(content);
+      }
     }
 
     if (instance._onMounts) {

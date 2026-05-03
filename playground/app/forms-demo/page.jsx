@@ -7,7 +7,7 @@ import { BasicForm, ComplexForm } from "./FormComponents";
  * Each form component manages its own state using 'web-forms'.
  */
 export default function FormsDemo() {
-  const activeTab = $state("basic");
+  let activeTab = $state("basic");
 
   return (
     <div className="max-w-7xl mx-auto space-y-8 pb-24 px-4 sm:px-6">

@@ -1,77 +1,121 @@
-import { effect, signal } from "@preact/signals-core";
+import { signal, effect, isSSG, untracked } from "../core/signals.js";
+import { IS_PROPERTY } from "../core/constants.js";
 
-export function renderDynamic(parent, fn) {
-  const anchor = document.createComment("dynamic");
-  parent.appendChild(anchor);
-  
-  let currentNodes = [];
-  
-  effect(() => {
-    let value = fn();
-    // If the value is a function (e.g., from mapped), execute it to get the nodes
-    if (typeof value === "function") value = value();
-    
-    if (value === null || value === undefined || value === false) value = [];
-    if (!Array.isArray(value)) value = [value];
+const ELEMENT_PROPS = new WeakMap();
 
-    const nextNodes = value.map(v => {
-      if (v instanceof Node) return v;
-      return document.createTextNode(String(v));
-    });
-
-    reconcile(anchor.parentNode, anchor, currentNodes, nextNodes);
-    currentNodes = nextNodes;
-  });
+export function applySpread(el, props) {
+  for (const key in props) {
+    setProperty(el, key, props[key]);
+  }
 }
 
-export function _mapped(source, fn) {
-  let cache = new Map(); // key -> { node, itemSignal, indexSignal }
-  
-  return () => {
-    const list = (typeof source === "function" ? source() : source.value) || [];
-    const nextNodes = [];
-    const nextCache = new Map();
+export function getWafProps(el) {
+  return ELEMENT_PROPS.get(el);
+}
 
-    list.forEach((item, index) => {
-      const key = item.key ?? item.id ?? index;
-      let cached = cache.get(key);
-      
-      if (cached) {
-        // Reuse node and update signals
-        cached.itemSignal.value = item;
-        cached.indexSignal.value = index;
-        nextNodes.push(cached.node);
-        nextCache.set(key, cached);
-      } else {
-        // Create new node and signals
-        const itemSignal = signal(item);
-        const indexSignal = signal(index);
-        const node = fn(itemSignal, indexSignal);
-        node._key = key;
-        nextNodes.push(node);
-        nextCache.set(key, { node, itemSignal, indexSignal });
+export function _clearChildren(el) {
+  if (isSSG) return;
+  while (el.firstChild) el.removeChild(el.firstChild);
+}
+
+export function setProperty(el, key, value) {
+  if (key === "style" && typeof value === "object") {
+    Object.assign(el.style, value);
+  } else if (key.startsWith("on") && typeof value === "function") {
+    const name = key.toLowerCase();
+    const isStandard = name in el || name in HTMLElement.prototype;
+    el[isStandard ? name : key] = value;
+  } else if (IS_PROPERTY.includes(key)) {
+    el[key] = value;
+  } else {
+    if (value === false || value === null || value === undefined) {
+      el.removeAttribute(key);
+    } else {
+      el.setAttribute(key, value);
+    }
+  }
+
+  // Update signals if this is a WAF component
+  if (el._propsSignals) {
+    untracked(() => {
+      if (!el._propsSignals[key]) {
+        el._propsSignals[key] = signal(value);
+      } else if (el._propsSignals[key].peek() !== value) {
+        el._propsSignals[key].value = value;
       }
     });
-
-    cache = nextCache;
-    return nextNodes;
-  };
+  }
 }
 
-function reconcile(parent, anchor, oldNodes, nextNodes) {
-  // 1. Remove nodes that are no longer present
-  const nextSet = new Set(nextNodes);
-  oldNodes.forEach(n => {
-    if (!nextSet.has(n)) n.remove();
+export function renderDynamic(parent, fn) {
+  const anchor = document.createTextNode("");
+  parent.appendChild(anchor);
+
+  let currentNodes = [];
+
+  effect(() => {
+    let value = fn();
+    if (value === undefined || value === null) value = [];
+    const newNodes = (Array.isArray(value) ? value : [value])
+      .map(node => {
+        if (node === null || node === undefined || typeof node === 'boolean') return null;
+        if (node instanceof Node) return node;
+        return document.createTextNode(String(node));
+      })
+      .filter(Boolean);
+    
+    // Remove nodes that are no longer present
+    for (const node of currentNodes) {
+      if (!newNodes.includes(node)) {
+        if (node.parentNode) node.parentNode.removeChild(node);
+      }
+    }
+
+    // Insert or move nodes (backwards to ensure nextNode is always in DOM)
+    for (let i = newNodes.length - 1; i >= 0; i--) {
+      const node = newNodes[i];
+      const nextNode = newNodes[i + 1] || anchor;
+      if (node.nextSibling !== nextNode) {
+        parent.insertBefore(node, nextNode);
+      }
+    }
+
+    currentNodes = newNodes;
+  });
+}
+
+export function _mapped(sourceFn, mapFn) {
+  const cache = new Map();
+  const result = signal([]);
+
+  effect(() => {
+    const source = sourceFn();
+    const data = Array.isArray(source) ? source : [];
+    
+    const newKeys = new Set();
+    const newItems = data.map((item, index) => {
+      const key = (item && typeof item === "object" && item.id !== undefined) ? item.id : index;
+      newKeys.add(key);
+
+      if (cache.has(key)) {
+        const entry = cache.get(key);
+        entry.sig.value = item;
+        return entry.res;
+      }
+
+      const sig = signal(item);
+      const res = mapFn(sig, index);
+      cache.set(key, { sig, res });
+      return res;
+    });
+
+    // Cleanup old cache entries
+    for (const key of cache.keys()) {
+      if (!newKeys.has(key)) cache.delete(key);
+    }
+
+    result.value = newItems;
   });
 
-  // 2. Insert or move nodes from right to left to minimize DOM operations
-  let current = anchor;
-  for (let i = nextNodes.length - 1; i >= 0; i--) {
-    const node = nextNodes[i];
-    if (node.nextSibling !== current) {
-      parent.insertBefore(node, current);
-    }
-    current = node;
-  }
+  return () => result.value;
 }

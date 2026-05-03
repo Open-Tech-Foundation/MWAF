@@ -1,10 +1,10 @@
-import { mapped, renderDynamic } from "./dom.js";
+import { _mapped } from "./dom.js";
 import { withInstance } from "./lifecycle.js";
 
 export function For(props) {
   // We return a "marker" that renderDynamic will handle
   // But wait, if we are called as a component, we need to render something.
-  return mapped(props.each, props.children[0]);
+  return _mapped(props.each, props.children[0]);
 }
 
 // Register as a Web Component to support <For> syntax

@@ -69,6 +69,6 @@ describe("Web App Framework Compiler > Reactivity Edge Cases", () => {
     `;
     const output = compile(code);
     // The className should be wrapped in an effect inside the mapped function
-    expect(output).toContain("_effect(() => el0.className = item.value.active ? \"active\" : \"inactive\")");
+    expect(output).toContain("_effect(() => _setProperty(el0, \"className\", item.value.active ? \"active\" : \"inactive\"))");
   });
 });

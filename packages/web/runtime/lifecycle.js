@@ -1,5 +1,6 @@
+import { effect, isSSG } from "../core/signals.js";
+
 let currentInstance = null;
-export const getCurrentInstance = () => currentInstance;
 
 export function withInstance(inst, fn) {
   const prev = currentInstance;
@@ -11,19 +12,47 @@ export function withInstance(inst, fn) {
   }
 }
 
+export function getCurrentInstance() {
+  return currentInstance;
+}
+
 export function onMount(fn) {
+  if (isSSG) return;
   if (currentInstance) {
-    if (!currentInstance._onMounts) currentInstance._onMounts = [];
+    if (!currentInstance._onMounts) {
+       Object.defineProperty(currentInstance, "_onMounts", { value: [], enumerable: false, writable: true });
+    }
     currentInstance._onMounts.push(fn);
-  } else {
-    // If no instance (like in a Page render), run immediately
-    fn();
+  }
+}
+
+export function onUnmount(fn) {
+  if (isSSG) return;
+  if (currentInstance) {
+    if (!currentInstance._onCleanups) {
+       Object.defineProperty(currentInstance, "_onCleanups", { value: [], enumerable: false, writable: true });
+    }
+    currentInstance._onCleanups.push(fn);
   }
 }
 
 export function onCleanup(fn) {
+  return onUnmount(fn);
+}
+
+export function hookEffect(fn) {
+  const disposer = effect(fn);
   if (currentInstance) {
-    if (!currentInstance._onCleanups) currentInstance._onCleanups = [];
-    currentInstance._onCleanups.push(fn);
+    onUnmount(disposer);
   }
+  return disposer;
+}
+
+
+// Metadata initializer for Web Components
+export function _initWafComponent(el) {
+  if (!el._propsSignals) {
+    Object.defineProperty(el, "_propsSignals", { value: {}, enumerable: false, writable: true });
+  }
+  return el;
 }

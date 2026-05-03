@@ -1,60 +1,99 @@
-import { signal as _signal, effect as _effect, renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy, withInstance as _withInstance } from "@opentf/web";
+import { signal as _signal, effect as _effect, setProperty as _setProperty, renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy, _clearChildren, withInstance as _withInstance } from "@opentf/web";
 class ComplexExpressionsElement extends HTMLElement {
   static observedAttributes = ["theme", "color", "loading", "title", "logMessage"];
   set theme(val) {
+    if (!this._propsSignals["theme"]) this._propsSignals["theme"] = _signal(val);
     this._propsSignals["theme"].value = val;
   }
   set color(val) {
+    if (!this._propsSignals["color"]) this._propsSignals["color"] = _signal(val);
     this._propsSignals["color"].value = val;
   }
   set loading(val) {
+    if (!this._propsSignals["loading"]) this._propsSignals["loading"] = _signal(val);
     this._propsSignals["loading"].value = val;
   }
   set title(val) {
+    if (!this._propsSignals["title"]) this._propsSignals["title"] = _signal(val);
     this._propsSignals["title"].value = val;
   }
   set logMessage(val) {
+    if (!this._propsSignals["logMessage"]) this._propsSignals["logMessage"] = _signal(val);
     this._propsSignals["logMessage"].value = val;
   }
   get theme() {
-    return this._propsSignals["theme"].value;
+    const _sig = this._propsSignals["theme"];
+    return _sig ? _sig.value : undefined;
   }
   get color() {
-    return this._propsSignals["color"].value;
+    const _sig = this._propsSignals["color"];
+    return _sig ? _sig.value : undefined;
   }
   get loading() {
-    return this._propsSignals["loading"].value;
+    const _sig = this._propsSignals["loading"];
+    return _sig ? _sig.value : undefined;
   }
   get title() {
-    return this._propsSignals["title"].value;
+    const _sig = this._propsSignals["title"];
+    return _sig ? _sig.value : undefined;
   }
   get logMessage() {
-    return this._propsSignals["logMessage"].value;
+    const _sig = this._propsSignals["logMessage"];
+    return _sig ? _sig.value : undefined;
   }
   constructor() {
     super();
-    this._propsSignals = {
-      theme: _signal(null),
-      color: _signal(null),
-      loading: _signal(null),
-      title: _signal(null),
-      logMessage: _signal(null)
-    };
+    Object.defineProperty(this, "_propsSignals", {
+      value: {
+        theme: _signal(null),
+        color: _signal(null),
+        loading: _signal(null),
+        title: _signal(null),
+        logMessage: _signal(null)
+      },
+      enumerable: false,
+      writable: true,
+      configurable: true
+    });
+    Object.defineProperty(this, "_onMounts", {
+      value: [],
+      enumerable: false,
+      writable: true,
+      configurable: true
+    });
+    Object.defineProperty(this, "_onCleanups", {
+      value: [],
+      enumerable: false,
+      writable: true,
+      configurable: true
+    });
+    Object.defineProperty(this, "_children", {
+      value: [],
+      enumerable: false,
+      writable: true,
+      configurable: true
+    });
+    Object.defineProperty(this, "_mounted", {
+      value: false,
+      enumerable: false,
+      writable: true,
+      configurable: true
+    });
   }
   attributeChangedCallback(name, _, value) {
-    this._propsSignals[name].value = value;
+    if (this._propsSignals[name]) this._propsSignals[name].value = value;
   }
   connectedCallback() {
-    this._onMounts = [];
-    this._onCleanups = [];
+    if (this._mounted) return;
+    this._mounted = true;
     const props = _createPropsProxy(this);
     this._children = Array.from(this.childNodes);
-    while (this.firstChild) this.removeChild(this.firstChild);
+    _clearChildren(this);
     _withInstance(this, () => {
       let count = _signal(0);
       const rootElement = (() => {
         const el0 = document.createElement("div");
-        _effect(() => el0.className = props.theme);
+        _effect(() => _setProperty(el0, "className", props.theme));
         _effect(() => Object.assign(el0.style, {
           color: props.color,
           opacity: count.value > 5 ? 1 : 0.5

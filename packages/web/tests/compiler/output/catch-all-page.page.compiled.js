@@ -1,19 +1,19 @@
-import { _mapped, renderDynamic as _renderDynamic } from "@opentf/web";
+import { setProperty as _setProperty, _mapped, renderDynamic as _renderDynamic } from "@opentf/web";
 export function render(root, props) {
   const rootElement = (() => {
     const el0 = document.createElement("div");
     const el1 = document.createElement("h1");
-    el1.className = "text-2xl font-bold";
+    _setProperty(el1, "className", "text-2xl font-bold");
     const text2 = document.createTextNode("Shop");
     el1.appendChild(text2);
     el0.appendChild(el1);
     const el3 = document.createElement("p");
-    el3.className = "mt-4";
+    _setProperty(el3, "className", "mt-4");
     const text4 = document.createTextNode("Slug segments: ");
     el3.appendChild(text4);
     el0.appendChild(el3);
     const el5 = document.createElement("ul");
-    el5.className = "list-disc ml-6 mt-2";
+    _setProperty(el5, "className", "list-disc ml-6 mt-2");
     const mapped6 = _mapped(() => props.params.slug, segment => (() => {
       const el0 = document.createElement("li");
       _renderDynamic(el0, () => segment.value);
@@ -22,11 +22,11 @@ export function render(root, props) {
     _renderDynamic(el5, () => mapped6());
     el0.appendChild(el5);
     const el7 = document.createElement("div");
-    el7.className = "mt-4 p-4 bg-slate-800 rounded";
+    _setProperty(el7, "className", "mt-4 p-4 bg-slate-800 rounded");
     const text8 = document.createTextNode(" Full path: ");
     el7.appendChild(text8);
     const el9 = document.createElement("span");
-    el9.className = "text-indigo-400 font-mono";
+    _setProperty(el9, "className", "text-indigo-400 font-mono");
     const text10 = document.createTextNode("/shop/");
     el9.appendChild(text10);
     _renderDynamic(el9, () => props.params.slug.join('/'));

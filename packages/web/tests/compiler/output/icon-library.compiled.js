@@ -1,33 +1,62 @@
-import { effect as _effect, applySpread as _applySpread, signal as _signal, createPropsProxy as _createPropsProxy, withInstance as _withInstance } from "@opentf/web";
+import { setProperty as _setProperty, effect as _effect, applySpread as _applySpread, signal as _signal, createPropsProxy as _createPropsProxy, _clearChildren, withInstance as _withInstance } from "@opentf/web";
 class IconGalleryElement extends HTMLElement {
   static observedAttributes = [];
   constructor() {
     super();
-    this._propsSignals = {};
+    Object.defineProperty(this, "_propsSignals", {
+      value: {},
+      enumerable: false,
+      writable: true,
+      configurable: true
+    });
+    Object.defineProperty(this, "_onMounts", {
+      value: [],
+      enumerable: false,
+      writable: true,
+      configurable: true
+    });
+    Object.defineProperty(this, "_onCleanups", {
+      value: [],
+      enumerable: false,
+      writable: true,
+      configurable: true
+    });
+    Object.defineProperty(this, "_children", {
+      value: [],
+      enumerable: false,
+      writable: true,
+      configurable: true
+    });
+    Object.defineProperty(this, "_mounted", {
+      value: false,
+      enumerable: false,
+      writable: true,
+      configurable: true
+    });
   }
   attributeChangedCallback(name, _, value) {
-    this._propsSignals[name].value = value;
+    if (this._propsSignals[name]) this._propsSignals[name].value = value;
   }
   connectedCallback() {
-    this._onMounts = [];
-    this._onCleanups = [];
+    if (this._mounted) return;
+    this._mounted = true;
     const props = _createPropsProxy(this);
     this._children = Array.from(this.childNodes);
-    while (this.firstChild) this.removeChild(this.firstChild);
+    _clearChildren(this);
     _withInstance(this, () => {
       const rootElement = (() => {
         const el0 = document.createElement("div");
-        el0.className = "flex gap-4";
+        _setProperty(el0, "className", "flex gap-4");
         const el1 = document.createElement("web-cameraicon");
-        _effect(() => el1.size = 32);
-        el1.color = "red";
+        _effect(() => _setProperty(el1, "size", 32));
+        _setProperty(el1, "color", "red");
         el0.appendChild(el1);
         const el2 = document.createElement("web-usericon");
-        _effect(() => el2.size = 24);
-        el2.className = "text-blue-500";
+        _effect(() => _setProperty(el2, "size", 24));
+        _setProperty(el2, "className", "text-blue-500");
         el0.appendChild(el2);
         const el3 = document.createElement("web-settingsicon");
-        _effect(() => el3.strokeWidth = 3);
+        _effect(() => _setProperty(el3, "strokeWidth", 3));
         el0.appendChild(el3);
         return el0;
       })();
@@ -44,33 +73,66 @@ export default IconGalleryElement;
 class CameraIconElement extends HTMLElement {
   static observedAttributes = ["size", "color"];
   set size(val) {
+    if (!this._propsSignals["size"]) this._propsSignals["size"] = _signal(val);
     this._propsSignals["size"].value = val;
   }
   set color(val) {
+    if (!this._propsSignals["color"]) this._propsSignals["color"] = _signal(val);
     this._propsSignals["color"].value = val;
   }
   get size() {
-    return this._propsSignals["size"].value;
+    const _sig = this._propsSignals["size"];
+    return _sig ? _sig.value : undefined;
   }
   get color() {
-    return this._propsSignals["color"].value;
+    const _sig = this._propsSignals["color"];
+    return _sig ? _sig.value : undefined;
   }
   constructor() {
     super();
-    this._propsSignals = {
-      size: _signal(null),
-      color: _signal(null)
-    };
+    Object.defineProperty(this, "_propsSignals", {
+      value: {
+        size: _signal(null),
+        color: _signal(null)
+      },
+      enumerable: false,
+      writable: true,
+      configurable: true
+    });
+    Object.defineProperty(this, "_onMounts", {
+      value: [],
+      enumerable: false,
+      writable: true,
+      configurable: true
+    });
+    Object.defineProperty(this, "_onCleanups", {
+      value: [],
+      enumerable: false,
+      writable: true,
+      configurable: true
+    });
+    Object.defineProperty(this, "_children", {
+      value: [],
+      enumerable: false,
+      writable: true,
+      configurable: true
+    });
+    Object.defineProperty(this, "_mounted", {
+      value: false,
+      enumerable: false,
+      writable: true,
+      configurable: true
+    });
   }
   attributeChangedCallback(name, _, value) {
-    this._propsSignals[name].value = value;
+    if (this._propsSignals[name]) this._propsSignals[name].value = value;
   }
   connectedCallback() {
-    this._onMounts = [];
-    this._onCleanups = [];
+    if (this._mounted) return;
+    this._mounted = true;
     const props = _createPropsProxy(this);
     this._children = Array.from(this.childNodes);
-    while (this.firstChild) this.removeChild(this.firstChild);
+    _clearChildren(this);
     _withInstance(this, () => {
       const rootElement = (() => {
         const el0 = document.createElementNS("http://www.w3.org/2000/svg", "svg");
@@ -106,26 +168,57 @@ customElements.define("web-cameraicon", CameraIconElement);
 class UserIconElement extends HTMLElement {
   static observedAttributes = ["size"];
   set size(val) {
+    if (!this._propsSignals["size"]) this._propsSignals["size"] = _signal(val);
     this._propsSignals["size"].value = val;
   }
   get size() {
-    return this._propsSignals["size"].value;
+    const _sig = this._propsSignals["size"];
+    return _sig ? _sig.value : undefined;
   }
   constructor() {
     super();
-    this._propsSignals = {
-      size: _signal(null)
-    };
+    Object.defineProperty(this, "_propsSignals", {
+      value: {
+        size: _signal(null)
+      },
+      enumerable: false,
+      writable: true,
+      configurable: true
+    });
+    Object.defineProperty(this, "_onMounts", {
+      value: [],
+      enumerable: false,
+      writable: true,
+      configurable: true
+    });
+    Object.defineProperty(this, "_onCleanups", {
+      value: [],
+      enumerable: false,
+      writable: true,
+      configurable: true
+    });
+    Object.defineProperty(this, "_children", {
+      value: [],
+      enumerable: false,
+      writable: true,
+      configurable: true
+    });
+    Object.defineProperty(this, "_mounted", {
+      value: false,
+      enumerable: false,
+      writable: true,
+      configurable: true
+    });
   }
   attributeChangedCallback(name, _, value) {
-    this._propsSignals[name].value = value;
+    if (this._propsSignals[name]) this._propsSignals[name].value = value;
   }
   connectedCallback() {
-    this._onMounts = [];
-    this._onCleanups = [];
+    if (this._mounted) return;
+    this._mounted = true;
     const props = _createPropsProxy(this);
     this._children = Array.from(this.childNodes);
-    while (this.firstChild) this.removeChild(this.firstChild);
+    _clearChildren(this);
     _withInstance(this, () => {
       const rootElement = (() => {
         const el0 = document.createElementNS("http://www.w3.org/2000/svg", "svg");
@@ -161,26 +254,57 @@ customElements.define("web-usericon", UserIconElement);
 class SettingsIconElement extends HTMLElement {
   static observedAttributes = ["strokeWidth"];
   set strokeWidth(val) {
+    if (!this._propsSignals["strokeWidth"]) this._propsSignals["strokeWidth"] = _signal(val);
     this._propsSignals["strokeWidth"].value = val;
   }
   get strokeWidth() {
-    return this._propsSignals["strokeWidth"].value;
+    const _sig = this._propsSignals["strokeWidth"];
+    return _sig ? _sig.value : undefined;
   }
   constructor() {
     super();
-    this._propsSignals = {
-      strokeWidth: _signal(null)
-    };
+    Object.defineProperty(this, "_propsSignals", {
+      value: {
+        strokeWidth: _signal(null)
+      },
+      enumerable: false,
+      writable: true,
+      configurable: true
+    });
+    Object.defineProperty(this, "_onMounts", {
+      value: [],
+      enumerable: false,
+      writable: true,
+      configurable: true
+    });
+    Object.defineProperty(this, "_onCleanups", {
+      value: [],
+      enumerable: false,
+      writable: true,
+      configurable: true
+    });
+    Object.defineProperty(this, "_children", {
+      value: [],
+      enumerable: false,
+      writable: true,
+      configurable: true
+    });
+    Object.defineProperty(this, "_mounted", {
+      value: false,
+      enumerable: false,
+      writable: true,
+      configurable: true
+    });
   }
   attributeChangedCallback(name, _, value) {
-    this._propsSignals[name].value = value;
+    if (this._propsSignals[name]) this._propsSignals[name].value = value;
   }
   connectedCallback() {
-    this._onMounts = [];
-    this._onCleanups = [];
+    if (this._mounted) return;
+    this._mounted = true;
     const props = _createPropsProxy(this);
     this._children = Array.from(this.childNodes);
-    while (this.firstChild) this.removeChild(this.firstChild);
+    _clearChildren(this);
     _withInstance(this, () => {
       const rootElement = (() => {
         const el0 = document.createElementNS("http://www.w3.org/2000/svg", "svg");
