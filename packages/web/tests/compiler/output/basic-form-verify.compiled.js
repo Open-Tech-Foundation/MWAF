@@ -41,7 +41,7 @@ export class BasicForm extends HTMLElement {
   connectedCallback() {
     if (this._mounted) return;
     this._mounted = true;
-    const props = _createPropsProxy(this);
+    const _waf_props = _createPropsProxy(this);
     this._children = Array.from(this.childNodes);
     _clearChildren(this);
     _withInstance(this, () => {
@@ -53,15 +53,13 @@ export class BasicForm extends HTMLElement {
       const isValid = _computed(() => form.isValid);
       const isSubmitting = _computed(() => form.isSubmitting);
       const canSubmit = _computed(() => isValid.value && !isSubmitting.value);
-      const rootElement = (() => {
-        const el0 = document.createElement("section");
-        const el1 = document.createElement("button");
-        el1.setAttribute("type", "submit");
-        _effect(() => _setProperty(el1, "disabled", (() => !canSubmit.value)()));
-        _renderDynamic(el1, () => isSubmitting.value ? "Processing..." : "Save Changes");
-        el0.appendChild(el1);
-        return el0;
-      })();
+      const el0 = document.createElement("section");
+      const el1 = document.createElement("button");
+      el1.setAttribute("type", "submit");
+      _effect(() => _setProperty(el1, "disabled", (() => !canSubmit.value)(), false));
+      _renderDynamic(el1, () => isSubmitting.value ? "Processing..." : "Save Changes");
+      el0.appendChild(el1);
+      const rootElement = el0;
       this.appendChild(rootElement);
     });
     this._onMounts.forEach(fn => fn());

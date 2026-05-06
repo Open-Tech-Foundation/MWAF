@@ -40,31 +40,29 @@ class StyleTestElement extends HTMLElement {
   connectedCallback() {
     if (this._mounted) return;
     this._mounted = true;
-    const props = _createPropsProxy(this);
+    const _waf_props = _createPropsProxy(this);
     this._children = Array.from(this.childNodes);
     _clearChildren(this);
     _withInstance(this, () => {
       let color = _signal("red");
-      const rootElement = (() => {
-        const el0 = document.createElement("div");
-        _effect(() => Object.assign(el0.style, {
-          display: "flex",
-          gap: "10px"
-        }));
-        const el1 = document.createElement("span");
-        _effect(() => Object.assign(el1.style, {
-          color: color.value
-        }));
-        const text2 = document.createTextNode(" Reactive Style ");
-        el1.appendChild(text2);
-        el0.appendChild(el1);
-        const el3 = document.createElement("div");
-        _setProperty(el3, "style", "font-weight: bold;");
-        const text4 = document.createTextNode(" Static Style String ");
-        el3.appendChild(text4);
-        el0.appendChild(el3);
-        return el0;
-      })();
+      const el0 = document.createElement("div");
+      _effect(() => Object.assign(el0.style, {
+        display: "flex",
+        gap: "10px"
+      }));
+      const el1 = document.createElement("span");
+      _effect(() => Object.assign(el1.style, {
+        color: color.value
+      }));
+      const text2 = document.createTextNode(" Reactive Style ");
+      el1.appendChild(text2);
+      el0.appendChild(el1);
+      const el3 = document.createElement("div");
+      _setProperty(el3, "style", "font-weight: bold;", false);
+      const text4 = document.createTextNode(" Static Style String ");
+      el3.appendChild(text4);
+      el0.appendChild(el3);
+      const rootElement = el0;
       this.appendChild(rootElement);
     });
     this._onMounts.forEach(fn => fn());

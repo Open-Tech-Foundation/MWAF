@@ -1,4 +1,4 @@
-import { signal as _signal, onMount as _onMount, effect as _effect, createPropsProxy as _createPropsProxy, _clearChildren, withInstance as _withInstance } from "@opentf/web";
+import { signal as _signal, onMount as _onMount, createPropsProxy as _createPropsProxy, _clearChildren, withInstance as _withInstance, effect as _effect } from "@opentf/web";
 class CustomInputElement extends HTMLElement {
   static observedAttributes = [];
   constructor() {
@@ -40,7 +40,7 @@ class CustomInputElement extends HTMLElement {
   connectedCallback() {
     if (this._mounted) return;
     this._mounted = true;
-    const props = _createPropsProxy(this);
+    const _waf_props = _createPropsProxy(this);
     this._children = Array.from(this.childNodes);
     _clearChildren(this);
     _withInstance(this, () => {
@@ -49,13 +49,11 @@ class CustomInputElement extends HTMLElement {
       Object.assign(this, {
         focus
       });
-      const rootElement = (() => {
-        const el0 = document.createElement("input");
-        input.value = el0;
-        el0.setAttribute("type", "text");
-        el0.setAttribute("placeholder", "Custom Input");
-        return el0;
-      })();
+      const el0 = document.createElement("input");
+      input.value = el0;
+      el0.setAttribute("type", "text");
+      el0.setAttribute("placeholder", "Custom Input");
+      const rootElement = el0;
       this.appendChild(rootElement);
     });
     this._onMounts.forEach(fn => fn());
@@ -106,7 +104,7 @@ class RefTestElement extends HTMLElement {
   connectedCallback() {
     if (this._mounted) return;
     this._mounted = true;
-    const props = _createPropsProxy(this);
+    const _waf_props = _createPropsProxy(this);
     this._children = Array.from(this.childNodes);
     _clearChildren(this);
     _withInstance(this, () => {
@@ -117,29 +115,27 @@ class RefTestElement extends HTMLElement {
         myDiv.value.style.backgroundColor = "lightgray";
         myInput.value.focus();
       });
-      const rootElement = (() => {
-        const el0 = document.createElement("div");
-        myDiv.value = el0;
-        _effect(() => Object.assign(el0.style, {
-          padding: "20px"
-        }));
-        const el1 = document.createElement("h1");
-        _effect(() => Object.assign(el1.style, {
-          color: color.value
-        }));
-        const text2 = document.createTextNode("Ref Test");
-        el1.appendChild(text2);
-        el0.appendChild(el1);
-        const el3 = document.createElement("web-custominput");
-        myInput.value = el3;
-        el0.appendChild(el3);
-        const el4 = document.createElement("button");
-        el4.onclick = () => color.value = "blue";
-        const text5 = document.createTextNode("Change Color");
-        el4.appendChild(text5);
-        el0.appendChild(el4);
-        return el0;
-      })();
+      const el0 = document.createElement("div");
+      myDiv.value = el0;
+      _effect(() => Object.assign(el0.style, {
+        padding: "20px"
+      }));
+      const el1 = document.createElement("h1");
+      _effect(() => Object.assign(el1.style, {
+        color: color.value
+      }));
+      const text2 = document.createTextNode("Ref Test");
+      el1.appendChild(text2);
+      el0.appendChild(el1);
+      const el3 = document.createElement("web-custominput");
+      myInput.value = el3;
+      el0.appendChild(el3);
+      const el4 = document.createElement("button");
+      el4.onclick = () => color.value = "blue";
+      const text5 = document.createTextNode("Change Color");
+      el4.appendChild(text5);
+      el0.appendChild(el4);
+      const rootElement = el0;
       this.appendChild(rootElement);
     });
     this._onMounts.forEach(fn => fn());

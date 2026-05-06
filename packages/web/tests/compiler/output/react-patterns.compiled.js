@@ -2,13 +2,13 @@ import { setProperty as _setProperty, effect as _effect, renderDynamic as _rende
 import { UI } from './ui-lib';
 class ReactPatternsElement extends HTMLElement {
   static observedAttributes = ["user", "notifications"];
-  set user(val) {
-    if (!this._propsSignals["user"]) this._propsSignals["user"] = _signal(val);
-    this._propsSignals["user"].value = val;
+  set user(_val) {
+    if (!this._propsSignals["user"]) this._propsSignals["user"] = _signal(_val);
+    this._propsSignals["user"].value = _val;
   }
-  set notifications(val) {
-    if (!this._propsSignals["notifications"]) this._propsSignals["notifications"] = _signal(val);
-    this._propsSignals["notifications"].value = val;
+  set notifications(_val) {
+    if (!this._propsSignals["notifications"]) this._propsSignals["notifications"] = _signal(_val);
+    this._propsSignals["notifications"].value = _val;
   }
   get user() {
     const _sig = this._propsSignals["user"];
@@ -60,92 +60,91 @@ class ReactPatternsElement extends HTMLElement {
   connectedCallback() {
     if (this._mounted) return;
     this._mounted = true;
-    const props = _createPropsProxy(this);
+    const _waf_props = _createPropsProxy(this);
     this._children = Array.from(this.childNodes);
     _clearChildren(this);
     _withInstance(this, () => {
-      const Tag = props.isHeader ? 'h1' : 'h2';
+      const props = _waf_props;
+      const Tag = props.isHeader.value ? 'h1' : 'h2';
       const items = ['A', 'B'];
-      const rootElement = (() => {
-        const el0 = document.createElement("div");
-        _setProperty(el0, "className", "container");
-        el0.setAttribute("data-testid", "main-div");
-        const el1 = document.createElement("input");
-        _setProperty(el1, "disabled", true);
-        _effect(() => el1.setAttribute("tab-index", -1));
-        _effect(() => el1.setAttribute("max-length", 5));
-        el0.appendChild(el1);
-        const el2 = document.createElement(Tag);
-        const text3 = document.createTextNode("Dynamic Heading");
-        el2.appendChild(text3);
-        el0.appendChild(el2);
-        const el4 = document.createElement("web-ui-button");
-        _setProperty(el4, "variant", "primary");
-        const text5 = document.createTextNode("Click Me");
-        el4.appendChild(text5);
-        el0.appendChild(el4);
-        const el6 = document.createElement("p");
-        const text7 = document.createTextNode(" Welcome, ");
-        el6.appendChild(text7);
-        const el8 = document.createElement("strong");
-        _renderDynamic(el8, () => props.user.name);
-        el6.appendChild(el8);
-        const text9 = document.createTextNode("!  You have ");
-        el6.appendChild(text9);
-        _renderDynamic(el6, () => props.notifications.length);
-        const text10 = document.createTextNode(" new messages. ");
-        el6.appendChild(text10);
-        el0.appendChild(el6);
-        const el11 = document.createElement("div");
-        _effect(() => _applySpread(el11, props.extra));
-        _setProperty(el11, "className", "override");
-        _setProperty(el11, "id", "constant");
-        const text12 = document.createTextNode(" Spread Test ");
-        el11.appendChild(text12);
-        el0.appendChild(el11);
-        const el13 = document.createElement("ul");
-        _renderDynamic(el13, () => [(() => {
-          const el0 = document.createElement("li");
-          _setProperty(el0, "_key", "1");
-          const text1 = document.createTextNode("One");
-          el0.appendChild(text1);
-          return el0;
-        })(), (() => {
-          const el0 = document.createElement("li");
-          _setProperty(el0, "_key", "2");
-          const text1 = document.createTextNode("Two");
-          el0.appendChild(text1);
-          return el0;
-        })()]);
-        el0.appendChild(el13);
-        const el14 = document.createElement("web-dataprovider");
-        _renderDynamic(el14, data => (() => {
-          const el0 = document.createElement("div");
-          const text1 = document.createTextNode("Data: ");
-          el0.appendChild(text1);
-          _renderDynamic(el0, () => data.value);
-          return el0;
-        })());
-        el0.appendChild(el14);
-        const el15 = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-        el15.setAttribute("viewBox", "0 0 100 100");
-        el15.setAttribute("xmlns", "http://www.w3.org/2000/svg");
-        const el16 = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-        el16.setAttribute("cx", "50");
-        el16.setAttribute("cy", "50");
-        el16.setAttribute("r", "40");
-        el16.setAttribute("strokeWidth", "2");
-        el16.setAttribute("fill", "red");
-        el15.appendChild(el16);
-        el0.appendChild(el15);
-        const el17 = document.createElement("web-customcomponent");
-        el0.appendChild(el17);
-        const el18 = document.createElement("br");
-        el0.appendChild(el18);
-        const el19 = document.createElement("hr");
-        el0.appendChild(el19);
+      const el0 = document.createElement("div");
+      _setProperty(el0, "className", "container", false);
+      el0.setAttribute("data-testid", "main-div");
+      const el1 = document.createElement("input");
+      _setProperty(el1, "disabled", true, false);
+      _effect(() => el1.setAttribute("tab-index", -1));
+      _effect(() => el1.setAttribute("max-length", 5));
+      el0.appendChild(el1);
+      const el2 = document.createElement(Tag);
+      const text3 = document.createTextNode("Dynamic Heading");
+      el2.appendChild(text3);
+      el0.appendChild(el2);
+      const el4 = document.createElement("web-ui-button");
+      _setProperty(el4, "variant", "primary", true);
+      const text5 = document.createTextNode("Click Me");
+      el4.appendChild(text5);
+      el0.appendChild(el4);
+      const el6 = document.createElement("p");
+      const text7 = document.createTextNode(" Welcome, ");
+      el6.appendChild(text7);
+      const el8 = document.createElement("strong");
+      _renderDynamic(el8, () => props.user.value.name);
+      el6.appendChild(el8);
+      const text9 = document.createTextNode("!  You have ");
+      el6.appendChild(text9);
+      _renderDynamic(el6, () => props.notifications.value.length);
+      const text10 = document.createTextNode(" new messages. ");
+      el6.appendChild(text10);
+      el0.appendChild(el6);
+      const el11 = document.createElement("div");
+      _effect(() => _applySpread(el11, props.extra.value, false));
+      _setProperty(el11, "className", "override", false);
+      _setProperty(el11, "id", "constant", false);
+      const text12 = document.createTextNode(" Spread Test ");
+      el11.appendChild(text12);
+      el0.appendChild(el11);
+      const el13 = document.createElement("ul");
+      _renderDynamic(el13, () => [() => {
+        const el0 = document.createElement("li");
+        _setProperty(el0, "_key", "1", false);
+        const text1 = document.createTextNode("One");
+        el0.appendChild(text1);
         return el0;
-      })();
+      }, () => {
+        const el0 = document.createElement("li");
+        _setProperty(el0, "_key", "2", false);
+        const text1 = document.createTextNode("Two");
+        el0.appendChild(text1);
+        return el0;
+      }]);
+      el0.appendChild(el13);
+      const el14 = document.createElement("web-dataprovider");
+      _renderDynamic(el14, data => (() => {
+        const el0 = document.createElement("div");
+        const text1 = document.createTextNode("Data: ");
+        el0.appendChild(text1);
+        _renderDynamic(el0, () => data.value);
+        return el0;
+      })());
+      el0.appendChild(el14);
+      const el15 = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      el15.setAttribute("viewBox", "0 0 100 100");
+      el15.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+      const el16 = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+      el16.setAttribute("cx", "50");
+      el16.setAttribute("cy", "50");
+      el16.setAttribute("r", "40");
+      el16.setAttribute("strokeWidth", "2");
+      el16.setAttribute("fill", "red");
+      el15.appendChild(el16);
+      el0.appendChild(el15);
+      const el17 = document.createElement("web-customcomponent");
+      el0.appendChild(el17);
+      const el18 = document.createElement("br");
+      el0.appendChild(el18);
+      const el19 = document.createElement("hr");
+      el0.appendChild(el19);
+      const rootElement = el0;
       this.appendChild(rootElement);
     });
     this._onMounts.forEach(fn => fn());
@@ -205,16 +204,14 @@ class CustomComponentElement extends HTMLElement {
   connectedCallback() {
     if (this._mounted) return;
     this._mounted = true;
-    const props = _createPropsProxy(this);
+    const _waf_props = _createPropsProxy(this);
     this._children = Array.from(this.childNodes);
     _clearChildren(this);
     _withInstance(this, () => {
-      const rootElement = (() => {
-        const el0 = document.createElement("div");
-        const text1 = document.createTextNode("Custom");
-        el0.appendChild(text1);
-        return el0;
-      })();
+      const el0 = document.createElement("div");
+      const text1 = document.createTextNode("Custom");
+      el0.appendChild(text1);
+      const rootElement = el0;
       this.appendChild(rootElement);
     });
     this._onMounts.forEach(fn => fn());

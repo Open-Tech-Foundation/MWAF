@@ -13,6 +13,19 @@ To prevent reactivity loss caused by multiple instances of the reactivity engine
 - **Global Guard**: The runtime includes a global guard that warns if multiple instances of the signals library are loaded.
 - **Strict Checks**: Internal runtime helpers (`createPropsProxy`, `setProperty`) use strict identity checks (`instanceof Signal`) and a framework-defined `brand` (`Symbol.for("preact-signals")`) to validate reactive objects.
 
+### 1.2 TypeScript & JSX Configuration
+WAF uses a custom JSX compilation pipeline. To use TypeScript or language server features, configure your `tsconfig.json` or `jsconfig.json` as follows:
+```json
+{
+  "compilerOptions": {
+    "jsx": "preserve",
+    "jsxImportSource": "@opentf/web",
+    "jsxFactory": "h",
+    "jsxFragmentFactory": "f"
+  }
+}
+```
+
 ---
 
 ## 2. Component Model
@@ -41,10 +54,72 @@ The following properties are defined on every component instance in the `constru
 
 ---
 
+### 2.4 Fragments
+JSX Fragments (`<>...</>`) are transformed into `DocumentFragment` objects.
+- **Root Return**: If a component returns a fragment, the fragment's children are appended directly to the component's root (or the provided `root` node in page renders).
+- **Identity**: Fragments do not have a DOM identity; they only serve as a container during the initial append operation.
+
+### 2.5 Props vs. Attributes
+The framework provides a unified interface for both DOM Attributes and JS Properties:
+- **Attributes**: String-based values defined in HTML. Synced via `observedAttributes` and `attributeChangedCallback`.
+- **Properties (Props)**: Rich data types (Objects, Arrays, Functions) passed via JS assignment.
+- **Unification**: Both update the same signal in `_propsSignals`, allowing the component logic to remain agnostic of the data source.
+
+### 2.6 Component Return Patterns
+WAF component functions are **executed once** during initialization. This "Init-Once" model impacts how return statements are processed.
+
+#### 2.6.1 Static vs. Reactive Conditionals
+Top-level `if` statements and ternaries are **static**. They are evaluated only once at mount.
+- **Static Pattern**: `if (!user) return <Login />` will never switch to the main layout even if `user` becomes truthy later.
+- **Reactive Pattern**: To switch layouts reactively, return a stable root and use inline conditionals: `return <div>{user ? <Main /> : <Login />}</div>`.
+
+#### 2.6.2 Variable Declarations
+Returning a variable containing a JSX element is fully supported.
+**JSX**:
+```javascript
+const layout = <div><Header />{children}</div>;
+return layout;
+```
+**Output**: The compiler treats the variable assignment as the primary DOM construction block and appends it to the component root.
+
+#### 2.6.3 Multi-Return Support
+The compiler supports multiple return paths (e.g., inside `if/else` blocks), but again, these are determined at the moment of component instantiation.
+
+### 2.7 Destructured Props
+Destructuring props in the component signature is a first-class pattern in WAF. 
+
+- **Automatic Observation**: Keys extracted via destructuring (e.g., `function Comp({ name })`) are automatically added to the `observedAttributes` of the Custom Element.
+- **Reactive Rewriting**: The compiler rewrites all usages of destructured variables in the component body to access the `_waf_props` proxy directly. This ensures that even though the variable looks like a static constant, its usage in JSX remains reactive.
+- **Renaming & Defaults**: Patterns like `{ name: n = "Guest" }` are supported. The compiler tracks the alias `n` and maps it back to the `name` signal on the proxy.
+- **Rest Pattern**: `{ title, ...others }` is supported. While `title` remains reactive, the `others` object is a static snapshot of the remaining props at the time of access.
+
+### 2.8 Direct Props Access
+Using the `props` object directly (e.g., `function Comp(props)` or `function Comp(p)`) is supported with the following behavior:
+
+- **JSX Discovery**: The compiler tracks the actual parameter identifier. It scans JSX expressions for `[identifier].key` access and automatically adds those keys to the `observedAttributes` list.
+- **Reactive JSX**: Accesses like `{props.name}` are rewritten to `_waf_props.name.value` and are fully reactive.
+- **Static Body Access**: Accessing `props.name` in the component body (outside of JSX) returns a **static snapshot** of the prop value at the time of component initialization. To maintain reactivity in the body, destructuring or `$derived` is required.
+
+### 2.9 Nested Props in JSX
+Deep path access on the `props` object follows the **First-Access Rule**: the compiler unwraps the property immediately following `props`.
+
+- **Transformation**: `<div>{props.user.name}</div>` → `_effect(() => el.textContent = _waf_props.user.value.name)`
+- **Behavior**: This pattern assumes that `user` is the Signal and `name` is a plain property of the object contained within that signal.
+- **Lists**: For arrays, `props.items.map(...)` transforms to `props.items.value.map(...)`, which is then optimized via `_mapped()` at runtime.
+
+### 2.10 Default Props
+Default values in the component signature are supported and maintained reactively by the compiler.
+
+- **Automatic Fallback**: If a default value is provided (e.g., `{ name = "World" }`), the compiler uses it as a fallback during reactive unwrapping.
+- **Strict JS Parity**: To match standard JavaScript destructuring behavior, the fallback is applied strictly using an `!== undefined` check, ensuring that an explicit `null` value is preserved.
+- **Transformation**: `<div>{name}</div>` → `_effect(() => el.textContent = (_waf_props.name.value !== undefined ? _waf_props.name.value : "World"))`
+- **Dynamic Compatibility**: This ensures that if a prop is initially missing but is provided later (e.g., via `setAttribute`), the component will transition from the default value to the new reactive value seamlessly.
+
 ## 3. Reactivity & Macros
 
 ### 3.1 Signals
 WAF uses `@preact/signals-core`. The compiler automatically manages `.value` access.
+- **Microtask Batching**: Multiple synchronous signal updates are automatically batched by the core engine into a single microtask. This guarantees that `_effect` closures (and DOM updates) only run once per synchronous execution block, delivering maximum performance with zero manual `batch()` boilerplate.
 
 ### 3.2 Compiler Macros
 Macros are special function calls that the compiler transforms:
@@ -52,7 +127,7 @@ Macros are special function calls that the compiler transforms:
 - `$derived(expression)`: Transforms into a Signal-based computed value.
     - **Auto-wrapping**: If a raw expression or a function call is passed (e.g., `$derived(a + b)` or `$derived(compute())`), the compiler automatically wraps it in an arrow function (`() => a + b` or `() => compute()`).
     - **Function Pass-through**: If a function literal (arrow function or anonymous function) is passed (e.g., `$derived(() => count * 2)`), it is used directly without additional wrapping.
-- `effect(callback)`: Standard runtime hook for reactive side effects. 
+- `$effect(callback)`: Standard runtime hook for reactive side effects. 
     - **SSG Guard**: The compiler automatically wraps `$effect()` calls in an `if (!isSSG)` check to prevent build-time execution of client-side logic.
 - `$ref()`: Transforms to `signal(null)`. Used in JSX: `<div ref={myRef}>`.
 - `$expose(obj)`: Transforms to `Object.assign(this, obj)` within the component class.
@@ -72,6 +147,11 @@ To maintain reactivity integrity and compiler predictability, the following patt
 1.  **Manual `.value` Access**: Accessing `.value` on variables declared with `$state`, `$derived`, or `$ref` is prohibited. The compiler handles all unwrapping.
 2.  **Conditional Macros**: Using `$state`, `$derived`, or `$effect` inside `if` statements or loops. Macros must be defined at the top level of the component function.
 3.  **Late Assignment to Props**: Re-assigning the `props` object itself is forbidden.
+4.  **Macro Interaction**: Nesting macros as direct arguments (e.g., using `$derived($signal(...))`) is forbidden. However, passing a function that evaluates a macro (e.g., `$derived(() => form.values.members)`) is perfectly valid because the arrow function isolates the expression.
+5.  **Async Components**: `async function MyComp() { ... }` is forbidden. Components must execute synchronously. Use the Resource Pattern (Section 7.4) for async data.
+6.  **Generator Functions**: `function* MyComp() { ... }` is unsupported.
+7.  **Class Components**: `class MyComp extends HTMLElement { ... }` is explicitly unsupported in the compiler pipeline. Use functional components.
+8.  **Dynamic Imports in Body**: `await import(...)` inside the component body breaks synchronous execution and is forbidden.
 
 ### 3.5 $signal() Macro
 `$signal()` is the **explicit bridge** between external reactive objects and the WAF compiler. It tells the compiler: *"this object contains signals — track its reactive properties in JSX."* 
@@ -114,81 +194,27 @@ _mapped(
 
 #### 3.5.3 Rules
 - **Component Top Level**: MUST be declared at the component top level.
-- **Object Only**: MUST wrap an object containing `Signal<T>` properties. Primitives must use `$state()`.
+- **Object Only**: MUST wrap a plain object containing reactive state.
+- **No Explicit Typing**: The compiler uses a single-level unwrap heuristic (the First-Access Rule) rather than relying on TypeScript or JSDoc. It blindly unwraps the first property access on a `$signal` variable.
 - **No Manual .value**: `.value` is FORBIDDEN on `$signal()` variables or their destructured children in component code.
 - **Priority Detection**:
   1. Local Macros (`$state`, `$derived`, `$ref`)
   2. Variables from `$signal()` (including destructured ones)
   3. Static values
 
-### 2.4 Fragments
-JSX Fragments (`<>...</>`) are transformed into `DocumentFragment` objects.
-- **Root Return**: If a component returns a fragment, the fragment's children are appended directly to the component's root (or the provided `root` node in page renders).
-- **Identity**: Fragments do not have a DOM identity; they only serve as a container during the initial append operation.
-
-### 2.5 Props vs. Attributes
-The framework provides a unified interface for both DOM Attributes and JS Properties:
-- **Attributes**: String-based values defined in HTML. Synced via `observedAttributes` and `attributeChangedCallback`.
-- **Properties (Props)**: Rich data types (Objects, Arrays, Functions) passed via JS assignment.
-- **Unification**: Both update the same signal in `_propsSignals`, allowing the component logic to remain agnostic of the data source.
-
-### 2.6 Component Return Patterns
-WAF component functions are **executed once** during initialization. This "Init-Once" model impacts how return statements are processed.
-
-#### 2.6.1 Static vs. Reactive Conditionals
-Top-level `if` statements and ternaries are **static**. They are evaluated only once at mount.
-- **Static Pattern**: `if (!user) return <Login />` will never switch to the main layout even if `user` becomes truthy later.
-- **Reactive Pattern**: To switch layouts reactively, return a stable root and use inline conditionals: `return <div>{user ? <Main /> : <Login />}</div>`.
-
-#### 2.6.2 Variable Declarations
-Returning a variable containing a JSX element is fully supported.
-**JSX**:
-```javascript
-const layout = <div><Header />{children}</div>;
-return layout;
-```
-**Output**: The compiler treats the variable assignment as the primary DOM construction block and appends it to the component root.
-
-#### 2.6.3 Multi-Return Support
-The compiler supports multiple return paths (e.g., inside `if/else` blocks), but again, these are determined at the moment of component instantiation.
-
-### 2.7 Destructured Props
-Destructuring props in the component signature is a first-class pattern in WAF. 
-
-- **Automatic Observation**: Keys extracted via destructuring (e.g., `function Comp({ name })`) are automatically added to the `observedAttributes` of the Custom Element.
-- **Reactive Rewriting**: The compiler rewrites all usages of destructured variables in the component body to access the `_waf_props` proxy directly. This ensures that even though the variable looks like a static constant, its usage in JSX remains reactive.
-- **Renaming & Defaults**: Patterns like `{ name: n = "Guest" }` are supported. The compiler tracks the alias `n` and maps it back to the `name` signal on the proxy.
-- **Rest Pattern**: `{ title, ...others }` is supported. While `title` remains reactive, the `others` object is a static snapshot of the remaining props at the time of access.
-
-### 2.10 Default Props
-Default values in the component signature are supported and maintained reactively by the compiler.
-
-- **Automatic Fallback**: If a default value is provided (e.g., `{ name = "World" }`), the compiler uses it as a fallback during reactive unwrapping.
-- **Transformation**: `<div>{name}</div>` → `_effect(() => el.textContent = (_waf_props.name.value ?? "World"))`
-- **Dynamic Compatibility**: This ensures that if a prop is initially missing but is provided later (e.g., via `setAttribute`), the component will transition from the default value to the new reactive value seamlessly.
-
-### 2.8 Direct Props Access
-Using the `props` object directly (e.g., `function Comp(props)`) is supported with the following behavior:
-
-- **JSX Discovery**: The compiler scans JSX expressions for `props.key` access and automatically adds those keys to the `observedAttributes` list.
-- **Reactive JSX**: Accesses like `{props.name}` are rewritten to `_waf_props.name.value` and are fully reactive.
-- **Static Body Access**: Accessing `props.name` in the component body (outside of JSX) returns a **static snapshot** of the prop value at the time of component initialization. To maintain reactivity in the body, destructuring or `$derived` is required.
-
-### 2.9 Nested Props in JSX
-Deep path access on the `props` object follows the **First-Access Rule**: the compiler unwraps the property immediately following `props`.
-
-- **Transformation**: `<div>{props.user.name}</div>` → `_effect(() => el.textContent = _waf_props.user.value.name)`
-- **Behavior**: This pattern assumes that `user` is the Signal and `name` is a plain property of the object contained within that signal.
-- **Lists**: For arrays, `props.items.map(...)` transforms to `props.items.value.map(...)`, which is then optimized via `_mapped()` at runtime.
 
 ---
 
+## 4. Component Transformation
 This section shows how the compiler progressively builds the Web Component class based on the features used in the JSX function.
 
 ### 4.0 Component Naming (Namespacing)
 To prevent tag name collisions across different folders, the framework uses **Deterministic Path-Based Namespacing**.
 - **Rule**: Tag names are prefixed with `web-` followed by the kebab-cased relative path from the project root.
 - **Example**: `app/admin/Profile.jsx` → `web-app-admin-profile`.
+- **Index Files**: `app/Button/index.jsx` omits `index` → `web-app-button`.
+- **Collisions**: If two identical names resolve from different paths, the first one registered wins.
+- **Max Length**: Tag names are capped at 255 characters to comply with browser Custom Element limits.
 
 ### 4.1 Level 1: Static Component
 **Input**:
@@ -341,6 +367,59 @@ Component props can be updated from the outside via several vectors, all of whic
 3.  **Parent Reactivity**: JSX assignments like `<Comp key={sig} />` are wrapped in an `effect` that calls `setProperty`.
 4.  **DevTools**: Manual edits to attributes in the browser inspector are treated as attribute changes.
 
+### 4.5 Component Children (`_children`)
+When a component receives children in JSX, they are captured during initialization.
+**Input**:
+```jsx
+export function Wrapper({ children }) {
+  return <div class="box">{children}</div>;
+}
+
+// Parent usage:
+// <Wrapper><span>Child</span></Wrapper>
+```
+**Output (Partial)**:
+```javascript
+// Inside WrapperElement's connectedCallback:
+// _children array is populated automatically by the base class constructor
+// from `Array.from(this.childNodes)` before rendering.
+const _waf_props = createPropsProxy(this);
+// The proxy exposes `children` which resolves to `this._children`.
+
+const el0 = document.createElement("div");
+el0.setAttribute("class", "box");
+
+// children are appended dynamically
+_renderDynamic(el0, () => _waf_props.children.value);
+```
+
+### 4.6 Exposed Properties (`$expose`)
+Components can expose methods and state to their parent via `$expose`.
+**Input**:
+```jsx
+export function Modal() {
+  let open = $state(false);
+  $expose({ show: () => open = true });
+  return open ? <dialog>...</dialog> : null;
+}
+```
+**Output**:
+```javascript
+class ModalElement extends HTMLElement {
+  connectedCallback() {
+    // ...
+    let open = signal(false);
+    
+    // Transformed $expose macro:
+    Object.assign(this, {
+      show: () => open.value = true
+    });
+    // Now `el.show()` is callable from the outside.
+  }
+}
+```
+
+## 5. JSX Transformation Patterns
 This section defines how various JSX patterns are transformed into imperative DOM operations by the compiler.
 
 ### 5.1 Static Elements
@@ -380,6 +459,7 @@ Spread attributes are applied via `_applySpread()`. The order of attributes in J
   - The compiler generates the spread effect followed by the static `setAttribute("class", "override")`.
 - **Dynamic Override**: `<div class="base" {...props} />`
   - The static attribute is set first, but the spread effect may later override it if `props` contains a `class` key.
+- **Runtime Event Normalization**: The `_applySpread` runtime helper MUST replicate the compiler's event normalization rules (see Section 5.3). When spreading an object containing `{ onClick: fn }`, it must be applied as `.onclick` to native elements and `.onClick` to components.
 
 ### 5.3 Event Handlers
 
@@ -395,13 +475,16 @@ The compiler applies different case normalization based on whether the target el
 | **Component** | `<MyComp onDataLoad={fn} />` | `el.onDataLoad = fn;` |
 | **Component** | `<MyComp onClick={fn} />` | `el.onClick = fn;` |
 
-#### 5.3.2 Handler Hoisting
-To optimize performance and maintain clean render paths, inline arrow functions in event handlers are hoisted to named variables by the compiler.
+#### 5.3.2 Inline Handlers (No Hoisting Required)
+Unlike VDOM frameworks where inline handlers are re-created on every render, WAF component functions follow the **Init-Once** model. 
+- **Setup Only**: The component body is executed exactly once during `connectedCallback`.
+- **Zero Overhead**: Inline arrow functions in event handlers are created only once per component instance.
+- **Output**: The compiler simply assigns the inline function directly to the property without any need for hoisting or `useCallback` equivalents.
+
 **JSX**: `<button onclick={() => count++} />`
 **Output**:
 ```javascript
-const _h0 = () => count.value++;
-el.onclick = _h0;
+el.onclick = () => count.value++;
 ```
 
 #### 5.3.3 Detection Logic
@@ -447,8 +530,51 @@ Any non-literal children (expressions, variables, or function calls) are wrapped
 #### 5.4.4 List Rendering
 Arrays and `.map()` operations are transformed into `_mapped()` calls for optimized reconciliation with item identity tracking.
 - **Simple Map**: `<ul>{items.map(i => <li>{i}</li>)}</ul>`
-- **Keyed List**: `<ul>{items.map(i => <li key={i.id}>{i.name}</li>)}</ul>` (Uses `i.id` for node reuse).
+- **Keyed List**: `<ul>{items.map(i => <li key={i.id}>{i.name}</li>)}</ul>`
 - **Nested Maps**: `<ul>{sections.map(s => s.items.map(i => <li>{i}</li>))}</ul>` (Transformed into nested `_mapped` vectors).
+
+##### Key Prop Behavior
+The `key` prop is crucial for `_mapped` optimization:
+- **Type**: Must be a `string` or `number`.
+- **Fallback**: If `key` is missing, `_mapped` falls back to the array `index`.
+- **Duplicates**: If keys duplicate, the framework logs a warning in development mode, and the last rendered item for that key overwrites previous cache entries (last-wins).
+- **Non-list elements**: Applying a `key` prop to elements outside of a `.map()` callback is ignored by the framework.
+
+##### Reactivity Boundary Rule
+Because of the Hybrid Reactivity model, there is a strict boundary between plain data operations and reified reactive signals during list rendering.
+
+**JSX Input:**
+```javascript
+{items.filter(i => i.active).map(i => <li>{i.name}</li>)}
+```
+
+**Compiled Output:**
+```javascript
+const _mapped0 = _mapped(
+  () => items.value.filter(i => i.active),  // sourceFn — plain data
+  (i) => {                                  // mapFn — i is Signal
+    const el = document.createElement("li")
+    _effect(() => el.textContent = i.value.name)
+    return el
+  }
+)
+_renderDynamic(el, () => _mapped0())
+```
+
+**The Rule:**
+- **Methods chained BEFORE `.map()`** (e.g., `.filter()`, `.sort()`) operate on **plain data**. They re-run *only* when the parent signal reference changes. An immutable update (e.g., `items.value = [...items.value]`) is required to trigger a re-filter or re-sort.
+- **Methods inside `.map()` callback** receive **Signals**. These bindings result in fine-grained DOM updates per item, without requiring list reconciliation.
+
+##### List Reactivity Matrix
+
+| Pattern | Valid | Trigger |
+|---|---|---|
+| `items.map(...)` | ✅ | items signal changes |
+| `items.filter().map(...)` | ✅ | items signal changes |
+| `items.sort().map(...)` | ✅ | items signal changes |
+| `items.reduce(...)` | ✅ | items signal changes (no `_mapped` optimization) |
+| mutate `items[0].active` directly | ❌ | won't re-filter or re-render |
+| `items.value = [...items.value]` | ✅ | triggers re-filter and reconciliation |
 
 ### 5.5 Component Usage
 **JSX**: `<MyComponent title={myTitle} />`
@@ -506,9 +632,12 @@ A central helper for assigning values to elements. It follows this decision tree
 | Type | Key Pattern | Action |
 | :--- | :--- | :--- |
 | **Style** | `key === "style"` | `Object.assign(el.style, value)` |
-| **Event** | `key.startsWith("on")` | `el[key.toLowerCase()] = value` |
+| **Event (Native)** | `key.startsWith("on")` & `!isComponent` | `el[key.toLowerCase()] = value` |
+| **Event (Comp)** | `key.startsWith("on")` & `isComponent` | `el[key] = value` |
 | **Property** | `key` in `IS_PROPERTY` list | `el[key] = value` |
 | **Attribute** | Default | `el.setAttribute(key, value)` (removes if null/false) |
+
+- **`isComponent` Flag**: To accurately apply event casing (preserving camelCase for components, lowercasing for native), the compiler passes an `isComponent` boolean flag to the `setProperty` runtime helper.
 
 - **Reactivity**: If `value` is a signal, `setProperty` automatically unwraps it via `value.value`.
 - **WAF Sync**: If `el` is a WAF component, `setProperty` updates the internal `el._propsSignals[key]` to propagate reactivity.
@@ -517,15 +646,16 @@ A central helper for assigning values to elements. It follows this decision tree
 Handles conditional and dynamic JSX rendering via an effect-based reconciliation strategy.
 - **Anchor Node**: Creates a "bookmark" (empty TextNode) in the `parent` to track the insertion point.
 - **Effect-based Tracking**: Runs `fn` inside an `effect`. Whenever any signals accessed in `fn` change, the reconciliation logic is triggered.
+- **Security (XSS Safe)**: By default, string and number primitives are converted to DOM nodes exclusively via `document.createTextNode()`. The framework **never** uses `innerHTML` for dynamic rendering, making it inherently safe from Cross-Site Scripting (XSS) attacks.
 - **Reconciliation**:
     - If `fn` returns a DOM node: It is inserted/moved before the anchor.
     - If `fn` returns `null/false/undefined`: Any previously rendered dynamic content is removed.
-    - If `fn` returns a primitive (string/number): It is converted to a TextNode and rendered.
+    - If `fn` returns a primitive: It is converted to a `TextNode` and rendered.
 
 ### 6.4 `_mapped(sourceFn, mapFn)`
 The primary helper for reactive list rendering. 
 - **Array Tracking**: Subscribes to the array returned by `sourceFn()`.
-- **Item Reification**: To support deep reactivity without nested signals in the data source, `_mapped` **wraps each array item in a signal** (or a reactive proxy) before passing it to `mapFn(item, index)`.
+- **Item Reification**: To support deep reactivity without nested signals in the data source, `_mapped` internally **wraps each array item in a `Signal`** before passing it to `mapFn(item, index)`.
 - **Optimization**: Uses an internal `Map` to cache nodes based on a `key` property (or index), ensuring that only changed or new items are rendered/updated.
 
 ### 6.5 `withInstance(inst, fn)`
@@ -542,10 +672,47 @@ A scoping helper used during component initialization.
 ### 7.1 Lifecycle Hooks
 - `onMount(cb)`: Associates `cb` with the current component instance. Executed once in `connectedCallback`.
 - `onCleanup(cb)`: Associates `cb` with the current component instance. Executed once in `disconnectedCallback`.
+- **Execution Order**: Multiple hooks of the same type within a component are executed in **FIFO (First-In, First-Out)** order.
 - **Mechanism**: These hooks rely on `getCurrentInstance()` (set via `withInstance`) to find the active component.
+- **Synchronous Constraint**: WAF component functions MUST be strictly synchronous. Using `async/await` in the component body breaks the `withInstance` context, causing lifecycle hooks called after an `await` to silently fail. Async logic should be placed inside `onMount` or `$effect` instead.
 
 ### 7.2 Environment
 - `isSSG`: A boolean flag. When `true`, `$effect` macros are ignored, and certain DOM operations (like `_clearChildren`) are skipped to allow for hydration-friendly output.
+
+### 7.3 Error Handling & Boundaries
+WAF does **not** use VDOM-style Error Boundaries (`<ErrorBoundary>`). Instead, it relies on a **Fine-Grained Failure** model:
+- **Mount Errors**: An error thrown directly inside the component body or `connectedCallback` stops the component from mounting, bubbling up to the global error handler (`window.onerror`).
+- **Effect Errors**: An error thrown inside an `_effect` kills *only that specific DOM binding's reactivity*. The rest of the component remains perfectly functional.
+- **Global Handler**: The framework provides `WAF.setErrorHandler((error, context) => {...})` to globally catch uncaught effect failures.
+- **Local Recovery**: Developers can use the `$onError(err => {...})` macro (transformed to a try/catch inside effects) to gracefully catch local effect failures without crashing the application.
+
+### 7.4 Async Data Loading (Resource Pattern)
+Because component functions must be strictly synchronous, top-level `await` is forbidden. The official pattern for data fetching is the **Resource Pattern**:
+1. Initialize a `$state` signal for the data (e.g., `let data = $state(null)`).
+2. Trigger the async operation inside an `$effect` or directly in the component body (without `await`).
+3. Render conditionally based on the signal value.
+
+**Example**:
+```jsx
+export function UserProfile({ id }) {
+  let user = $state(null);
+  let error = $state(null);
+
+  // Fire and forget
+  fetch(`/api/users/${id}`)
+    .then(res => res.json())
+    .then(data => user.value = data)
+    .catch(err => error.value = err.message);
+
+  return (
+    <div>
+      {error ? <p>Error: {error}</p> : 
+       user ? <h1>{user.name}</h1> : 
+       <p>Loading...</p>}
+    </div>
+  );
+}
+```
 
 ---
 
@@ -585,7 +752,8 @@ The framework uses `linkedom` to provide a lightweight server-side DOM environme
 - **Signal Hydration**: The framework identifies static content and skips the initial execution of effects that would otherwise re-render the pre-populated DOM.
 
 ### 9.3 Macro Behavior in SSG
-- `$effect()` macros are **never** executed during SSG. This prevents client-only logic (like `fetch` or `localStorage`) from breaking the build.
+- **`$effect()`**: The `$effect` macro is **never** executed during SSG to prevent client-only logic (like `fetch` or `localStorage`) from breaking the build.
+- **`effect()` (Internal)**: To populate the DOM initially during the server build, `core/signals.js` intercepts internal `effect()` calls. During SSG, it executes the provided function *once* synchronously to trigger DOM bindings, and then returns a no-op dispose function, bypassing the reactivity engine.
 
 
 ---
@@ -621,7 +789,7 @@ export const counterStore = {
 To participate in the WAF reactive ecosystem, library authors (Forms, Query, Auth) should follow this simplified contract:
 1. **Top-Level Signals**: Expose reactive state as top-level properties of a plain object, wrapped in `signal()`.
 2. **Standard Data Structures**: Nested data (arrays of objects, etc.) should be kept as plain JS structures. WAF's `_mapped` helper will handle item-level reactivity.
-3. **Explicit Typing**: Ensure properties are typed as `Signal<T>` so the compiler can detect them.
+3. **No Explicit Typing**: Because the compiler uses the single-level unwrap heuristic (the First-Access Rule), no `Signal<T>` typing or JSDoc is required. The compiler blindly unwraps the first property access, so the library author simply needs to structure the store such that those top-level accessed properties are the actual signals.
 4. **Plain Actions**: Expose mutation methods as plain functions, not signals.
 
 ### 10.3 Comparison with VDOM Frameworks
@@ -673,6 +841,7 @@ export async function GET(request) {
   return Response.json(users);
 }
 
+// Example: Creating a new user
 export async function POST(request) {
   const data = await request.json();
   const user = await db.users.create(data);
@@ -687,3 +856,22 @@ WAF provides its own high-performance **Regex Router** to ensure consistent rout
 - **Internal Router**: The framework-provided router matches incoming URLs against compiled regex patterns and dispatches them to the appropriate named exports (`GET`, `POST`, etc.).
 - **Platform-Agnostic**: Because the router is built into the WAF runtime, routing logic remains identical whether running on Bun, Node.js, or Edge workers.
 - **HTTP Server Utilization**: WAF utilizes the native HTTP server of the underlying runtime (e.g., `Bun.serve` or Node's `http` module) via specialized **Adapters**. These adapters translate the platform's native request/response into the standard `Request`/`Response` objects used by WAF handlers.
+
+## 12. DevTools & Debugging
+Because WAF compiles components to standard Custom Elements, you can use native browser developer tools to inspect and debug your application.
+
+### 12.1 Inspecting Reactive State
+If you select a WAF component in the Elements panel, it is available as `$0` in the Console.
+You can inspect the component's reactive state by accessing its internal signals:
+```javascript
+// View the actual signal objects holding the prop values
+console.log($0._propsSignals);
+
+// Read the current value of the 'name' prop
+console.log($0._propsSignals.name.value);
+
+// Force an update to the component manually
+$0._propsSignals.name.value = "New Name";
+```
+
+This makes debugging fine-grained reactivity straightforward without needing specialized browser extensions.

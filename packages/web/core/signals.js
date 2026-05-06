@@ -1,6 +1,14 @@
 import * as Signals from "@preact/signals-core";
 
+if (typeof globalThis !== 'undefined') {
+  if (globalThis.__WAF_SIGNALS_LOADED__) {
+    console.warn("@opentf/web: Multiple instances of signals detected! This may cause reactivity loss.");
+  }
+  globalThis.__WAF_SIGNALS_LOADED__ = true;
+}
+
 // ─── SSG Detection ───
+export const PREACT_SIGNALS_BRAND = Symbol.for("preact-signals");
 export let isSSG = false;
 try {
   isSSG = typeof globalThis !== 'undefined' && globalThis.__WAF_SSG__ === true;
@@ -12,6 +20,7 @@ export function _setSSG(val) { isSSG = val; }
 export const signal = (val) => {
   if (isSSG) {
     return {
+      brand: Symbol.for("preact-signals"),
       _v: val,
       get value() { return this._v; },
       set value(v) { this._v = v; },
@@ -25,6 +34,7 @@ export const signal = (val) => {
 export const computed = (fn) => {
   if (isSSG) {
     return {
+      brand: Symbol.for("preact-signals"),
       get value() { return fn(); },
       peek: () => fn(),
       subscribe: () => () => {}
@@ -47,5 +57,3 @@ export const untracked = (fn) => Signals.untracked(fn);
 export const Signal = Signals.Signal;
 export const Computed = Signals.Computed;
 export const Effect = Signals.Effect;
-export const action = Signals.action;
-export const createModel = Signals.createModel;

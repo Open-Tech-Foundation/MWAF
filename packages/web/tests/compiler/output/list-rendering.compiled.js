@@ -40,30 +40,29 @@ class ListRenderingElement extends HTMLElement {
   connectedCallback() {
     if (this._mounted) return;
     this._mounted = true;
-    const props = _createPropsProxy(this);
+    const _waf_props = _createPropsProxy(this);
     this._children = Array.from(this.childNodes);
     _clearChildren(this);
     _withInstance(this, () => {
+      const props = _waf_props;
       let items = _signal(['A', 'B', 'C']);
-      const rootElement = (() => {
-        const el0 = document.createElement("div");
-        const el1 = document.createElement("ul");
-        const mapped2 = _mapped(() => items.value, item => (() => {
-          const el0 = document.createElement("li");
-          const text1 = document.createTextNode("Item ");
-          el0.appendChild(text1);
-          _renderDynamic(el0, () => item.value);
-          return el0;
-        })());
-        _renderDynamic(el1, () => mapped2());
-        el0.appendChild(el1);
-        const el3 = document.createElement("button");
-        el3.onclick = () => items.value = [...items.value, 'D'];
-        const text4 = document.createTextNode(" Add ");
-        el3.appendChild(text4);
-        el0.appendChild(el3);
+      const el0 = document.createElement("div");
+      const el1 = document.createElement("ul");
+      const mapped2 = _mapped(() => items.value, item => (() => {
+        const el0 = document.createElement("li");
+        const text1 = document.createTextNode("Item ");
+        el0.appendChild(text1);
+        _renderDynamic(el0, () => item.value);
         return el0;
-      })();
+      })());
+      _renderDynamic(el1, () => mapped2());
+      el0.appendChild(el1);
+      const el3 = document.createElement("button");
+      el3.onclick = () => items.value = [...items.value, 'D'];
+      const text4 = document.createTextNode(" Add ");
+      el3.appendChild(text4);
+      el0.appendChild(el3);
+      const rootElement = el0;
       this.appendChild(rootElement);
     });
     this._onMounts.forEach(fn => fn());

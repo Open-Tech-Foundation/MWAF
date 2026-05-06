@@ -40,7 +40,7 @@ class LifecycleElement extends HTMLElement {
   connectedCallback() {
     if (this._mounted) return;
     this._mounted = true;
-    const props = _createPropsProxy(this);
+    const _waf_props = _createPropsProxy(this);
     this._children = Array.from(this.childNodes);
     _clearChildren(this);
     _withInstance(this, () => {
@@ -50,12 +50,10 @@ class LifecycleElement extends HTMLElement {
       _onCleanup(() => {
         console.log("cleaned up");
       });
-      const rootElement = (() => {
-        const el0 = document.createElement("div");
-        const text1 = document.createTextNode("Lifecycle");
-        el0.appendChild(text1);
-        return el0;
-      })();
+      const el0 = document.createElement("div");
+      const text1 = document.createTextNode("Lifecycle");
+      el0.appendChild(text1);
+      const rootElement = el0;
       this.appendChild(rootElement);
     });
     this._onMounts.forEach(fn => fn());

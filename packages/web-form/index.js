@@ -34,13 +34,15 @@ export function createForm(options = {}) {
   const forms = INST_FORMS_REGISTRY.get(inst);
 
   const key = options.key || JSON.stringify({
-    initialValues: options.initialValues,
-    mode: options.mode instanceof Object ? options.mode.value : options.mode,
-    reValidateMode: options.reValidateMode instanceof Object ? options.reValidateMode.value : options.reValidateMode
+    initialValues: options.initialValues
   });
   
   if (forms.has(key)) {
-    return forms.get(key);
+    const form = forms.get(key);
+    if (form._updateConfig) {
+      form._updateConfig(options.mode, options.reValidateMode);
+    }
+    return form;
   }
 
   isSetup = true;
@@ -63,6 +65,8 @@ function _createForm(options = {}) {
   const isValidatingSig = signal(false);
   const isSubmittedSig = signal(false);
   const submitCountSig = signal(0);
+  const modeSig = signal(options.mode);
+  const reValidateModeSig = signal(options.reValidateMode);
 
   const signalsCache = new Map();
 
@@ -90,8 +94,14 @@ function _createForm(options = {}) {
     }
   }
 
-  const getMode = () => (options.mode instanceof Object ? options.mode.value : options.mode) || "onBlur";
-  const getReValidateMode = () => (options.reValidateMode instanceof Object ? options.reValidateMode.value : options.reValidateMode) || "onChange";
+  const getMode = () => {
+    const m = modeSig.value;
+    return (m instanceof Object && 'value' in m ? m.value : m) || "onBlur";
+  };
+  const getReValidateMode = () => {
+    const rm = reValidateModeSig.value;
+    return (rm instanceof Object && 'value' in rm ? rm.value : rm) || "onChange";
+  };
   const activeValidator = options.validator || options.validate;
 
   function hasErrors(obj) {
@@ -164,12 +174,16 @@ function _createForm(options = {}) {
     });
   }
   const register = (path) => {
-    const subSig = getSignal("v", path);
-    const val = getSafe(subSig);
+    const valSig = getSignal("v", path);
+    const errSig = getSignal("e", path);
+    const touchSig = getSignal("t", path, false);
+    
     return {
       name: path,
-      value: val,
-      checked: !!val,
+      value: valSig,
+      checked: valSig,
+      error: errSig,
+      isTouched: touchSig,
       oninput: (e) => {
         const val = e.target.type === "checkbox" ? e.target.checked : e.target.value;
         updateValue(path, val);
@@ -322,6 +336,13 @@ function _createForm(options = {}) {
     register,
     handleSubmit,
     reset,
+    _updateConfig(newMode, newReValidateMode) {
+      batch(() => {
+        modeSig.value = newMode;
+        reValidateModeSig.value = newReValidateMode;
+      });
+    },
+    _notifySignals: notifySignals,
     get values() { return createDeepProxy(valuesSig); },
     get errors() { return createDeepProxy(errorsSig); },
     get touched() { return createDeepProxy(touchedSig, [], false); },

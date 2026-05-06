@@ -40,25 +40,24 @@ class WrapperElement extends HTMLElement {
   connectedCallback() {
     if (this._mounted) return;
     this._mounted = true;
-    const props = _createPropsProxy(this);
+    const _waf_props = _createPropsProxy(this);
     this._children = Array.from(this.childNodes);
     _clearChildren(this);
     _withInstance(this, () => {
-      const rootElement = (() => {
-        const el0 = document.createElement("div");
-        _setProperty(el0, "className", "wrapper");
-        const el1 = document.createElement("header");
-        const text2 = document.createTextNode("Header");
-        el1.appendChild(text2);
-        el0.appendChild(el1);
-        const el3 = document.createElement("main");
-        el0.appendChild(el3);
-        const el4 = document.createElement("footer");
-        const text5 = document.createTextNode("Footer");
-        el4.appendChild(text5);
-        el0.appendChild(el4);
-        return el0;
-      })();
+      const props = _waf_props;
+      const el0 = document.createElement("div");
+      _setProperty(el0, "className", "wrapper", false);
+      const el1 = document.createElement("header");
+      const text2 = document.createTextNode("Header");
+      el1.appendChild(text2);
+      el0.appendChild(el1);
+      const el3 = document.createElement("main");
+      el0.appendChild(el3);
+      const el4 = document.createElement("footer");
+      const text5 = document.createTextNode("Footer");
+      el4.appendChild(text5);
+      el0.appendChild(el4);
+      const rootElement = el0;
       this.appendChild(rootElement);
     });
     this._onMounts.forEach(fn => fn());

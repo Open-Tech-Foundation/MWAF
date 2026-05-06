@@ -1,11 +1,21 @@
-import { signal, effect, isSSG, untracked } from "../core/signals.js";
+import { signal, effect, isSSG, untracked, Signal, PREACT_SIGNALS_BRAND } from "../core/signals.js";
 import { IS_PROPERTY } from "../core/constants.js";
+
+console.log("@opentf/web: dom.js loaded");
 
 const ELEMENT_PROPS = new WeakMap();
 
-export function applySpread(el, props) {
-  for (const key in props) {
-    setProperty(el, key, props[key]);
+export function applySpread(el, props, isComponent) {
+  if (!props || typeof props !== 'object') return;
+  
+  const keys = Object.keys(props);
+  for (let i = 0; i < keys.length; i++) {
+    const key = keys[i];
+    let value = props[key];
+    if (value && typeof value === 'object' && (value instanceof Signal || value.brand === PREACT_SIGNALS_BRAND || PREACT_SIGNALS_BRAND in value)) {
+      value = value.value;
+    }
+    setProperty(el, key, value, isComponent);
   }
 }
 
@@ -18,13 +28,14 @@ export function _clearChildren(el) {
   while (el.firstChild) el.removeChild(el.firstChild);
 }
 
-export function setProperty(el, key, value) {
+export function setProperty(el, key, value, isComponent) {
+  if (value && typeof value === 'object' && (value instanceof Signal || value.brand === PREACT_SIGNALS_BRAND || PREACT_SIGNALS_BRAND in value)) {
+    value = value.value;
+  }
   if (key === "style" && typeof value === "object") {
     Object.assign(el.style, value);
   } else if (key.startsWith("on") && typeof value === "function") {
-    const name = key.toLowerCase();
-    const isStandard = name in el || name in HTMLElement.prototype;
-    el[isStandard ? name : key] = value;
+    el[isComponent ? key : key.toLowerCase()] = value;
   } else if (IS_PROPERTY.includes(key)) {
     el[key] = value;
   } else {
@@ -36,12 +47,13 @@ export function setProperty(el, key, value) {
   }
 
   // Update signals if this is a WAF component
-  if (el._propsSignals) {
+  if (el._propsSignals && !key.startsWith("on")) {
     untracked(() => {
-      if (!el._propsSignals[key]) {
+      const sig = el._propsSignals[key];
+      if (!sig) {
         el._propsSignals[key] = signal(value);
-      } else if (el._propsSignals[key].peek() !== value) {
-        el._propsSignals[key].value = value;
+      } else if (sig && typeof sig === 'object' && 'value' in sig && sig.peek() !== value) {
+        sig.value = value;
       }
     });
   }
@@ -59,10 +71,11 @@ export function renderDynamic(parent, fn) {
     const newNodes = (Array.isArray(value) ? value : [value])
       .map(node => {
         if (node === null || node === undefined || typeof node === 'boolean') return null;
+        if (typeof node === 'function') node = node();
         if (node instanceof Node) return node;
         return document.createTextNode(String(node));
       })
-      .filter(Boolean);
+      .filter(n => n !== null);
     
     // Remove nodes that are no longer present
     for (const node of currentNodes) {

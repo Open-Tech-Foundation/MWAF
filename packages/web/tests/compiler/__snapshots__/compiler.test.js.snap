@@ -4,25 +4,25 @@ exports[`Web App Framework Compiler Compiles complex-expressions.jsx 1`] = `
 "import { signal as _signal, effect as _effect, setProperty as _setProperty, renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy, _clearChildren, withInstance as _withInstance } from "@opentf/web";
 class ComplexExpressionsElement extends HTMLElement {
   static observedAttributes = ["theme", "color", "loading", "title", "logMessage"];
-  set theme(val) {
-    if (!this._propsSignals["theme"]) this._propsSignals["theme"] = _signal(val);
-    this._propsSignals["theme"].value = val;
+  set theme(_val) {
+    if (!this._propsSignals["theme"]) this._propsSignals["theme"] = _signal(_val);
+    this._propsSignals["theme"].value = _val;
   }
-  set color(val) {
-    if (!this._propsSignals["color"]) this._propsSignals["color"] = _signal(val);
-    this._propsSignals["color"].value = val;
+  set color(_val) {
+    if (!this._propsSignals["color"]) this._propsSignals["color"] = _signal(_val);
+    this._propsSignals["color"].value = _val;
   }
-  set loading(val) {
-    if (!this._propsSignals["loading"]) this._propsSignals["loading"] = _signal(val);
-    this._propsSignals["loading"].value = val;
+  set loading(_val) {
+    if (!this._propsSignals["loading"]) this._propsSignals["loading"] = _signal(_val);
+    this._propsSignals["loading"].value = _val;
   }
-  set title(val) {
-    if (!this._propsSignals["title"]) this._propsSignals["title"] = _signal(val);
-    this._propsSignals["title"].value = val;
+  set title(_val) {
+    if (!this._propsSignals["title"]) this._propsSignals["title"] = _signal(_val);
+    this._propsSignals["title"].value = _val;
   }
-  set logMessage(val) {
-    if (!this._propsSignals["logMessage"]) this._propsSignals["logMessage"] = _signal(val);
-    this._propsSignals["logMessage"].value = val;
+  set logMessage(_val) {
+    if (!this._propsSignals["logMessage"]) this._propsSignals["logMessage"] = _signal(_val);
+    this._propsSignals["logMessage"].value = _val;
   }
   get theme() {
     const _sig = this._propsSignals["theme"];
@@ -89,38 +89,37 @@ class ComplexExpressionsElement extends HTMLElement {
   connectedCallback() {
     if (this._mounted) return;
     this._mounted = true;
-    const props = _createPropsProxy(this);
+    const _waf_props = _createPropsProxy(this);
     this._children = Array.from(this.childNodes);
     _clearChildren(this);
     _withInstance(this, () => {
+      const props = _waf_props;
       let count = _signal(0);
-      const rootElement = (() => {
-        const el0 = document.createElement("div");
-        _effect(() => _setProperty(el0, "className", props.theme));
-        _effect(() => Object.assign(el0.style, {
-          color: props.color,
-          opacity: count.value > 5 ? 1 : 0.5
-        }));
-        _renderDynamic(el0, () => props.loading ? (() => {
-          const el0 = document.createElement("span");
-          const text1 = document.createTextNode("Loading...");
-          el0.appendChild(text1);
-          return el0;
-        })() : (() => {
-          const el0 = document.createElement("div");
-          const el1 = document.createElement("h1");
-          _renderDynamic(el1, () => props.title);
-          el0.appendChild(el1);
-          const el2 = document.createElement("button");
-          el2.onclick = () => console.log(props.logMessage);
-          const text3 = document.createTextNode(" Log ");
-          el2.appendChild(text3);
-          _renderDynamic(el2, () => count.value);
-          el0.appendChild(el2);
-          return el0;
-        })());
+      const el0 = document.createElement("div");
+      _effect(() => _setProperty(el0, "className", props.theme.value, false));
+      _effect(() => Object.assign(el0.style, {
+        color: props.color.value,
+        opacity: count.value > 5 ? 1 : 0.5
+      }));
+      _renderDynamic(el0, () => props.loading.value ? (() => {
+        const el0 = document.createElement("span");
+        const text1 = document.createTextNode("Loading...");
+        el0.appendChild(text1);
         return el0;
-      })();
+      })() : (() => {
+        const el0 = document.createElement("div");
+        const el1 = document.createElement("h1");
+        _renderDynamic(el1, () => props.title.value);
+        el0.appendChild(el1);
+        const el2 = document.createElement("button");
+        el2.onclick = () => console.log(props.logMessage.value);
+        const text3 = document.createTextNode(" Log ");
+        el2.appendChild(text3);
+        _renderDynamic(el2, () => count.value);
+        el0.appendChild(el2);
+        return el0;
+      })());
+      const rootElement = el0;
       this.appendChild(rootElement);
     });
     this._onMounts.forEach(fn => fn());
@@ -137,13 +136,13 @@ exports[`Web App Framework Compiler Compiles conditional.jsx 1`] = `
 "import { setProperty as _setProperty, renderDynamic as _renderDynamic, signal as _signal, createPropsProxy as _createPropsProxy, _clearChildren, withInstance as _withInstance } from "@opentf/web";
 class ItemElement extends HTMLElement {
   static observedAttributes = ["name", "isPacked"];
-  set name(val) {
-    if (!this._propsSignals["name"]) this._propsSignals["name"] = _signal(val);
-    this._propsSignals["name"].value = val;
+  set name(_val) {
+    if (!this._propsSignals["name"]) this._propsSignals["name"] = _signal(_val);
+    this._propsSignals["name"].value = _val;
   }
-  set isPacked(val) {
-    if (!this._propsSignals["isPacked"]) this._propsSignals["isPacked"] = _signal(val);
-    this._propsSignals["isPacked"].value = val;
+  set isPacked(_val) {
+    if (!this._propsSignals["isPacked"]) this._propsSignals["isPacked"] = _signal(_val);
+    this._propsSignals["isPacked"].value = _val;
   }
   get name() {
     const _sig = this._propsSignals["name"];
@@ -195,20 +194,22 @@ class ItemElement extends HTMLElement {
   connectedCallback() {
     if (this._mounted) return;
     this._mounted = true;
-    const props = _createPropsProxy(this);
+    const _waf_props = _createPropsProxy(this);
     this._children = Array.from(this.childNodes);
     _clearChildren(this);
     _withInstance(this, () => {
-      const rootElement = (() => {
-        const el0 = document.createElement("li");
-        _setProperty(el0, "className", "item");
-        _renderDynamic(el0, () => props.isPacked ? (() => {
-          const el0 = document.createElement("del");
-          _renderDynamic(el0, () => props.name + ' ✅');
-          return el0;
-        })() : props.name);
+      const {
+        name,
+        isPacked
+      } = _waf_props;
+      const el0 = document.createElement("li");
+      _setProperty(el0, "className", "item", false);
+      _renderDynamic(el0, () => _waf_props.isPacked.value ? (() => {
+        const el0 = document.createElement("del");
+        _renderDynamic(el0, () => _waf_props.name.value + ' ✅');
         return el0;
-      })();
+      })() : _waf_props.name.value);
+      const rootElement = el0;
       this.appendChild(rootElement);
     });
     this._onMounts.forEach(fn => fn());
@@ -222,19 +223,23 @@ export default ItemElement;"
 `;
 
 exports[`Web App Framework Compiler Compiles routing-404.404.jsx 1`] = `
-"export function render(root, props) {
-  const rootElement = (() => {
-    const el0 = document.createElement("div");
-    const el1 = document.createElement("h1");
-    const text2 = document.createTextNode("404 - Not Found");
-    el1.appendChild(text2);
-    el0.appendChild(el1);
-    const el3 = document.createElement("p");
-    const text4 = document.createTextNode("The page you are looking for does not exist.");
-    el3.appendChild(text4);
-    el0.appendChild(el3);
-    return el0;
-  })();
+"import { createPropsProxy as _createPropsProxy } from "@opentf/web";
+export function render(root, _props) {
+  const _holder = {
+    _children: _props.children || []
+  };
+  const _waf_props = _createPropsProxy(_holder);
+  Object.assign(_waf_props, _props);
+  const el0 = document.createElement("div");
+  const el1 = document.createElement("h1");
+  const text2 = document.createTextNode("404 - Not Found");
+  el1.appendChild(text2);
+  el0.appendChild(el1);
+  const el3 = document.createElement("p");
+  const text4 = document.createTextNode("The page you are looking for does not exist.");
+  el3.appendChild(text4);
+  el0.appendChild(el3);
+  const rootElement = el0;
   root.appendChild(rootElement);
 }"
 `;
@@ -282,25 +287,24 @@ class WrapperElement extends HTMLElement {
   connectedCallback() {
     if (this._mounted) return;
     this._mounted = true;
-    const props = _createPropsProxy(this);
+    const _waf_props = _createPropsProxy(this);
     this._children = Array.from(this.childNodes);
     _clearChildren(this);
     _withInstance(this, () => {
-      const rootElement = (() => {
-        const el0 = document.createElement("div");
-        _setProperty(el0, "className", "wrapper");
-        const el1 = document.createElement("header");
-        const text2 = document.createTextNode("Header");
-        el1.appendChild(text2);
-        el0.appendChild(el1);
-        const el3 = document.createElement("main");
-        el0.appendChild(el3);
-        const el4 = document.createElement("footer");
-        const text5 = document.createTextNode("Footer");
-        el4.appendChild(text5);
-        el0.appendChild(el4);
-        return el0;
-      })();
+      const props = _waf_props;
+      const el0 = document.createElement("div");
+      _setProperty(el0, "className", "wrapper", false);
+      const el1 = document.createElement("header");
+      const text2 = document.createTextNode("Header");
+      el1.appendChild(text2);
+      el0.appendChild(el1);
+      const el3 = document.createElement("main");
+      el0.appendChild(el3);
+      const el4 = document.createElement("footer");
+      const text5 = document.createTextNode("Footer");
+      el4.appendChild(text5);
+      el0.appendChild(el4);
+      const rootElement = el0;
       this.appendChild(rootElement);
     });
     this._onMounts.forEach(fn => fn());
@@ -356,7 +360,7 @@ class LifecycleElement extends HTMLElement {
   connectedCallback() {
     if (this._mounted) return;
     this._mounted = true;
-    const props = _createPropsProxy(this);
+    const _waf_props = _createPropsProxy(this);
     this._children = Array.from(this.childNodes);
     _clearChildren(this);
     _withInstance(this, () => {
@@ -366,12 +370,10 @@ class LifecycleElement extends HTMLElement {
       _onCleanup(() => {
         console.log("cleaned up");
       });
-      const rootElement = (() => {
-        const el0 = document.createElement("div");
-        const text1 = document.createTextNode("Lifecycle");
-        el0.appendChild(text1);
-        return el0;
-      })();
+      const el0 = document.createElement("div");
+      const text1 = document.createTextNode("Lifecycle");
+      el0.appendChild(text1);
+      const rootElement = el0;
       this.appendChild(rootElement);
     });
     this._onMounts.forEach(fn => fn());
@@ -389,9 +391,9 @@ exports[`Web App Framework Compiler Compiles reactivity.jsx 1`] = `
 import { signal } from "@preact/signals";
 class ReactivityElement extends HTMLElement {
   static observedAttributes = ["title"];
-  set title(val) {
-    if (!this._propsSignals["title"]) this._propsSignals["title"] = _signal(val);
-    this._propsSignals["title"].value = val;
+  set title(_val) {
+    if (!this._propsSignals["title"]) this._propsSignals["title"] = _signal(_val);
+    this._propsSignals["title"].value = _val;
   }
   get title() {
     const _sig = this._propsSignals["title"];
@@ -438,24 +440,23 @@ class ReactivityElement extends HTMLElement {
   connectedCallback() {
     if (this._mounted) return;
     this._mounted = true;
-    const props = _createPropsProxy(this);
+    const _waf_props = _createPropsProxy(this);
     this._children = Array.from(this.childNodes);
     _clearChildren(this);
     _withInstance(this, () => {
+      const props = _waf_props;
       let count = _signal(0);
-      const rootElement = (() => {
-        const el0 = document.createElement("div");
-        _effect(() => _setProperty(el0, "title", props.title));
-        const el1 = document.createElement("span");
-        _renderDynamic(el1, () => count.value);
-        el0.appendChild(el1);
-        const el2 = document.createElement("button");
-        el2.onclick = () => count.value++;
-        const text3 = document.createTextNode("Add");
-        el2.appendChild(text3);
-        el0.appendChild(el2);
-        return el0;
-      })();
+      const el0 = document.createElement("div");
+      _effect(() => _setProperty(el0, "title", props.title.value, false));
+      const el1 = document.createElement("span");
+      _renderDynamic(el1, () => count.value);
+      el0.appendChild(el1);
+      const el2 = document.createElement("button");
+      el2.onclick = () => count.value++;
+      const text3 = document.createTextNode("Add");
+      el2.appendChild(text3);
+      el0.appendChild(el2);
+      const rootElement = el0;
       this.appendChild(rootElement);
     });
     this._onMounts.forEach(fn => fn());
@@ -512,7 +513,7 @@ export class BasicForm extends HTMLElement {
   connectedCallback() {
     if (this._mounted) return;
     this._mounted = true;
-    const props = _createPropsProxy(this);
+    const _waf_props = _createPropsProxy(this);
     this._children = Array.from(this.childNodes);
     _clearChildren(this);
     _withInstance(this, () => {
@@ -524,15 +525,13 @@ export class BasicForm extends HTMLElement {
       const isValid = _computed(() => form.isValid);
       const isSubmitting = _computed(() => form.isSubmitting);
       const canSubmit = _computed(() => isValid.value && !isSubmitting.value);
-      const rootElement = (() => {
-        const el0 = document.createElement("section");
-        const el1 = document.createElement("button");
-        el1.setAttribute("type", "submit");
-        _effect(() => _setProperty(el1, "disabled", (() => !canSubmit.value)()));
-        _renderDynamic(el1, () => isSubmitting.value ? "Processing..." : "Save Changes");
-        el0.appendChild(el1);
-        return el0;
-      })();
+      const el0 = document.createElement("section");
+      const el1 = document.createElement("button");
+      el1.setAttribute("type", "submit");
+      _effect(() => _setProperty(el1, "disabled", (() => !canSubmit.value)(), false));
+      _renderDynamic(el1, () => isSubmitting.value ? "Processing..." : "Save Changes");
+      el0.appendChild(el1);
+      const rootElement = el0;
       this.appendChild(rootElement);
     });
     this._onMounts.forEach(fn => fn());
@@ -549,13 +548,13 @@ exports[`Web App Framework Compiler Compiles react-patterns.jsx 1`] = `
 import { UI } from './ui-lib';
 class ReactPatternsElement extends HTMLElement {
   static observedAttributes = ["user", "notifications"];
-  set user(val) {
-    if (!this._propsSignals["user"]) this._propsSignals["user"] = _signal(val);
-    this._propsSignals["user"].value = val;
+  set user(_val) {
+    if (!this._propsSignals["user"]) this._propsSignals["user"] = _signal(_val);
+    this._propsSignals["user"].value = _val;
   }
-  set notifications(val) {
-    if (!this._propsSignals["notifications"]) this._propsSignals["notifications"] = _signal(val);
-    this._propsSignals["notifications"].value = val;
+  set notifications(_val) {
+    if (!this._propsSignals["notifications"]) this._propsSignals["notifications"] = _signal(_val);
+    this._propsSignals["notifications"].value = _val;
   }
   get user() {
     const _sig = this._propsSignals["user"];
@@ -607,92 +606,91 @@ class ReactPatternsElement extends HTMLElement {
   connectedCallback() {
     if (this._mounted) return;
     this._mounted = true;
-    const props = _createPropsProxy(this);
+    const _waf_props = _createPropsProxy(this);
     this._children = Array.from(this.childNodes);
     _clearChildren(this);
     _withInstance(this, () => {
-      const Tag = props.isHeader ? 'h1' : 'h2';
+      const props = _waf_props;
+      const Tag = props.isHeader.value ? 'h1' : 'h2';
       const items = ['A', 'B'];
-      const rootElement = (() => {
-        const el0 = document.createElement("div");
-        _setProperty(el0, "className", "container");
-        el0.setAttribute("data-testid", "main-div");
-        const el1 = document.createElement("input");
-        _setProperty(el1, "disabled", true);
-        _effect(() => el1.setAttribute("tab-index", -1));
-        _effect(() => el1.setAttribute("max-length", 5));
-        el0.appendChild(el1);
-        const el2 = document.createElement(Tag);
-        const text3 = document.createTextNode("Dynamic Heading");
-        el2.appendChild(text3);
-        el0.appendChild(el2);
-        const el4 = document.createElement("web-ui-button");
-        _setProperty(el4, "variant", "primary");
-        const text5 = document.createTextNode("Click Me");
-        el4.appendChild(text5);
-        el0.appendChild(el4);
-        const el6 = document.createElement("p");
-        const text7 = document.createTextNode(" Welcome, ");
-        el6.appendChild(text7);
-        const el8 = document.createElement("strong");
-        _renderDynamic(el8, () => props.user.name);
-        el6.appendChild(el8);
-        const text9 = document.createTextNode("!  You have ");
-        el6.appendChild(text9);
-        _renderDynamic(el6, () => props.notifications.length);
-        const text10 = document.createTextNode(" new messages. ");
-        el6.appendChild(text10);
-        el0.appendChild(el6);
-        const el11 = document.createElement("div");
-        _effect(() => _applySpread(el11, props.extra));
-        _setProperty(el11, "className", "override");
-        _setProperty(el11, "id", "constant");
-        const text12 = document.createTextNode(" Spread Test ");
-        el11.appendChild(text12);
-        el0.appendChild(el11);
-        const el13 = document.createElement("ul");
-        _renderDynamic(el13, () => [(() => {
-          const el0 = document.createElement("li");
-          _setProperty(el0, "_key", "1");
-          const text1 = document.createTextNode("One");
-          el0.appendChild(text1);
-          return el0;
-        })(), (() => {
-          const el0 = document.createElement("li");
-          _setProperty(el0, "_key", "2");
-          const text1 = document.createTextNode("Two");
-          el0.appendChild(text1);
-          return el0;
-        })()]);
-        el0.appendChild(el13);
-        const el14 = document.createElement("web-dataprovider");
-        _renderDynamic(el14, data => (() => {
-          const el0 = document.createElement("div");
-          const text1 = document.createTextNode("Data: ");
-          el0.appendChild(text1);
-          _renderDynamic(el0, () => data.value);
-          return el0;
-        })());
-        el0.appendChild(el14);
-        const el15 = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-        el15.setAttribute("viewBox", "0 0 100 100");
-        el15.setAttribute("xmlns", "http://www.w3.org/2000/svg");
-        const el16 = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-        el16.setAttribute("cx", "50");
-        el16.setAttribute("cy", "50");
-        el16.setAttribute("r", "40");
-        el16.setAttribute("strokeWidth", "2");
-        el16.setAttribute("fill", "red");
-        el15.appendChild(el16);
-        el0.appendChild(el15);
-        const el17 = document.createElement("web-customcomponent");
-        el0.appendChild(el17);
-        const el18 = document.createElement("br");
-        el0.appendChild(el18);
-        const el19 = document.createElement("hr");
-        el0.appendChild(el19);
+      const el0 = document.createElement("div");
+      _setProperty(el0, "className", "container", false);
+      el0.setAttribute("data-testid", "main-div");
+      const el1 = document.createElement("input");
+      _setProperty(el1, "disabled", true, false);
+      _effect(() => el1.setAttribute("tab-index", -1));
+      _effect(() => el1.setAttribute("max-length", 5));
+      el0.appendChild(el1);
+      const el2 = document.createElement(Tag);
+      const text3 = document.createTextNode("Dynamic Heading");
+      el2.appendChild(text3);
+      el0.appendChild(el2);
+      const el4 = document.createElement("web-ui-button");
+      _setProperty(el4, "variant", "primary", true);
+      const text5 = document.createTextNode("Click Me");
+      el4.appendChild(text5);
+      el0.appendChild(el4);
+      const el6 = document.createElement("p");
+      const text7 = document.createTextNode(" Welcome, ");
+      el6.appendChild(text7);
+      const el8 = document.createElement("strong");
+      _renderDynamic(el8, () => props.user.value.name);
+      el6.appendChild(el8);
+      const text9 = document.createTextNode("!  You have ");
+      el6.appendChild(text9);
+      _renderDynamic(el6, () => props.notifications.value.length);
+      const text10 = document.createTextNode(" new messages. ");
+      el6.appendChild(text10);
+      el0.appendChild(el6);
+      const el11 = document.createElement("div");
+      _effect(() => _applySpread(el11, props.extra.value, false));
+      _setProperty(el11, "className", "override", false);
+      _setProperty(el11, "id", "constant", false);
+      const text12 = document.createTextNode(" Spread Test ");
+      el11.appendChild(text12);
+      el0.appendChild(el11);
+      const el13 = document.createElement("ul");
+      _renderDynamic(el13, () => [() => {
+        const el0 = document.createElement("li");
+        _setProperty(el0, "_key", "1", false);
+        const text1 = document.createTextNode("One");
+        el0.appendChild(text1);
         return el0;
-      })();
+      }, () => {
+        const el0 = document.createElement("li");
+        _setProperty(el0, "_key", "2", false);
+        const text1 = document.createTextNode("Two");
+        el0.appendChild(text1);
+        return el0;
+      }]);
+      el0.appendChild(el13);
+      const el14 = document.createElement("web-dataprovider");
+      _renderDynamic(el14, data => (() => {
+        const el0 = document.createElement("div");
+        const text1 = document.createTextNode("Data: ");
+        el0.appendChild(text1);
+        _renderDynamic(el0, () => data.value);
+        return el0;
+      })());
+      el0.appendChild(el14);
+      const el15 = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      el15.setAttribute("viewBox", "0 0 100 100");
+      el15.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+      const el16 = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+      el16.setAttribute("cx", "50");
+      el16.setAttribute("cy", "50");
+      el16.setAttribute("r", "40");
+      el16.setAttribute("strokeWidth", "2");
+      el16.setAttribute("fill", "red");
+      el15.appendChild(el16);
+      el0.appendChild(el15);
+      const el17 = document.createElement("web-customcomponent");
+      el0.appendChild(el17);
+      const el18 = document.createElement("br");
+      el0.appendChild(el18);
+      const el19 = document.createElement("hr");
+      el0.appendChild(el19);
+      const rootElement = el0;
       this.appendChild(rootElement);
     });
     this._onMounts.forEach(fn => fn());
@@ -752,16 +750,14 @@ class CustomComponentElement extends HTMLElement {
   connectedCallback() {
     if (this._mounted) return;
     this._mounted = true;
-    const props = _createPropsProxy(this);
+    const _waf_props = _createPropsProxy(this);
     this._children = Array.from(this.childNodes);
     _clearChildren(this);
     _withInstance(this, () => {
-      const rootElement = (() => {
-        const el0 = document.createElement("div");
-        const text1 = document.createTextNode("Custom");
-        el0.appendChild(text1);
-        return el0;
-      })();
+      const el0 = document.createElement("div");
+      const text1 = document.createTextNode("Custom");
+      el0.appendChild(text1);
+      const rootElement = el0;
       this.appendChild(rootElement);
     });
     this._onMounts.forEach(fn => fn());
@@ -777,9 +773,9 @@ exports[`Web App Framework Compiler Compiles nested-reactivity.jsx 1`] = `
 "import { signal as _signal, effect as _effect, setProperty as _setProperty, renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy, _clearChildren, withInstance as _withInstance } from "@opentf/web";
 class NestedReactivityElement extends HTMLElement {
   static observedAttributes = ["title"];
-  set title(val) {
-    if (!this._propsSignals["title"]) this._propsSignals["title"] = _signal(val);
-    this._propsSignals["title"].value = val;
+  set title(_val) {
+    if (!this._propsSignals["title"]) this._propsSignals["title"] = _signal(_val);
+    this._propsSignals["title"].value = _val;
   }
   get title() {
     const _sig = this._propsSignals["title"];
@@ -826,22 +822,21 @@ class NestedReactivityElement extends HTMLElement {
   connectedCallback() {
     if (this._mounted) return;
     this._mounted = true;
-    const props = _createPropsProxy(this);
+    const _waf_props = _createPropsProxy(this);
     this._children = Array.from(this.childNodes);
     _clearChildren(this);
     _withInstance(this, () => {
+      const props = _waf_props;
       let show = _signal(true);
-      const rootElement = (() => {
-        const el0 = document.createElement("div");
-        _renderDynamic(el0, () => show.value && (() => {
-          const el0 = document.createElement("span");
-          _effect(() => _setProperty(el0, "title", props.title));
-          const text1 = document.createTextNode("Hello");
-          el0.appendChild(text1);
-          return el0;
-        })());
+      const el0 = document.createElement("div");
+      _renderDynamic(el0, () => show.value && (() => {
+        const el0 = document.createElement("span");
+        _effect(() => _setProperty(el0, "title", props.title.value, false));
+        const text1 = document.createTextNode("Hello");
+        el0.appendChild(text1);
         return el0;
-      })();
+      })());
+      const rootElement = el0;
       this.appendChild(rootElement);
     });
     this._onMounts.forEach(fn => fn());
@@ -855,19 +850,23 @@ export default NestedReactivityElement;"
 `;
 
 exports[`Web App Framework Compiler Compiles basic-elements.page.jsx 1`] = `
-"export function render(root, props) {
-  const rootElement = (() => {
-    const el0 = document.createElement("div");
-    const el1 = document.createElement("h1");
-    const text2 = document.createTextNode("Hello");
-    el1.appendChild(text2);
-    el0.appendChild(el1);
-    const el3 = document.createElement("p");
-    const text4 = document.createTextNode("World");
-    el3.appendChild(text4);
-    el0.appendChild(el3);
-    return el0;
-  })();
+"import { createPropsProxy as _createPropsProxy } from "@opentf/web";
+export function render(root, _props) {
+  const _holder = {
+    _children: _props.children || []
+  };
+  const _waf_props = _createPropsProxy(_holder);
+  Object.assign(_waf_props, _props);
+  const el0 = document.createElement("div");
+  const el1 = document.createElement("h1");
+  const text2 = document.createTextNode("Hello");
+  el1.appendChild(text2);
+  el0.appendChild(el1);
+  const el3 = document.createElement("p");
+  const text4 = document.createTextNode("World");
+  el3.appendChild(text4);
+  el0.appendChild(el3);
+  const rootElement = el0;
   root.appendChild(rootElement);
 }"
 `;
@@ -915,7 +914,7 @@ class SpreadTestElement extends HTMLElement {
   connectedCallback() {
     if (this._mounted) return;
     this._mounted = true;
-    const props = _createPropsProxy(this);
+    const _waf_props = _createPropsProxy(this);
     this._children = Array.from(this.childNodes);
     _clearChildren(this);
     _withInstance(this, () => {
@@ -924,20 +923,18 @@ class SpreadTestElement extends HTMLElement {
         className: "foo",
         "data-custom": "bar"
       };
-      const rootElement = (() => {
-        const el0 = document.createElement("div");
-        _effect(() => _applySpread(el0, props));
-        const el1 = document.createElement("span");
-        _effect(() => _applySpread(el1, {
-          style: {
-            color: "red"
-          }
-        }));
-        const text2 = document.createTextNode("Hello");
-        el1.appendChild(text2);
-        el0.appendChild(el1);
-        return el0;
-      })();
+      const el0 = document.createElement("div");
+      _effect(() => _applySpread(el0, props, false));
+      const el1 = document.createElement("span");
+      _effect(() => _applySpread(el1, {
+        style: {
+          color: "red"
+        }
+      }, false));
+      const text2 = document.createTextNode("Hello");
+      el1.appendChild(text2);
+      el0.appendChild(el1);
+      const rootElement = el0;
       this.appendChild(rootElement);
     });
     this._onMounts.forEach(fn => fn());
@@ -993,7 +990,7 @@ class StateEdgeCasesElement extends HTMLElement {
   connectedCallback() {
     if (this._mounted) return;
     this._mounted = true;
-    const props = _createPropsProxy(this);
+    const _waf_props = _createPropsProxy(this);
     this._children = Array.from(this.childNodes);
     _clearChildren(this);
     _withInstance(this, () => {
@@ -1034,24 +1031,22 @@ class StateEdgeCasesElement extends HTMLElement {
 
       // 7. Passing as argument
       console.log(count.value, user.value);
-      const rootElement = (() => {
-        const el0 = document.createElement("div");
-        const el1 = document.createElement("span");
-        _renderDynamic(el1, () => count.value);
-        el0.appendChild(el1);
-        const el2 = document.createElement("span");
-        _renderDynamic(el2, () => user.value.name);
-        el0.appendChild(el2);
-        const el3 = document.createElement("button");
-        el3.onclick = () => {
-          count.value++;
-          user.value.age++;
-        };
-        const text4 = document.createTextNode("Increment");
-        el3.appendChild(text4);
-        el0.appendChild(el3);
-        return el0;
-      })();
+      const el0 = document.createElement("div");
+      const el1 = document.createElement("span");
+      _renderDynamic(el1, () => count.value);
+      el0.appendChild(el1);
+      const el2 = document.createElement("span");
+      _renderDynamic(el2, () => user.value.name);
+      el0.appendChild(el2);
+      const el3 = document.createElement("button");
+      el3.onclick = () => {
+        count.value++;
+        user.value.age++;
+      };
+      const text4 = document.createTextNode("Increment");
+      el3.appendChild(text4);
+      el0.appendChild(el3);
+      const rootElement = el0;
       this.appendChild(rootElement);
     });
     this._onMounts.forEach(fn => fn());
@@ -1068,9 +1063,9 @@ exports[`Web App Framework Compiler Compiles styling.jsx 1`] = `
 "import { signal as _signal, setProperty as _setProperty, effect as _effect, createPropsProxy as _createPropsProxy, _clearChildren, withInstance as _withInstance } from "@opentf/web";
 class StylingTestElement extends HTMLElement {
   static observedAttributes = ["theme"];
-  set theme(val) {
-    if (!this._propsSignals["theme"]) this._propsSignals["theme"] = _signal(val);
-    this._propsSignals["theme"].value = val;
+  set theme(_val) {
+    if (!this._propsSignals["theme"]) this._propsSignals["theme"] = _signal(_val);
+    this._propsSignals["theme"].value = _val;
   }
   get theme() {
     const _sig = this._propsSignals["theme"];
@@ -1117,27 +1112,26 @@ class StylingTestElement extends HTMLElement {
   connectedCallback() {
     if (this._mounted) return;
     this._mounted = true;
-    const props = _createPropsProxy(this);
+    const _waf_props = _createPropsProxy(this);
     this._children = Array.from(this.childNodes);
     _clearChildren(this);
     _withInstance(this, () => {
+      const props = _waf_props;
       let active = _signal(true);
-      const rootElement = (() => {
-        const el0 = document.createElement("div");
-        _setProperty(el0, "className", "static-class");
-        _setProperty(el0, "className", "static-classname");
-        const el1 = document.createElement("span");
-        _effect(() => _setProperty(el1, "className", active.value ? "active" : "inactive"));
-        const text2 = document.createTextNode(" Reactive Class ");
-        el1.appendChild(text2);
-        el0.appendChild(el1);
-        const el3 = document.createElement("button");
-        _effect(() => _setProperty(el3, "className", props.theme));
-        const text4 = document.createTextNode(" Reactive ClassName from Props ");
-        el3.appendChild(text4);
-        el0.appendChild(el3);
-        return el0;
-      })();
+      const el0 = document.createElement("div");
+      _setProperty(el0, "className", "static-class", false);
+      _setProperty(el0, "className", "static-classname", false);
+      const el1 = document.createElement("span");
+      _effect(() => _setProperty(el1, "className", active.value ? "active" : "inactive", false));
+      const text2 = document.createTextNode(" Reactive Class ");
+      el1.appendChild(text2);
+      el0.appendChild(el1);
+      const el3 = document.createElement("button");
+      _effect(() => _setProperty(el3, "className", props.theme.value, false));
+      const text4 = document.createTextNode(" Reactive ClassName from Props ");
+      el3.appendChild(text4);
+      el0.appendChild(el3);
+      const rootElement = el0;
       this.appendChild(rootElement);
     });
     this._onMounts.forEach(fn => fn());
@@ -1194,7 +1188,7 @@ class FormCaseElement extends HTMLElement {
   connectedCallback() {
     if (this._mounted) return;
     this._mounted = true;
-    const props = _createPropsProxy(this);
+    const _waf_props = _createPropsProxy(this);
     this._children = Array.from(this.childNodes);
     _clearChildren(this);
     _withInstance(this, () => {
@@ -1203,23 +1197,21 @@ class FormCaseElement extends HTMLElement {
           name: "Alice"
         }
       });
-      const rootElement = (() => {
-        const el0 = document.createElement("div");
-        const el1 = document.createElement("input");
-        _effect(() => _applySpread(el1, form.register('name')));
-        el0.appendChild(el1);
-        const el2 = document.createElement("p");
-        const text3 = document.createTextNode("Hello, ");
-        el2.appendChild(text3);
-        _renderDynamic(el2, () => form.values.name);
-        el0.appendChild(el2);
-        const el4 = document.createElement("button");
-        el4.onclick = form.handleSubmit(v => console.log(v));
-        const text5 = document.createTextNode(" Submit ");
-        el4.appendChild(text5);
-        el0.appendChild(el4);
-        return el0;
-      })();
+      const el0 = document.createElement("div");
+      const el1 = document.createElement("input");
+      _effect(() => _applySpread(el1, form.register('name'), false));
+      el0.appendChild(el1);
+      const el2 = document.createElement("p");
+      const text3 = document.createTextNode("Hello, ");
+      el2.appendChild(text3);
+      _renderDynamic(el2, () => form.values.name);
+      el0.appendChild(el2);
+      const el4 = document.createElement("button");
+      el4.onclick = form.handleSubmit(v => console.log(v));
+      const text5 = document.createTextNode(" Submit ");
+      el4.appendChild(text5);
+      el0.appendChild(el4);
+      const rootElement = el0;
       this.appendChild(rootElement);
     });
     this._onMounts.forEach(fn => fn());
@@ -1233,7 +1225,7 @@ export default FormCaseElement;"
 `;
 
 exports[`Web App Framework Compiler Compiles ref.jsx 1`] = `
-"import { signal as _signal, onMount as _onMount, effect as _effect, createPropsProxy as _createPropsProxy, _clearChildren, withInstance as _withInstance } from "@opentf/web";
+"import { signal as _signal, onMount as _onMount, createPropsProxy as _createPropsProxy, _clearChildren, withInstance as _withInstance, effect as _effect } from "@opentf/web";
 class CustomInputElement extends HTMLElement {
   static observedAttributes = [];
   constructor() {
@@ -1275,7 +1267,7 @@ class CustomInputElement extends HTMLElement {
   connectedCallback() {
     if (this._mounted) return;
     this._mounted = true;
-    const props = _createPropsProxy(this);
+    const _waf_props = _createPropsProxy(this);
     this._children = Array.from(this.childNodes);
     _clearChildren(this);
     _withInstance(this, () => {
@@ -1284,13 +1276,11 @@ class CustomInputElement extends HTMLElement {
       Object.assign(this, {
         focus
       });
-      const rootElement = (() => {
-        const el0 = document.createElement("input");
-        input.value = el0;
-        el0.setAttribute("type", "text");
-        el0.setAttribute("placeholder", "Custom Input");
-        return el0;
-      })();
+      const el0 = document.createElement("input");
+      input.value = el0;
+      el0.setAttribute("type", "text");
+      el0.setAttribute("placeholder", "Custom Input");
+      const rootElement = el0;
       this.appendChild(rootElement);
     });
     this._onMounts.forEach(fn => fn());
@@ -1341,7 +1331,7 @@ class RefTestElement extends HTMLElement {
   connectedCallback() {
     if (this._mounted) return;
     this._mounted = true;
-    const props = _createPropsProxy(this);
+    const _waf_props = _createPropsProxy(this);
     this._children = Array.from(this.childNodes);
     _clearChildren(this);
     _withInstance(this, () => {
@@ -1352,29 +1342,27 @@ class RefTestElement extends HTMLElement {
         myDiv.value.style.backgroundColor = "lightgray";
         myInput.value.focus();
       });
-      const rootElement = (() => {
-        const el0 = document.createElement("div");
-        myDiv.value = el0;
-        _effect(() => Object.assign(el0.style, {
-          padding: "20px"
-        }));
-        const el1 = document.createElement("h1");
-        _effect(() => Object.assign(el1.style, {
-          color: color.value
-        }));
-        const text2 = document.createTextNode("Ref Test");
-        el1.appendChild(text2);
-        el0.appendChild(el1);
-        const el3 = document.createElement("web-custominput");
-        myInput.value = el3;
-        el0.appendChild(el3);
-        const el4 = document.createElement("button");
-        el4.onclick = () => color.value = "blue";
-        const text5 = document.createTextNode("Change Color");
-        el4.appendChild(text5);
-        el0.appendChild(el4);
-        return el0;
-      })();
+      const el0 = document.createElement("div");
+      myDiv.value = el0;
+      _effect(() => Object.assign(el0.style, {
+        padding: "20px"
+      }));
+      const el1 = document.createElement("h1");
+      _effect(() => Object.assign(el1.style, {
+        color: color.value
+      }));
+      const text2 = document.createTextNode("Ref Test");
+      el1.appendChild(text2);
+      el0.appendChild(el1);
+      const el3 = document.createElement("web-custominput");
+      myInput.value = el3;
+      el0.appendChild(el3);
+      const el4 = document.createElement("button");
+      el4.onclick = () => color.value = "blue";
+      const text5 = document.createTextNode("Change Color");
+      el4.appendChild(text5);
+      el0.appendChild(el4);
+      const rootElement = el0;
       this.appendChild(rootElement);
     });
     this._onMounts.forEach(fn => fn());
@@ -1388,8 +1376,13 @@ export default RefTestElement;"
 `;
 
 exports[`Web App Framework Compiler Compiles products-page.page.jsx 1`] = `
-"import { signal as _signal, setProperty as _setProperty, _mapped, effect as _effect, renderDynamic as _renderDynamic } from "@opentf/web";
-export function render(root, props) {
+"import { signal as _signal, setProperty as _setProperty, _mapped, effect as _effect, renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy } from "@opentf/web";
+export function render(root, _props) {
+  const _holder = {
+    _children: _props.children || []
+  };
+  const _waf_props = _createPropsProxy(_holder);
+  Object.assign(_waf_props, _props);
   let products = _signal(Array.from({
     length: 1000
   }, (_, i) => ({
@@ -1408,77 +1401,78 @@ export function render(root, props) {
   const reverse = () => {
     products.value = [...products.value].reverse();
   };
-  const rootElement = (() => {
+  const el0 = document.createElement("div");
+  const el1 = document.createElement("div");
+  _setProperty(el1, "className", "flex justify-between items-center mb-6", false);
+  const el2 = document.createElement("h1");
+  _setProperty(el2, "className", "text-2xl font-bold text-white", false);
+  const text3 = document.createTextNode("Products (1000 items)");
+  el2.appendChild(text3);
+  el1.appendChild(el2);
+  const el4 = document.createElement("div");
+  _setProperty(el4, "className", "space-x-4", false);
+  const el5 = document.createElement("button");
+  el5.onclick = shuffle;
+  _setProperty(el5, "className", "bg-indigo-600 px-4 py-2 rounded text-white hover:bg-indigo-500 transition-colors", false);
+  const text6 = document.createTextNode(" Shuffle List ");
+  el5.appendChild(text6);
+  el4.appendChild(el5);
+  const el7 = document.createElement("button");
+  el7.onclick = reverse;
+  _setProperty(el7, "className", "bg-slate-700 px-4 py-2 rounded text-white hover:bg-slate-600 transition-colors", false);
+  const text8 = document.createTextNode(" Reverse List ");
+  el7.appendChild(text8);
+  el4.appendChild(el7);
+  el1.appendChild(el4);
+  el0.appendChild(el1);
+  const el9 = document.createElement("div");
+  _setProperty(el9, "className", "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4", false);
+  const mapped10 = _mapped(() => products.value, p => (() => {
     const el0 = document.createElement("div");
+    el0._key = p.value.id;
+    _setProperty(el0, "className", "p-4 bg-slate-800 rounded border border-slate-700 hover:border-indigo-500 transition-all", false);
     const el1 = document.createElement("div");
-    _setProperty(el1, "className", "flex justify-between items-center mb-6");
-    const el2 = document.createElement("h1");
-    _setProperty(el2, "className", "text-2xl font-bold text-white");
-    const text3 = document.createTextNode("Products (1000 items)");
-    el2.appendChild(text3);
-    el1.appendChild(el2);
-    const el4 = document.createElement("div");
-    _setProperty(el4, "className", "space-x-4");
-    const el5 = document.createElement("button");
-    el5.onclick = shuffle;
-    _setProperty(el5, "className", "bg-indigo-600 px-4 py-2 rounded text-white hover:bg-indigo-500 transition-colors");
-    const text6 = document.createTextNode(" Shuffle List ");
-    el5.appendChild(text6);
-    el4.appendChild(el5);
-    const el7 = document.createElement("button");
-    el7.onclick = reverse;
-    _setProperty(el7, "className", "bg-slate-700 px-4 py-2 rounded text-white hover:bg-slate-600 transition-colors");
-    const text8 = document.createTextNode(" Reverse List ");
-    el7.appendChild(text8);
-    el4.appendChild(el7);
-    el1.appendChild(el4);
+    _setProperty(el1, "className", "font-bold text-white", false);
+    _renderDynamic(el1, () => p.value.name);
     el0.appendChild(el1);
-    const el9 = document.createElement("div");
-    _setProperty(el9, "className", "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4");
-    const mapped10 = _mapped(() => products.value, p => (() => {
-      const el0 = document.createElement("div");
-      el0._key = p.value.id;
-      _setProperty(el0, "className", "p-4 bg-slate-800 rounded border border-slate-700 hover:border-indigo-500 transition-all");
-      const el1 = document.createElement("div");
-      _setProperty(el1, "className", "font-bold text-white");
-      _renderDynamic(el1, () => p.value.name);
-      el0.appendChild(el1);
-      const el2 = document.createElement("div");
-      _setProperty(el2, "className", "text-slate-400 mt-1");
-      const text3 = document.createTextNode("$");
-      el2.appendChild(text3);
-      _renderDynamic(el2, () => p.value.price);
-      el0.appendChild(el2);
-      const el4 = document.createElement("input");
-      el4.setAttribute("placeholder", "Add note...");
-      _setProperty(el4, "className", "mt-2 w-full bg-slate-900 border border-slate-700 rounded px-2 py-1 text-sm text-slate-300 focus:outline-none focus:border-indigo-500");
-      el0.appendChild(el4);
-      return el0;
-    })());
-    _renderDynamic(el9, () => mapped10());
-    el0.appendChild(el9);
+    const el2 = document.createElement("div");
+    _setProperty(el2, "className", "text-slate-400 mt-1", false);
+    const text3 = document.createTextNode("$");
+    el2.appendChild(text3);
+    _renderDynamic(el2, () => p.value.price);
+    el0.appendChild(el2);
+    const el4 = document.createElement("input");
+    el4.setAttribute("placeholder", "Add note...");
+    _setProperty(el4, "className", "mt-2 w-full bg-slate-900 border border-slate-700 rounded px-2 py-1 text-sm text-slate-300 focus:outline-none focus:border-indigo-500", false);
+    el0.appendChild(el4);
     return el0;
-  })();
+  })());
+  _renderDynamic(el9, () => mapped10());
+  el0.appendChild(el9);
+  const rootElement = el0;
   root.appendChild(rootElement);
 }"
 `;
 
 exports[`Web App Framework Compiler Compiles comments.page.jsx 1`] = `
-"import { setProperty as _setProperty } from "@opentf/web";
-export function render(root, props) {
-  const rootElement = (() => {
-    const el0 = document.createElement("div");
-    const el1 = document.createElement("h1");
-    const text2 = document.createTextNode("Title");
-    el1.appendChild(text2);
-    el0.appendChild(el1);
-    const el3 = document.createElement("p");
-    _setProperty(el3, "className", "foo");
-    const text4 = document.createTextNode(" Content ");
-    el3.appendChild(text4);
-    el0.appendChild(el3);
-    return el0;
-  })();
+"import { setProperty as _setProperty, createPropsProxy as _createPropsProxy } from "@opentf/web";
+export function render(root, _props) {
+  const _holder = {
+    _children: _props.children || []
+  };
+  const _waf_props = _createPropsProxy(_holder);
+  Object.assign(_waf_props, _props);
+  const el0 = document.createElement("div");
+  const el1 = document.createElement("h1");
+  const text2 = document.createTextNode("Title");
+  el1.appendChild(text2);
+  el0.appendChild(el1);
+  const el3 = document.createElement("p");
+  _setProperty(el3, "className", "foo", false);
+  const text4 = document.createTextNode(" Content ");
+  el3.appendChild(text4);
+  el0.appendChild(el3);
+  const rootElement = el0;
   root.appendChild(rootElement);
 }"
 `;
@@ -1526,31 +1520,29 @@ class SvgTestElement extends HTMLElement {
   connectedCallback() {
     if (this._mounted) return;
     this._mounted = true;
-    const props = _createPropsProxy(this);
+    const _waf_props = _createPropsProxy(this);
     this._children = Array.from(this.childNodes);
     _clearChildren(this);
     _withInstance(this, () => {
       let strokeWidth = _signal(2);
-      const rootElement = (() => {
-        const el0 = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-        el0.setAttribute("width", "100");
-        el0.setAttribute("height", "100");
-        el0.setAttribute("viewBox", "0 0 100 100");
-        const el1 = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-        el1.setAttribute("cx", "50");
-        el1.setAttribute("cy", "50");
-        el1.setAttribute("r", "40");
-        el1.setAttribute("stroke", "red");
-        _effect(() => el1.setAttribute("strokeWidth", strokeWidth.value));
-        el1.setAttribute("fill", "transparent");
-        el0.appendChild(el1);
-        const el2 = document.createElementNS("http://www.w3.org/2000/svg", "path");
-        el2.setAttribute("d", "M 10 10 L 90 90");
-        el2.setAttribute("stroke", "blue");
-        el2.setAttribute("strokeLinecap", "round");
-        el0.appendChild(el2);
-        return el0;
-      })();
+      const el0 = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      el0.setAttribute("width", "100");
+      el0.setAttribute("height", "100");
+      el0.setAttribute("viewBox", "0 0 100 100");
+      const el1 = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+      el1.setAttribute("cx", "50");
+      el1.setAttribute("cy", "50");
+      el1.setAttribute("r", "40");
+      el1.setAttribute("stroke", "red");
+      _effect(() => el1.setAttribute("strokeWidth", strokeWidth.value));
+      el1.setAttribute("fill", "transparent");
+      el0.appendChild(el1);
+      const el2 = document.createElementNS("http://www.w3.org/2000/svg", "path");
+      el2.setAttribute("d", "M 10 10 L 90 90");
+      el2.setAttribute("stroke", "blue");
+      el2.setAttribute("strokeLinecap", "round");
+      el0.appendChild(el2);
+      const rootElement = el0;
       this.appendChild(rootElement);
     });
     this._onMounts.forEach(fn => fn());
@@ -1564,7 +1556,7 @@ export default SvgTestElement;"
 `;
 
 exports[`Web App Framework Compiler Compiles component-props.jsx 1`] = `
-"import { signal as _signal, setProperty as _setProperty, effect as _effect, renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy, _clearChildren, withInstance as _withInstance } from "@opentf/web";
+"import { signal as _signal, setProperty as _setProperty, effect as _effect, createPropsProxy as _createPropsProxy, _clearChildren, withInstance as _withInstance, renderDynamic as _renderDynamic } from "@opentf/web";
 class ParentElement extends HTMLElement {
   static observedAttributes = [];
   constructor() {
@@ -1606,23 +1598,21 @@ class ParentElement extends HTMLElement {
   connectedCallback() {
     if (this._mounted) return;
     this._mounted = true;
-    const props = _createPropsProxy(this);
+    const _waf_props = _createPropsProxy(this);
     this._children = Array.from(this.childNodes);
     _clearChildren(this);
     _withInstance(this, () => {
       let count = _signal(0);
-      const rootElement = (() => {
-        const el0 = document.createElement("div");
-        const el1 = document.createElement("web-child");
-        _effect(() => _setProperty(el1, "val", count.value));
-        el0.appendChild(el1);
-        const el2 = document.createElement("button");
-        el2.onclick = () => count.value++;
-        const text3 = document.createTextNode("Inc");
-        el2.appendChild(text3);
-        el0.appendChild(el2);
-        return el0;
-      })();
+      const el0 = document.createElement("div");
+      const el1 = document.createElement("web-child");
+      _effect(() => _setProperty(el1, "val", count.value, true));
+      el0.appendChild(el1);
+      const el2 = document.createElement("button");
+      el2.onclick = () => count.value++;
+      const text3 = document.createTextNode("Inc");
+      el2.appendChild(text3);
+      el0.appendChild(el2);
+      const rootElement = el0;
       this.appendChild(rootElement);
     });
     this._onMounts.forEach(fn => fn());
@@ -1635,9 +1625,9 @@ customElements.define("web-parent", ParentElement);
 export default ParentElement;
 class ChildElement extends HTMLElement {
   static observedAttributes = ["val"];
-  set val(val) {
-    if (!this._propsSignals["val"]) this._propsSignals["val"] = _signal(val);
-    this._propsSignals["val"].value = val;
+  set val(_val) {
+    if (!this._propsSignals["val"]) this._propsSignals["val"] = _signal(_val);
+    this._propsSignals["val"].value = _val;
   }
   get val() {
     const _sig = this._propsSignals["val"];
@@ -1684,15 +1674,16 @@ class ChildElement extends HTMLElement {
   connectedCallback() {
     if (this._mounted) return;
     this._mounted = true;
-    const props = _createPropsProxy(this);
+    const _waf_props = _createPropsProxy(this);
     this._children = Array.from(this.childNodes);
     _clearChildren(this);
     _withInstance(this, () => {
-      const rootElement = (() => {
-        const el0 = document.createElement("div");
-        _renderDynamic(el0, () => props.val);
-        return el0;
-      })();
+      const {
+        val
+      } = _waf_props;
+      const el0 = document.createElement("div");
+      _renderDynamic(el0, () => _waf_props.val.value);
+      const rootElement = el0;
       this.appendChild(rootElement);
     });
     this._onMounts.forEach(fn => fn());
@@ -1705,7 +1696,7 @@ customElements.define("web-child", ChildElement);"
 `;
 
 exports[`Web App Framework Compiler Compiles multiple-components.jsx 1`] = `
-"import { setProperty as _setProperty, effect as _effect, renderDynamic as _renderDynamic, signal as _signal, createPropsProxy as _createPropsProxy, _clearChildren, withInstance as _withInstance } from "@opentf/web";
+"import { setProperty as _setProperty, effect as _effect, signal as _signal, createPropsProxy as _createPropsProxy, _clearChildren, withInstance as _withInstance, renderDynamic as _renderDynamic } from "@opentf/web";
 class MultipleComponentsElement extends HTMLElement {
   static observedAttributes = [];
   constructor() {
@@ -1747,20 +1738,19 @@ class MultipleComponentsElement extends HTMLElement {
   connectedCallback() {
     if (this._mounted) return;
     this._mounted = true;
-    const props = _createPropsProxy(this);
+    const _waf_props = _createPropsProxy(this);
     this._children = Array.from(this.childNodes);
     _clearChildren(this);
     _withInstance(this, () => {
-      const rootElement = (() => {
-        const el0 = document.createElement("div");
-        const el1 = document.createElement("web-a");
-        _effect(() => _setProperty(el1, "val", props.a));
-        el0.appendChild(el1);
-        const el2 = document.createElement("web-b");
-        _effect(() => _setProperty(el2, "val", props.b));
-        el0.appendChild(el2);
-        return el0;
-      })();
+      const props = _waf_props;
+      const el0 = document.createElement("div");
+      const el1 = document.createElement("web-a");
+      _effect(() => _setProperty(el1, "val", props.a.value, true));
+      el0.appendChild(el1);
+      const el2 = document.createElement("web-b");
+      _effect(() => _setProperty(el2, "val", props.b.value, true));
+      el0.appendChild(el2);
+      const rootElement = el0;
       this.appendChild(rootElement);
     });
     this._onMounts.forEach(fn => fn());
@@ -1773,9 +1763,9 @@ customElements.define("web-multiplecomponents", MultipleComponentsElement);
 export default MultipleComponentsElement;
 class AElement extends HTMLElement {
   static observedAttributes = ["val"];
-  set val(val) {
-    if (!this._propsSignals["val"]) this._propsSignals["val"] = _signal(val);
-    this._propsSignals["val"].value = val;
+  set val(_val) {
+    if (!this._propsSignals["val"]) this._propsSignals["val"] = _signal(_val);
+    this._propsSignals["val"].value = _val;
   }
   get val() {
     const _sig = this._propsSignals["val"];
@@ -1822,15 +1812,14 @@ class AElement extends HTMLElement {
   connectedCallback() {
     if (this._mounted) return;
     this._mounted = true;
-    const props = _createPropsProxy(this);
+    const _waf_props = _createPropsProxy(this);
     this._children = Array.from(this.childNodes);
     _clearChildren(this);
     _withInstance(this, () => {
-      const rootElement = (() => {
-        const el0 = document.createElement("div");
-        _renderDynamic(el0, () => props.val);
-        return el0;
-      })();
+      const props = _waf_props;
+      const el0 = document.createElement("div");
+      _renderDynamic(el0, () => props.val.value);
+      const rootElement = el0;
       this.appendChild(rootElement);
     });
     this._onMounts.forEach(fn => fn());
@@ -1842,9 +1831,9 @@ class AElement extends HTMLElement {
 customElements.define("web-a", AElement);
 class BElement extends HTMLElement {
   static observedAttributes = ["val"];
-  set val(val) {
-    if (!this._propsSignals["val"]) this._propsSignals["val"] = _signal(val);
-    this._propsSignals["val"].value = val;
+  set val(_val) {
+    if (!this._propsSignals["val"]) this._propsSignals["val"] = _signal(_val);
+    this._propsSignals["val"].value = _val;
   }
   get val() {
     const _sig = this._propsSignals["val"];
@@ -1891,15 +1880,14 @@ class BElement extends HTMLElement {
   connectedCallback() {
     if (this._mounted) return;
     this._mounted = true;
-    const props = _createPropsProxy(this);
+    const _waf_props = _createPropsProxy(this);
     this._children = Array.from(this.childNodes);
     _clearChildren(this);
     _withInstance(this, () => {
-      const rootElement = (() => {
-        const el0 = document.createElement("div");
-        _renderDynamic(el0, () => props.val);
-        return el0;
-      })();
+      const props = _waf_props;
+      const el0 = document.createElement("div");
+      _renderDynamic(el0, () => props.val.value);
+      const rootElement = el0;
       this.appendChild(rootElement);
     });
     this._onMounts.forEach(fn => fn());
@@ -1912,64 +1900,72 @@ customElements.define("web-b", BElement);"
 `;
 
 exports[`Web App Framework Compiler Compiles routing-layout.layout.jsx 1`] = `
-"import { setProperty as _setProperty, renderDynamic as _renderDynamic } from "@opentf/web";
-export function render(root, props) {
-  const rootElement = (() => {
-    const el0 = document.createElement("div");
-    _setProperty(el0, "className", "root-layout");
-    const el1 = document.createElement("nav");
-    const el2 = document.createElement("a");
-    _setProperty(el2, "href", "/");
-    const text3 = document.createTextNode("Home");
-    el2.appendChild(text3);
-    el1.appendChild(el2);
-    el0.appendChild(el1);
-    const el4 = document.createElement("main");
-    _renderDynamic(el4, () => props.children);
-    el0.appendChild(el4);
-    return el0;
-  })();
+"import { setProperty as _setProperty, renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy } from "@opentf/web";
+export function render(root, _props) {
+  const _holder = {
+    _children: _props.children || []
+  };
+  const _waf_props = _createPropsProxy(_holder);
+  Object.assign(_waf_props, _props);
+  const props = _waf_props;
+  const el0 = document.createElement("div");
+  _setProperty(el0, "className", "root-layout", false);
+  const el1 = document.createElement("nav");
+  const el2 = document.createElement("a");
+  _setProperty(el2, "href", "/", false);
+  const text3 = document.createTextNode("Home");
+  el2.appendChild(text3);
+  el1.appendChild(el2);
+  el0.appendChild(el1);
+  const el4 = document.createElement("main");
+  _renderDynamic(el4, () => props.children);
+  el0.appendChild(el4);
+  const rootElement = el0;
   root.appendChild(rootElement);
 }"
 `;
 
 exports[`Web App Framework Compiler Compiles catch-all-page.page.jsx 1`] = `
-"import { setProperty as _setProperty, _mapped, renderDynamic as _renderDynamic } from "@opentf/web";
-export function render(root, props) {
-  const rootElement = (() => {
-    const el0 = document.createElement("div");
-    const el1 = document.createElement("h1");
-    _setProperty(el1, "className", "text-2xl font-bold");
-    const text2 = document.createTextNode("Shop");
-    el1.appendChild(text2);
-    el0.appendChild(el1);
-    const el3 = document.createElement("p");
-    _setProperty(el3, "className", "mt-4");
-    const text4 = document.createTextNode("Slug segments: ");
-    el3.appendChild(text4);
-    el0.appendChild(el3);
-    const el5 = document.createElement("ul");
-    _setProperty(el5, "className", "list-disc ml-6 mt-2");
-    const mapped6 = _mapped(() => props.params.slug, segment => (() => {
-      const el0 = document.createElement("li");
-      _renderDynamic(el0, () => segment.value);
-      return el0;
-    })());
-    _renderDynamic(el5, () => mapped6());
-    el0.appendChild(el5);
-    const el7 = document.createElement("div");
-    _setProperty(el7, "className", "mt-4 p-4 bg-slate-800 rounded");
-    const text8 = document.createTextNode(" Full path: ");
-    el7.appendChild(text8);
-    const el9 = document.createElement("span");
-    _setProperty(el9, "className", "text-indigo-400 font-mono");
-    const text10 = document.createTextNode("/shop/");
-    el9.appendChild(text10);
-    _renderDynamic(el9, () => props.params.slug.join('/'));
-    el7.appendChild(el9);
-    el0.appendChild(el7);
+"import { setProperty as _setProperty, _mapped, renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy } from "@opentf/web";
+export function render(root, _props) {
+  const _holder = {
+    _children: _props.children || []
+  };
+  const _waf_props = _createPropsProxy(_holder);
+  Object.assign(_waf_props, _props);
+  const props = _waf_props;
+  const el0 = document.createElement("div");
+  const el1 = document.createElement("h1");
+  _setProperty(el1, "className", "text-2xl font-bold", false);
+  const text2 = document.createTextNode("Shop");
+  el1.appendChild(text2);
+  el0.appendChild(el1);
+  const el3 = document.createElement("p");
+  _setProperty(el3, "className", "mt-4", false);
+  const text4 = document.createTextNode("Slug segments: ");
+  el3.appendChild(text4);
+  el0.appendChild(el3);
+  const el5 = document.createElement("ul");
+  _setProperty(el5, "className", "list-disc ml-6 mt-2", false);
+  const mapped6 = _mapped(() => props.params.value.slug, segment => (() => {
+    const el0 = document.createElement("li");
+    _renderDynamic(el0, () => segment.value);
     return el0;
-  })();
+  })());
+  _renderDynamic(el5, () => mapped6());
+  el0.appendChild(el5);
+  const el7 = document.createElement("div");
+  _setProperty(el7, "className", "mt-4 p-4 bg-slate-800 rounded", false);
+  const text8 = document.createTextNode(" Full path: ");
+  el7.appendChild(text8);
+  const el9 = document.createElement("span");
+  _setProperty(el9, "className", "text-indigo-400 font-mono", false);
+  const text10 = document.createTextNode("/shop/");
+  el9.appendChild(text10);
+  _renderDynamic(el9, () => props.params.value.slug.join('/'));
+  el7.appendChild(el9);
+  el0.appendChild(el7);
+  const rootElement = el0;
   root.appendChild(rootElement);
 }"
 `;
@@ -2017,31 +2013,29 @@ class StyleTestElement extends HTMLElement {
   connectedCallback() {
     if (this._mounted) return;
     this._mounted = true;
-    const props = _createPropsProxy(this);
+    const _waf_props = _createPropsProxy(this);
     this._children = Array.from(this.childNodes);
     _clearChildren(this);
     _withInstance(this, () => {
       let color = _signal("red");
-      const rootElement = (() => {
-        const el0 = document.createElement("div");
-        _effect(() => Object.assign(el0.style, {
-          display: "flex",
-          gap: "10px"
-        }));
-        const el1 = document.createElement("span");
-        _effect(() => Object.assign(el1.style, {
-          color: color.value
-        }));
-        const text2 = document.createTextNode(" Reactive Style ");
-        el1.appendChild(text2);
-        el0.appendChild(el1);
-        const el3 = document.createElement("div");
-        _setProperty(el3, "style", "font-weight: bold;");
-        const text4 = document.createTextNode(" Static Style String ");
-        el3.appendChild(text4);
-        el0.appendChild(el3);
-        return el0;
-      })();
+      const el0 = document.createElement("div");
+      _effect(() => Object.assign(el0.style, {
+        display: "flex",
+        gap: "10px"
+      }));
+      const el1 = document.createElement("span");
+      _effect(() => Object.assign(el1.style, {
+        color: color.value
+      }));
+      const text2 = document.createTextNode(" Reactive Style ");
+      el1.appendChild(text2);
+      el0.appendChild(el1);
+      const el3 = document.createElement("div");
+      _setProperty(el3, "style", "font-weight: bold;", false);
+      const text4 = document.createTextNode(" Static Style String ");
+      el3.appendChild(text4);
+      el0.appendChild(el3);
+      const rootElement = el0;
       this.appendChild(rootElement);
     });
     this._onMounts.forEach(fn => fn());
@@ -2097,7 +2091,7 @@ class MacroTestElement extends HTMLElement {
   connectedCallback() {
     if (this._mounted) return;
     this._mounted = true;
-    const props = _createPropsProxy(this);
+    const _waf_props = _createPropsProxy(this);
     this._children = Array.from(this.childNodes);
     _clearChildren(this);
     _withInstance(this, () => {
@@ -2106,25 +2100,23 @@ class MacroTestElement extends HTMLElement {
       if (!_isSSG) _effect(() => {
         console.log("Count changed:", count.value);
       });
-      const rootElement = (() => {
-        const el0 = document.createElement("div");
-        const el1 = document.createElement("p");
-        const text2 = document.createTextNode("Count: ");
-        el1.appendChild(text2);
-        _renderDynamic(el1, () => count.value);
-        el0.appendChild(el1);
-        const el3 = document.createElement("p");
-        const text4 = document.createTextNode("Doubled: ");
-        el3.appendChild(text4);
-        _renderDynamic(el3, () => doubled.value);
-        el0.appendChild(el3);
-        const el5 = document.createElement("button");
-        el5.onclick = () => count.value++;
-        const text6 = document.createTextNode("Increment");
-        el5.appendChild(text6);
-        el0.appendChild(el5);
-        return el0;
-      })();
+      const el0 = document.createElement("div");
+      const el1 = document.createElement("p");
+      const text2 = document.createTextNode("Count: ");
+      el1.appendChild(text2);
+      _renderDynamic(el1, () => count.value);
+      el0.appendChild(el1);
+      const el3 = document.createElement("p");
+      const text4 = document.createTextNode("Doubled: ");
+      el3.appendChild(text4);
+      _renderDynamic(el3, () => doubled.value);
+      el0.appendChild(el3);
+      const el5 = document.createElement("button");
+      el5.onclick = () => count.value++;
+      const text6 = document.createTextNode("Increment");
+      el5.appendChild(text6);
+      el0.appendChild(el5);
+      const rootElement = el0;
       this.appendChild(rootElement);
     });
     this._onMounts.forEach(fn => fn());
@@ -2180,30 +2172,29 @@ class ListRenderingElement extends HTMLElement {
   connectedCallback() {
     if (this._mounted) return;
     this._mounted = true;
-    const props = _createPropsProxy(this);
+    const _waf_props = _createPropsProxy(this);
     this._children = Array.from(this.childNodes);
     _clearChildren(this);
     _withInstance(this, () => {
+      const props = _waf_props;
       let items = _signal(['A', 'B', 'C']);
-      const rootElement = (() => {
-        const el0 = document.createElement("div");
-        const el1 = document.createElement("ul");
-        const mapped2 = _mapped(() => items.value, item => (() => {
-          const el0 = document.createElement("li");
-          const text1 = document.createTextNode("Item ");
-          el0.appendChild(text1);
-          _renderDynamic(el0, () => item.value);
-          return el0;
-        })());
-        _renderDynamic(el1, () => mapped2());
-        el0.appendChild(el1);
-        const el3 = document.createElement("button");
-        el3.onclick = () => items.value = [...items.value, 'D'];
-        const text4 = document.createTextNode(" Add ");
-        el3.appendChild(text4);
-        el0.appendChild(el3);
+      const el0 = document.createElement("div");
+      const el1 = document.createElement("ul");
+      const mapped2 = _mapped(() => items.value, item => (() => {
+        const el0 = document.createElement("li");
+        const text1 = document.createTextNode("Item ");
+        el0.appendChild(text1);
+        _renderDynamic(el0, () => item.value);
         return el0;
-      })();
+      })());
+      _renderDynamic(el1, () => mapped2());
+      el0.appendChild(el1);
+      const el3 = document.createElement("button");
+      el3.onclick = () => items.value = [...items.value, 'D'];
+      const text4 = document.createTextNode(" Add ");
+      el3.appendChild(text4);
+      el0.appendChild(el3);
+      const rootElement = el0;
       this.appendChild(rootElement);
     });
     this._onMounts.forEach(fn => fn());
@@ -2217,7 +2208,7 @@ export default ListRenderingElement;"
 `;
 
 exports[`Web App Framework Compiler Compiles icon-library.jsx 1`] = `
-"import { setProperty as _setProperty, effect as _effect, applySpread as _applySpread, signal as _signal, createPropsProxy as _createPropsProxy, _clearChildren, withInstance as _withInstance } from "@opentf/web";
+"import { setProperty as _setProperty, effect as _effect, signal as _signal, createPropsProxy as _createPropsProxy, _clearChildren, withInstance as _withInstance, applySpread as _applySpread } from "@opentf/web";
 class IconGalleryElement extends HTMLElement {
   static observedAttributes = [];
   constructor() {
@@ -2259,26 +2250,25 @@ class IconGalleryElement extends HTMLElement {
   connectedCallback() {
     if (this._mounted) return;
     this._mounted = true;
-    const props = _createPropsProxy(this);
+    const _waf_props = _createPropsProxy(this);
     this._children = Array.from(this.childNodes);
     _clearChildren(this);
     _withInstance(this, () => {
-      const rootElement = (() => {
-        const el0 = document.createElement("div");
-        _setProperty(el0, "className", "flex gap-4");
-        const el1 = document.createElement("web-cameraicon");
-        _effect(() => _setProperty(el1, "size", 32));
-        _setProperty(el1, "color", "red");
-        el0.appendChild(el1);
-        const el2 = document.createElement("web-usericon");
-        _effect(() => _setProperty(el2, "size", 24));
-        _setProperty(el2, "className", "text-blue-500");
-        el0.appendChild(el2);
-        const el3 = document.createElement("web-settingsicon");
-        _effect(() => _setProperty(el3, "strokeWidth", 3));
-        el0.appendChild(el3);
-        return el0;
-      })();
+      const props = _waf_props;
+      const el0 = document.createElement("div");
+      _setProperty(el0, "className", "flex gap-4", false);
+      const el1 = document.createElement("web-cameraicon");
+      _effect(() => _setProperty(el1, "size", 32, true));
+      _setProperty(el1, "color", "red", true);
+      el0.appendChild(el1);
+      const el2 = document.createElement("web-usericon");
+      _effect(() => _setProperty(el2, "size", 24, true));
+      _setProperty(el2, "className", "text-blue-500", true);
+      el0.appendChild(el2);
+      const el3 = document.createElement("web-settingsicon");
+      _effect(() => _setProperty(el3, "strokeWidth", 3, true));
+      el0.appendChild(el3);
+      const rootElement = el0;
       this.appendChild(rootElement);
     });
     this._onMounts.forEach(fn => fn());
@@ -2291,13 +2281,13 @@ customElements.define("web-icongallery", IconGalleryElement);
 export default IconGalleryElement;
 class CameraIconElement extends HTMLElement {
   static observedAttributes = ["size", "color"];
-  set size(val) {
-    if (!this._propsSignals["size"]) this._propsSignals["size"] = _signal(val);
-    this._propsSignals["size"].value = val;
+  set size(_val) {
+    if (!this._propsSignals["size"]) this._propsSignals["size"] = _signal(_val);
+    this._propsSignals["size"].value = _val;
   }
-  set color(val) {
-    if (!this._propsSignals["color"]) this._propsSignals["color"] = _signal(val);
-    this._propsSignals["color"].value = val;
+  set color(_val) {
+    if (!this._propsSignals["color"]) this._propsSignals["color"] = _signal(_val);
+    this._propsSignals["color"].value = _val;
   }
   get size() {
     const _sig = this._propsSignals["size"];
@@ -2349,32 +2339,35 @@ class CameraIconElement extends HTMLElement {
   connectedCallback() {
     if (this._mounted) return;
     this._mounted = true;
-    const props = _createPropsProxy(this);
+    const _waf_props = _createPropsProxy(this);
     this._children = Array.from(this.childNodes);
     _clearChildren(this);
     _withInstance(this, () => {
-      const rootElement = (() => {
-        const el0 = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-        el0.setAttribute("xmlns", "http://www.w3.org/2000/svg");
-        _effect(() => el0.setAttribute("width", props.size));
-        _effect(() => el0.setAttribute("height", props.size));
-        el0.setAttribute("viewBox", "0 0 24 24");
-        el0.setAttribute("fill", "none");
-        _effect(() => el0.setAttribute("stroke", props.color));
-        el0.setAttribute("strokeWidth", "2");
-        el0.setAttribute("strokeLinecap", "round");
-        el0.setAttribute("strokeLinejoin", "round");
-        _effect(() => _applySpread(el0, props));
-        const el1 = document.createElementNS("http://www.w3.org/2000/svg", "path");
-        el1.setAttribute("d", "M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z");
-        el0.appendChild(el1);
-        const el2 = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-        el2.setAttribute("cx", "12");
-        el2.setAttribute("cy", "13");
-        el2.setAttribute("r", "4");
-        el0.appendChild(el2);
-        return el0;
-      })();
+      const {
+        size = 24,
+        color = "currentColor",
+        ...props
+      } = _waf_props;
+      const el0 = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      el0.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+      _effect(() => el0.setAttribute("width", _waf_props.size.value));
+      _effect(() => el0.setAttribute("height", _waf_props.size.value));
+      el0.setAttribute("viewBox", "0 0 24 24");
+      el0.setAttribute("fill", "none");
+      _effect(() => el0.setAttribute("stroke", _waf_props.color.value));
+      el0.setAttribute("strokeWidth", "2");
+      el0.setAttribute("strokeLinecap", "round");
+      el0.setAttribute("strokeLinejoin", "round");
+      _effect(() => _applySpread(el0, props, false));
+      const el1 = document.createElementNS("http://www.w3.org/2000/svg", "path");
+      el1.setAttribute("d", "M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z");
+      el0.appendChild(el1);
+      const el2 = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+      el2.setAttribute("cx", "12");
+      el2.setAttribute("cy", "13");
+      el2.setAttribute("r", "4");
+      el0.appendChild(el2);
+      const rootElement = el0;
       this.appendChild(rootElement);
     });
     this._onMounts.forEach(fn => fn());
@@ -2386,9 +2379,9 @@ class CameraIconElement extends HTMLElement {
 customElements.define("web-cameraicon", CameraIconElement);
 class UserIconElement extends HTMLElement {
   static observedAttributes = ["size"];
-  set size(val) {
-    if (!this._propsSignals["size"]) this._propsSignals["size"] = _signal(val);
-    this._propsSignals["size"].value = val;
+  set size(_val) {
+    if (!this._propsSignals["size"]) this._propsSignals["size"] = _signal(_val);
+    this._propsSignals["size"].value = _val;
   }
   get size() {
     const _sig = this._propsSignals["size"];
@@ -2435,32 +2428,34 @@ class UserIconElement extends HTMLElement {
   connectedCallback() {
     if (this._mounted) return;
     this._mounted = true;
-    const props = _createPropsProxy(this);
+    const _waf_props = _createPropsProxy(this);
     this._children = Array.from(this.childNodes);
     _clearChildren(this);
     _withInstance(this, () => {
-      const rootElement = (() => {
-        const el0 = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-        el0.setAttribute("xmlns", "http://www.w3.org/2000/svg");
-        _effect(() => el0.setAttribute("width", props.size));
-        _effect(() => el0.setAttribute("height", props.size));
-        el0.setAttribute("viewBox", "0 0 24 24");
-        el0.setAttribute("fill", "none");
-        el0.setAttribute("stroke", "currentColor");
-        el0.setAttribute("strokeWidth", "2");
-        el0.setAttribute("strokeLinecap", "round");
-        el0.setAttribute("strokeLinejoin", "round");
-        _effect(() => _applySpread(el0, props));
-        const el1 = document.createElementNS("http://www.w3.org/2000/svg", "path");
-        el1.setAttribute("d", "M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2");
-        el0.appendChild(el1);
-        const el2 = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-        el2.setAttribute("cx", "12");
-        el2.setAttribute("cy", "7");
-        el2.setAttribute("r", "4");
-        el0.appendChild(el2);
-        return el0;
-      })();
+      const {
+        size = 24,
+        ...props
+      } = _waf_props;
+      const el0 = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      el0.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+      _effect(() => el0.setAttribute("width", _waf_props.size.value));
+      _effect(() => el0.setAttribute("height", _waf_props.size.value));
+      el0.setAttribute("viewBox", "0 0 24 24");
+      el0.setAttribute("fill", "none");
+      el0.setAttribute("stroke", "currentColor");
+      el0.setAttribute("strokeWidth", "2");
+      el0.setAttribute("strokeLinecap", "round");
+      el0.setAttribute("strokeLinejoin", "round");
+      _effect(() => _applySpread(el0, props, false));
+      const el1 = document.createElementNS("http://www.w3.org/2000/svg", "path");
+      el1.setAttribute("d", "M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2");
+      el0.appendChild(el1);
+      const el2 = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+      el2.setAttribute("cx", "12");
+      el2.setAttribute("cy", "7");
+      el2.setAttribute("r", "4");
+      el0.appendChild(el2);
+      const rootElement = el0;
       this.appendChild(rootElement);
     });
     this._onMounts.forEach(fn => fn());
@@ -2472,9 +2467,9 @@ class UserIconElement extends HTMLElement {
 customElements.define("web-usericon", UserIconElement);
 class SettingsIconElement extends HTMLElement {
   static observedAttributes = ["strokeWidth"];
-  set strokeWidth(val) {
-    if (!this._propsSignals["strokeWidth"]) this._propsSignals["strokeWidth"] = _signal(val);
-    this._propsSignals["strokeWidth"].value = val;
+  set strokeWidth(_val) {
+    if (!this._propsSignals["strokeWidth"]) this._propsSignals["strokeWidth"] = _signal(_val);
+    this._propsSignals["strokeWidth"].value = _val;
   }
   get strokeWidth() {
     const _sig = this._propsSignals["strokeWidth"];
@@ -2521,32 +2516,34 @@ class SettingsIconElement extends HTMLElement {
   connectedCallback() {
     if (this._mounted) return;
     this._mounted = true;
-    const props = _createPropsProxy(this);
+    const _waf_props = _createPropsProxy(this);
     this._children = Array.from(this.childNodes);
     _clearChildren(this);
     _withInstance(this, () => {
-      const rootElement = (() => {
-        const el0 = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-        el0.setAttribute("xmlns", "http://www.w3.org/2000/svg");
-        el0.setAttribute("width", "24");
-        el0.setAttribute("height", "24");
-        el0.setAttribute("viewBox", "0 0 24 24");
-        el0.setAttribute("fill", "none");
-        el0.setAttribute("stroke", "currentColor");
-        _effect(() => el0.setAttribute("strokeWidth", props.strokeWidth));
-        el0.setAttribute("strokeLinecap", "round");
-        el0.setAttribute("strokeLinejoin", "round");
-        _effect(() => _applySpread(el0, props));
-        const el1 = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-        el1.setAttribute("cx", "12");
-        el1.setAttribute("cy", "12");
-        el1.setAttribute("r", "3");
-        el0.appendChild(el1);
-        const el2 = document.createElementNS("http://www.w3.org/2000/svg", "path");
-        el2.setAttribute("d", "M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z");
-        el0.appendChild(el2);
-        return el0;
-      })();
+      const {
+        strokeWidth = 2,
+        ...props
+      } = _waf_props;
+      const el0 = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      el0.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+      el0.setAttribute("width", "24");
+      el0.setAttribute("height", "24");
+      el0.setAttribute("viewBox", "0 0 24 24");
+      el0.setAttribute("fill", "none");
+      el0.setAttribute("stroke", "currentColor");
+      _effect(() => el0.setAttribute("strokeWidth", _waf_props.strokeWidth.value));
+      el0.setAttribute("strokeLinecap", "round");
+      el0.setAttribute("strokeLinejoin", "round");
+      _effect(() => _applySpread(el0, props, false));
+      const el1 = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+      el1.setAttribute("cx", "12");
+      el1.setAttribute("cy", "12");
+      el1.setAttribute("r", "3");
+      el0.appendChild(el1);
+      const el2 = document.createElementNS("http://www.w3.org/2000/svg", "path");
+      el2.setAttribute("d", "M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z");
+      el0.appendChild(el2);
+      const rootElement = el0;
       this.appendChild(rootElement);
     });
     this._onMounts.forEach(fn => fn());
@@ -2601,33 +2598,31 @@ class NestedFragmentsElement extends HTMLElement {
   connectedCallback() {
     if (this._mounted) return;
     this._mounted = true;
-    const props = _createPropsProxy(this);
+    const _waf_props = _createPropsProxy(this);
     this._children = Array.from(this.childNodes);
     _clearChildren(this);
     _withInstance(this, () => {
       let show = _signal(true);
-      const rootElement = (() => {
-        const el0 = document.createElement("div");
-        _renderDynamic(el0, () => show.value && (() => {
-          const frag0 = document.createDocumentFragment();
-          const el1 = document.createElement("span");
-          const text2 = document.createTextNode("A");
-          el1.appendChild(text2);
-          frag0.appendChild(el1);
-          const frag3 = document.createDocumentFragment();
-          const el4 = document.createElement("span");
-          const text5 = document.createTextNode("B");
-          el4.appendChild(text5);
-          frag3.appendChild(el4);
-          const el6 = document.createElement("span");
-          const text7 = document.createTextNode("C");
-          el6.appendChild(text7);
-          frag3.appendChild(el6);
-          frag0.appendChild(frag3);
-          return frag0;
-        })());
-        return el0;
-      })();
+      const el0 = document.createElement("div");
+      _renderDynamic(el0, () => show.value && (() => {
+        const frag0 = document.createDocumentFragment();
+        const el1 = document.createElement("span");
+        const text2 = document.createTextNode("A");
+        el1.appendChild(text2);
+        frag0.appendChild(el1);
+        const frag3 = document.createDocumentFragment();
+        const el4 = document.createElement("span");
+        const text5 = document.createTextNode("B");
+        el4.appendChild(text5);
+        frag3.appendChild(el4);
+        const el6 = document.createElement("span");
+        const text7 = document.createTextNode("C");
+        el6.appendChild(text7);
+        frag3.appendChild(el6);
+        frag0.appendChild(frag3);
+        return frag0;
+      })());
+      const rootElement = el0;
       this.appendChild(rootElement);
     });
     this._onMounts.forEach(fn => fn());
@@ -2641,60 +2636,67 @@ export default NestedFragmentsElement;"
 `;
 
 exports[`Web App Framework Compiler Compiles dynamic-page.page.jsx 1`] = `
-"import { onMount as _onMount, onCleanup as _onCleanup, setProperty as _setProperty, renderDynamic as _renderDynamic } from "@opentf/web";
-export function render(root, props) {
+"import { onMount as _onMount, onCleanup as _onCleanup, setProperty as _setProperty, renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy } from "@opentf/web";
+export function render(root, _props) {
+  const _holder = {
+    _children: _props.children || []
+  };
+  const _waf_props = _createPropsProxy(_holder);
+  Object.assign(_waf_props, _props);
+  const props = _waf_props;
   _onMount(() => {
-    console.log(\`Post page mounted with ID: \${props.params.id}\`);
+    console.log(\`Post page mounted with ID: \${props.params.value.id}\`);
   });
   _onCleanup(() => {
-    console.log(\`Post page cleaned up with ID: \${props.params.id}\`);
+    console.log(\`Post page cleaned up with ID: \${props.params.value.id}\`);
   });
-  const rootElement = (() => {
-    const el0 = document.createElement("div");
-    const el1 = document.createElement("h1");
-    _setProperty(el1, "className", "text-2xl font-bold");
-    const text2 = document.createTextNode("Post ");
-    el1.appendChild(text2);
-    _renderDynamic(el1, () => props.params.id);
-    el0.appendChild(el1);
-    const el3 = document.createElement("p");
-    _setProperty(el3, "className", "mt-4");
-    const text4 = document.createTextNode("This is a dynamic post page for ID: ");
-    el3.appendChild(text4);
-    const el5 = document.createElement("span");
-    _setProperty(el5, "className", "font-mono bg-gray-200 px-1");
-    _renderDynamic(el5, () => props.params.id);
-    el3.appendChild(el5);
-    el0.appendChild(el3);
-    return el0;
-  })();
+  const el0 = document.createElement("div");
+  const el1 = document.createElement("h1");
+  _setProperty(el1, "className", "text-2xl font-bold", false);
+  const text2 = document.createTextNode("Post ");
+  el1.appendChild(text2);
+  _renderDynamic(el1, () => props.params.value.id);
+  el0.appendChild(el1);
+  const el3 = document.createElement("p");
+  _setProperty(el3, "className", "mt-4", false);
+  const text4 = document.createTextNode("This is a dynamic post page for ID: ");
+  el3.appendChild(text4);
+  const el5 = document.createElement("span");
+  _setProperty(el5, "className", "font-mono bg-gray-200 px-1", false);
+  _renderDynamic(el5, () => props.params.value.id);
+  el3.appendChild(el5);
+  el0.appendChild(el3);
+  const rootElement = el0;
   root.appendChild(rootElement);
 }"
 `;
 
 exports[`Web App Framework Compiler Compiles whitespace.page.jsx 1`] = `
-"import { renderDynamic as _renderDynamic } from "@opentf/web";
-export function render(root, props) {
+"import { renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy } from "@opentf/web";
+export function render(root, _props) {
+  const _holder = {
+    _children: _props.children || []
+  };
+  const _waf_props = _createPropsProxy(_holder);
+  Object.assign(_waf_props, _props);
   const name = "Web App Framework";
-  const rootElement = (() => {
-    const el0 = document.createElement("div");
-    const el1 = document.createElement("span");
-    const text2 = document.createTextNode("Hello ");
-    el1.appendChild(text2);
-    _renderDynamic(el1, () => name);
-    const text3 = document.createTextNode("!");
-    el1.appendChild(text3);
-    el0.appendChild(el1);
-    const el4 = document.createElement("p");
-    const text5 = document.createTextNode(" Line 1 Line 2 ");
-    el4.appendChild(text5);
-    el0.appendChild(el4);
-    const el6 = document.createElement("div");
-    const text7 = document.createTextNode("Spaces should be preserved here -> ");
-    el6.appendChild(text7);
-    el0.appendChild(el6);
-    return el0;
-  })();
+  const el0 = document.createElement("div");
+  const el1 = document.createElement("span");
+  const text2 = document.createTextNode("Hello ");
+  el1.appendChild(text2);
+  _renderDynamic(el1, () => name);
+  const text3 = document.createTextNode("!");
+  el1.appendChild(text3);
+  el0.appendChild(el1);
+  const el4 = document.createElement("p");
+  const text5 = document.createTextNode(" Line 1 Line 2 ");
+  el4.appendChild(text5);
+  el0.appendChild(el4);
+  const el6 = document.createElement("div");
+  const text7 = document.createTextNode("Spaces should be preserved here -> ");
+  el6.appendChild(text7);
+  el0.appendChild(el6);
+  const rootElement = el0;
   root.appendChild(rootElement);
 }"
 `;

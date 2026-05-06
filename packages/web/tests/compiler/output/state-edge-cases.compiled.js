@@ -40,7 +40,7 @@ class StateEdgeCasesElement extends HTMLElement {
   connectedCallback() {
     if (this._mounted) return;
     this._mounted = true;
-    const props = _createPropsProxy(this);
+    const _waf_props = _createPropsProxy(this);
     this._children = Array.from(this.childNodes);
     _clearChildren(this);
     _withInstance(this, () => {
@@ -81,24 +81,22 @@ class StateEdgeCasesElement extends HTMLElement {
 
       // 7. Passing as argument
       console.log(count.value, user.value);
-      const rootElement = (() => {
-        const el0 = document.createElement("div");
-        const el1 = document.createElement("span");
-        _renderDynamic(el1, () => count.value);
-        el0.appendChild(el1);
-        const el2 = document.createElement("span");
-        _renderDynamic(el2, () => user.value.name);
-        el0.appendChild(el2);
-        const el3 = document.createElement("button");
-        el3.onclick = () => {
-          count.value++;
-          user.value.age++;
-        };
-        const text4 = document.createTextNode("Increment");
-        el3.appendChild(text4);
-        el0.appendChild(el3);
-        return el0;
-      })();
+      const el0 = document.createElement("div");
+      const el1 = document.createElement("span");
+      _renderDynamic(el1, () => count.value);
+      el0.appendChild(el1);
+      const el2 = document.createElement("span");
+      _renderDynamic(el2, () => user.value.name);
+      el0.appendChild(el2);
+      const el3 = document.createElement("button");
+      el3.onclick = () => {
+        count.value++;
+        user.value.age++;
+      };
+      const text4 = document.createTextNode("Increment");
+      el3.appendChild(text4);
+      el0.appendChild(el3);
+      const rootElement = el0;
       this.appendChild(rootElement);
     });
     this._onMounts.forEach(fn => fn());

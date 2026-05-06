@@ -7,9 +7,8 @@ import { signal } from "@opentf/web";
  * A custom form field component that works with 'register' props.
  */
 export function FormField(props) {
-  const { label, name, form, ...rest } = props;
-
-  const error = $derived(() => form.errors[name] && form.touched[name] ? form.errors[name] : null);
+  const { label, error, isTouched, value } = props;
+  const fieldError = $derived(() => error.value && isTouched.value ? error.value : null);
 
   return (
     <div className="flex flex-col gap-1.5 mb-5 group">
@@ -17,18 +16,19 @@ export function FormField(props) {
         {label}
       </label>
       <input
-        name={name}
-        {...rest}
-        className={error
+        {...props}
+        value={value}
+        checked={value}
+        className={fieldError
           ? 'px-4 py-3 rounded-xl border transition-all duration-300 outline-none bg-red-500/5 border-red-500/50 text-[var(--text-main)] placeholder-slate-400 shadow-[0_0_15px_-3px_rgba(239,68,68,0.1)]'
           : 'px-4 py-3 rounded-xl border transition-all duration-300 outline-none bg-[var(--bg-surface)] border-[var(--border)] text-[var(--text-main)] placeholder-slate-400 focus:border-accent/50 focus:bg-[var(--bg-main)] focus:shadow-[0_0_20px_-5px_rgba(var(--accent-rgb),0.1)]'
         }
       />
       <div className="h-4 ml-1">
-        {() => error && (
-          <span className="text-[10px] text-red-500 font-bold flex items-center gap-1">
+        {fieldError && (
+          <span className="text-[10px] text-red-400 font-bold flex items-center gap-1 animate-in fade-in slide-in-from-top-1 duration-200">
             <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg>
-            {error}
+            {fieldError}
           </span>
         )}
       </div>
@@ -40,15 +40,14 @@ export function FormField(props) {
  * A custom toggle/checkbox component.
  */
 export function CustomToggle(props) {
-  const toggle = () => {
-    props.oninput({ target: { checked: !props.value, type: 'checkbox' } });
-  };
+  const { label, value, oninput } = props;
+  const toggle = () => oninput({ target: { checked: !value.value, type: 'checkbox' } });
 
   return (
     <div className="flex items-center justify-between p-4 rounded-xl border border-[var(--border)] bg-[var(--bg-surface)] mb-6 cursor-pointer hover:bg-[var(--bg-surface)]/50 transition-all group" onclick={toggle}>
-      <span className="text-sm font-medium text-[var(--text-muted)] group-hover:text-[var(--text-main)] transition-colors">{props.label}</span>
-      <div className={props.value ? 'w-12 h-6 rounded-full transition-all duration-500 relative p-1 bg-accent shadow-[0_0_15px_-3px_rgba(var(--accent-rgb),0.3)]' : 'w-12 h-6 rounded-full transition-all duration-500 relative p-1 bg-slate-300'}>
-        <div className={props.value ? 'w-4 h-4 bg-[var(--bg-main)] rounded-full transition-all duration-300 shadow-lg transform translate-x-6' : 'w-4 h-4 bg-[var(--bg-main)] rounded-full transition-all duration-300 shadow-lg transform translate-x-0'} />
+      <span className="text-sm font-medium text-[var(--text-muted)] group-hover:text-[var(--text-main)] transition-colors">{label}</span>
+      <div className={value ? 'w-12 h-6 rounded-full transition-all duration-500 relative p-1 bg-accent shadow-[0_0_15px_-3px_rgba(var(--accent-rgb),0.3)]' : 'w-12 h-6 rounded-full transition-all duration-500 relative p-1 bg-slate-300'}>
+        <div className={value ? 'w-4 h-4 bg-[var(--bg-main)] rounded-full transition-all duration-300 shadow-lg transform translate-x-6' : 'w-4 h-4 bg-[var(--bg-main)] rounded-full transition-all duration-300 shadow-lg transform translate-x-0'} />
       </div>
     </div>
   );
@@ -84,22 +83,12 @@ export function ModeSelector({ label, value, options, onchange }) {
       <label className="text-[9px] font-black text-[var(--text-muted)] uppercase tracking-widest ml-1">{label}</label>
       <div className="relative group">
         <select
-          value={() => {
-            if (typeof value === 'function') return value();
-            if (value && typeof value === 'object' && 'value' in value) return value.value;
-            return value;
-          }}
+          value={value}
           onchange={(e) => onchange(e.target.value)}
           className="appearance-none w-full bg-[var(--bg-main)] border border-[var(--border)] text-[var(--text-main)] text-[11px] font-bold rounded-lg px-3 py-1.5 outline-none focus:border-accent/50 transition-all cursor-pointer pr-8"
         >
           {options.map(opt => (
-            <option 
-              value={opt} 
-              selected={() => {
-                const current = typeof value === 'function' ? value() : value?.value;
-                return current === opt;
-              }}
-            >
+            <option value={opt} selected={value === opt}>
               {opt}
             </option>
           ))}
@@ -139,8 +128,8 @@ export function StatePreview({ form }) {
 }
 
 export function BasicForm() {
-  const mode = signal("onBlur");
-  const reValidateMode = signal("onChange");
+  let mode = $state("onBlur");
+  let reValidateMode = $state("onChange");
   const schema = z.object({
     username: z.string().min(3, "Username must be at least 3 chars"),
     email: z.string().email("Invalid email address")
@@ -173,8 +162,8 @@ export function BasicForm() {
           </div>
 
           <div className="flex gap-3 bg-[var(--bg-surface)] p-2 rounded-2xl border border-[var(--border)]">
-            <ModeSelector label="Mode" value={mode} options={["onBlur", "onChange", "onSubmit"]} onchange={(v) => mode.value = v} />
-            <ModeSelector label="Re-Validate" value={reValidateMode} options={["onChange", "onBlur", "onSubmit"]} onchange={(v) => reValidateMode.value = v} />
+            <ModeSelector label="Mode" value={mode} options={["onBlur", "onChange", "onSubmit"]} onchange={(v) => mode = v} />
+            <ModeSelector label="Re-Validate" value={reValidateMode} options={["onChange", "onBlur", "onSubmit"]} onchange={(v) => reValidateMode = v} />
           </div>
         </div>
 
@@ -185,8 +174,8 @@ export function BasicForm() {
           await new Promise(r => setTimeout(r, 1500));
           console.log('Submitted:', v);
         })}>
-          <FormField label="Username" name="username" form={form} {...form.register('username')} />
-          <FormField label="Email" name="email" form={form} {...form.register('email')} />
+          <FormField label="Username" {...form.register('username')} />
+          <FormField label="Email" {...form.register('email')} />
 
           <div className="flex gap-4 mt-8">
             <button type="button" onclick={() => form.reset()} className="flex-1 py-3.5 border border-[var(--border)] text-[var(--text-muted)] rounded-xl hover:bg-[var(--bg-surface)] transition-all font-bold tracking-wide uppercase text-[11px]">Reset</button>
@@ -217,8 +206,8 @@ export function BasicForm() {
 }
 
 export function ComplexForm() {
-  const mode = signal("onBlur");
-  const reValidateMode = signal("onChange");
+  let mode = $state("onBlur");
+  let reValidateMode = $state("onChange");
   const schema = z.object({
     profile: z.object({
       firstName: z.string().min(1, "First name is required"),
@@ -264,8 +253,8 @@ export function ComplexForm() {
           </div>
 
           <div className="flex gap-3 bg-[var(--bg-surface)] p-2 rounded-2xl border border-[var(--border)]">
-            <ModeSelector label="Mode" value={mode} options={["onBlur", "onChange", "onSubmit"]} onchange={(v) => mode.value = v} />
-            <ModeSelector label="Re-Validate" value={reValidateMode} options={["onChange", "onBlur", "onSubmit"]} onchange={(v) => reValidateMode.value = v} />
+            <ModeSelector label="Mode" value={mode} options={["onBlur", "onChange", "onSubmit"]} onchange={(v) => mode = v} />
+            <ModeSelector label="Re-Validate" value={reValidateMode} options={["onChange", "onBlur", "onSubmit"]} onchange={(v) => reValidateMode = v} />
           </div>
         </div>
 
@@ -277,8 +266,8 @@ export function ComplexForm() {
           console.log('Submitted Profile:', v);
         })}>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <FormField label="First Name" name="profile.firstName" form={form} {...form.register('profile.firstName')} />
-            <FormField label="Last Name" name="profile.lastName" form={form} {...form.register('profile.lastName')} />
+            <FormField label="First Name" {...form.register('profile.firstName')} />
+            <FormField label="Last Name" {...form.register('profile.lastName')} />
           </div>
 
           <div className="mb-8">
@@ -312,6 +301,9 @@ export function ComplexForm() {
                 </div>
               ))}
             </div>
+            {() => form.errors.skills && typeof form.errors.skills === 'string' && (
+              <p className="text-[10px] text-red-500 font-bold mt-2 ml-1">{form.errors.skills}</p>
+            )}
           </div>
 
           <CustomToggle label="Subscribe to developer updates" {...form.register("preferences.newsletter")} />

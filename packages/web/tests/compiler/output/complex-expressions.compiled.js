@@ -1,25 +1,25 @@
 import { signal as _signal, effect as _effect, setProperty as _setProperty, renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy, _clearChildren, withInstance as _withInstance } from "@opentf/web";
 class ComplexExpressionsElement extends HTMLElement {
   static observedAttributes = ["theme", "color", "loading", "title", "logMessage"];
-  set theme(val) {
-    if (!this._propsSignals["theme"]) this._propsSignals["theme"] = _signal(val);
-    this._propsSignals["theme"].value = val;
+  set theme(_val) {
+    if (!this._propsSignals["theme"]) this._propsSignals["theme"] = _signal(_val);
+    this._propsSignals["theme"].value = _val;
   }
-  set color(val) {
-    if (!this._propsSignals["color"]) this._propsSignals["color"] = _signal(val);
-    this._propsSignals["color"].value = val;
+  set color(_val) {
+    if (!this._propsSignals["color"]) this._propsSignals["color"] = _signal(_val);
+    this._propsSignals["color"].value = _val;
   }
-  set loading(val) {
-    if (!this._propsSignals["loading"]) this._propsSignals["loading"] = _signal(val);
-    this._propsSignals["loading"].value = val;
+  set loading(_val) {
+    if (!this._propsSignals["loading"]) this._propsSignals["loading"] = _signal(_val);
+    this._propsSignals["loading"].value = _val;
   }
-  set title(val) {
-    if (!this._propsSignals["title"]) this._propsSignals["title"] = _signal(val);
-    this._propsSignals["title"].value = val;
+  set title(_val) {
+    if (!this._propsSignals["title"]) this._propsSignals["title"] = _signal(_val);
+    this._propsSignals["title"].value = _val;
   }
-  set logMessage(val) {
-    if (!this._propsSignals["logMessage"]) this._propsSignals["logMessage"] = _signal(val);
-    this._propsSignals["logMessage"].value = val;
+  set logMessage(_val) {
+    if (!this._propsSignals["logMessage"]) this._propsSignals["logMessage"] = _signal(_val);
+    this._propsSignals["logMessage"].value = _val;
   }
   get theme() {
     const _sig = this._propsSignals["theme"];
@@ -86,38 +86,37 @@ class ComplexExpressionsElement extends HTMLElement {
   connectedCallback() {
     if (this._mounted) return;
     this._mounted = true;
-    const props = _createPropsProxy(this);
+    const _waf_props = _createPropsProxy(this);
     this._children = Array.from(this.childNodes);
     _clearChildren(this);
     _withInstance(this, () => {
+      const props = _waf_props;
       let count = _signal(0);
-      const rootElement = (() => {
-        const el0 = document.createElement("div");
-        _effect(() => _setProperty(el0, "className", props.theme));
-        _effect(() => Object.assign(el0.style, {
-          color: props.color,
-          opacity: count.value > 5 ? 1 : 0.5
-        }));
-        _renderDynamic(el0, () => props.loading ? (() => {
-          const el0 = document.createElement("span");
-          const text1 = document.createTextNode("Loading...");
-          el0.appendChild(text1);
-          return el0;
-        })() : (() => {
-          const el0 = document.createElement("div");
-          const el1 = document.createElement("h1");
-          _renderDynamic(el1, () => props.title);
-          el0.appendChild(el1);
-          const el2 = document.createElement("button");
-          el2.onclick = () => console.log(props.logMessage);
-          const text3 = document.createTextNode(" Log ");
-          el2.appendChild(text3);
-          _renderDynamic(el2, () => count.value);
-          el0.appendChild(el2);
-          return el0;
-        })());
+      const el0 = document.createElement("div");
+      _effect(() => _setProperty(el0, "className", props.theme.value, false));
+      _effect(() => Object.assign(el0.style, {
+        color: props.color.value,
+        opacity: count.value > 5 ? 1 : 0.5
+      }));
+      _renderDynamic(el0, () => props.loading.value ? (() => {
+        const el0 = document.createElement("span");
+        const text1 = document.createTextNode("Loading...");
+        el0.appendChild(text1);
         return el0;
-      })();
+      })() : (() => {
+        const el0 = document.createElement("div");
+        const el1 = document.createElement("h1");
+        _renderDynamic(el1, () => props.title.value);
+        el0.appendChild(el1);
+        const el2 = document.createElement("button");
+        el2.onclick = () => console.log(props.logMessage.value);
+        const text3 = document.createTextNode(" Log ");
+        el2.appendChild(text3);
+        _renderDynamic(el2, () => count.value);
+        el0.appendChild(el2);
+        return el0;
+      })());
+      const rootElement = el0;
       this.appendChild(rootElement);
     });
     this._onMounts.forEach(fn => fn());

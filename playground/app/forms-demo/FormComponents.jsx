@@ -1,15 +1,13 @@
 import { z } from "zod";
 import { createForm } from "@opentf/web-form";
-import { untracked } from "@opentf/web";
 import { zodResolver } from "./zodResolver.js";
 
 /**
  * A custom form field component that works with 'register' props.
  */
 export function FormField(props) {
-  const { label, name, form, ...rest } = props;
-
-  const error = $derived(form.errors[name] && form.touched[name] ? form.errors[name] : null);
+  const { label, error, isTouched, value } = props;
+  const fieldError = $derived(() => error && isTouched ? error : null);
 
   return (
     <div className="flex flex-col gap-1.5 mb-5 group">
@@ -17,18 +15,19 @@ export function FormField(props) {
         {label}
       </label>
       <input
-        name={name}
-        {...rest}
-        className={error
+        {...props}
+        value={value}
+        checked={value}
+        className={fieldError
           ? 'px-4 py-3 rounded-xl border transition-all duration-300 outline-none bg-red-500/5 border-red-500/50 text-white placeholder-slate-500 backdrop-blur-sm shadow-[0_0_15px_-3px_rgba(239,68,68,0.2)]'
           : 'px-4 py-3 rounded-xl border transition-all duration-300 outline-none bg-slate-900/50 border-slate-700/50 text-white placeholder-slate-500 backdrop-blur-sm focus:border-blue-500/50 focus:bg-slate-900/80 focus:shadow-[0_0_20px_-5px_rgba(59,130,246,0.3)]'
         }
       />
       <div className="h-4 ml-1">
-        {() => error && (
+        {fieldError && (
           <span className="text-[10px] text-red-400 font-bold flex items-center gap-1 animate-in fade-in slide-in-from-top-1 duration-200">
             <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg>
-            {error}
+            {fieldError}
           </span>
         )}
       </div>
@@ -40,15 +39,14 @@ export function FormField(props) {
  * A custom toggle/checkbox component.
  */
 export function CustomToggle(props) {
-  const toggle = () => {
-    props.oninput({ target: { checked: !props.value, type: 'checkbox' } });
-  };
+  const { label, value, oninput } = props;
+  const toggle = () => oninput({ target: { checked: !value, type: 'checkbox' } });
 
   return (
     <div className="flex items-center justify-between p-4 rounded-xl border border-slate-700/30 bg-slate-900/20 mb-6 cursor-pointer hover:bg-slate-900/40 transition-all group" onclick={toggle}>
-      <span className="text-sm font-medium text-slate-300 group-hover:text-white transition-colors">{props.label}</span>
-      <div className={props.value ? 'w-12 h-6 rounded-full transition-all duration-500 relative p-1 bg-emerald-500 shadow-[0_0_15px_-3px_rgba(16,185,129,0.5)]' : 'w-12 h-6 rounded-full transition-all duration-500 relative p-1 bg-slate-700'}>
-        <div className={props.value ? 'w-4 h-4 bg-white rounded-full transition-all duration-300 shadow-lg transform translate-x-6' : 'w-4 h-4 bg-white rounded-full transition-all duration-300 shadow-lg transform translate-x-0'} />
+      <span className="text-sm font-medium text-slate-300 group-hover:text-white transition-colors">{label}</span>
+      <div className={value ? 'w-12 h-6 rounded-full transition-all duration-500 relative p-1 bg-emerald-500 shadow-[0_0_15px_-3px_rgba(16,185,129,0.5)]' : 'w-12 h-6 rounded-full transition-all duration-500 relative p-1 bg-slate-700'}>
+        <div className={value ? 'w-4 h-4 bg-white rounded-full transition-all duration-300 shadow-lg transform translate-x-6' : 'w-4 h-4 bg-white rounded-full transition-all duration-300 shadow-lg transform translate-x-0'} />
       </div>
     </div>
   );
@@ -69,10 +67,10 @@ export function FormStatus({ form }) {
         <span className="text-[10px] font-black uppercase tracking-widest">{isChanged ? "Changed" : "Clean"}</span>
       </div>
       <div className={isTouched ? 'flex items-center justify-center gap-2 p-2.5 rounded-xl border transition-all duration-500 bg-amber-500/10 border-amber-500/30 text-amber-400 shadow-[0_0_15px_-5px_rgba(245,158,11,0.3)]' : 'flex items-center justify-center gap-2 p-2.5 rounded-xl border transition-all duration-500 bg-slate-800/20 border-slate-700/30 text-slate-500'}>
-        <span className="text-[10px] font-black uppercase tracking-widest">{() => isTouched ? "Touched" : "Untouched"}</span>
+        <span className="text-[10px] font-black uppercase tracking-widest">{isTouched ? "Touched" : "Untouched"}</span>
       </div>
       <div className={isSubmitting ? 'flex items-center justify-center gap-2 p-2.5 rounded-xl border transition-all duration-500 bg-purple-500/10 border-purple-500/30 text-purple-400 shadow-[0_0_15px_-5px_rgba(168,85,247,0.3)]' : 'flex items-center justify-center gap-2 p-2.5 rounded-xl border transition-all duration-500 bg-slate-800/20 border-slate-700/30 text-slate-500'}>
-        <span className="text-[10px] font-black uppercase tracking-widest">{() => isSubmitting ? "Saving" : "Idle"}</span>
+        <span className="text-[10px] font-black uppercase tracking-widest">{isSubmitting ? "Saving" : "Idle"}</span>
       </div>
     </div>
   );
@@ -88,7 +86,11 @@ export function ModeSelector({ label, value, options, onchange }) {
           onchange={(e) => onchange(e.target.value)}
           className="appearance-none w-full bg-slate-900/80 border border-slate-700/50 text-slate-200 text-[11px] font-bold rounded-lg px-3 py-1.5 outline-none focus:border-blue-500/50 transition-all cursor-pointer pr-8"
         >
-          {options.map(opt => <option value={opt}>{opt}</option>)}
+          {options.map(opt => (
+            <option value={opt} selected={value === opt}>
+              {opt}
+            </option>
+          ))}
         </select>
         <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none text-slate-500 group-hover:text-blue-400 transition-colors">
           <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
@@ -107,7 +109,7 @@ export function StatePreview({ form }) {
           <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">Live Values</p>
         </div>
         <pre className="text-[11px] font-mono bg-slate-950/80 p-5 rounded-2xl border border-slate-800/50 text-blue-300/80 overflow-auto max-h-[300px] leading-relaxed shadow-inner backdrop-blur-md">
-          {() => JSON.stringify(form.values, null, 2)}
+          {JSON.stringify(form.values, null, 2)}
         </pre>
       </div>
 
@@ -117,13 +119,13 @@ export function StatePreview({ form }) {
           <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">Validation State</p>
         </div>
         <pre className="text-[11px] font-mono bg-slate-950/80 p-5 rounded-2xl border border-slate-800/50 text-amber-300/80 overflow-auto max-h-[300px] leading-relaxed shadow-inner backdrop-blur-md">
-          {() => JSON.stringify({ errors: form.errors, touched: form.touched }, null, 2)}
+          {JSON.stringify({ errors: form.errors, touched: form.touched }, null, 2)}
         </pre>
       </div>
 
       <div className="p-4 rounded-2xl bg-slate-900/40 border border-slate-800/50">
         <p className="text-[10px] font-medium text-slate-500 leading-tight">
-          Identity Check: <code className="text-emerald-400">{() => (form.values === form.values ? '✓ Stable' : '✗ Unstable')}</code>
+          Identity Check: <code className="text-emerald-400">{form.values === form.values ? '✓ Stable' : '✗ Unstable'}</code>
         </p>
       </div>
     </div>
@@ -138,12 +140,12 @@ export function BasicForm() {
     email: z.string().email("Invalid email address")
   });
 
-  const form = untracked(() => createForm({
+  const form = createForm({
     initialValues: { username: "", email: "" },
     validator: zodResolver(schema),
     mode,
     reValidateMode
-  }));
+  });
 
   const isValid = $derived(form.isValid);
   const isChanged = $derived(form.isChanged);
@@ -177,8 +179,8 @@ export function BasicForm() {
           await new Promise(r => setTimeout(r, 1500));
           console.log('Submitted:', v);
         })}>
-          <FormField label="Username" name="username" form={form} {...form.register('username')} />
-          <FormField label="Email" name="email" form={form} {...form.register('email')} />
+          <FormField label="Username" {...form.register('username')} />
+          <FormField label="Email" {...form.register('email')} />
 
           <div className="flex gap-4 mt-8">
             <button type="button" onclick={() => form.reset()} className="flex-1 py-3.5 border border-slate-700 text-slate-400 rounded-xl hover:bg-slate-700/30 hover:text-white transition-all font-bold tracking-wide uppercase text-[11px]">Reset</button>
@@ -221,7 +223,7 @@ export function ComplexForm() {
     })
   });
 
-  const form = untracked(() => createForm({
+  const form = createForm({
     initialValues: {
       profile: { firstName: "", lastName: "" },
       skills: ["JavaScript"],
@@ -230,7 +232,7 @@ export function ComplexForm() {
     validator: zodResolver(schema),
     mode,
     reValidateMode
-  }));
+  });
 
   const isValid = $derived(form.isValid);
   const isChanged = $derived(form.isChanged);
@@ -268,8 +270,8 @@ export function ComplexForm() {
           console.log('Submitted Profile:', v);
         })}>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <FormField label="First Name" name="profile.firstName" form={form} {...form.register('profile.firstName')} />
-            <FormField label="Last Name" name="profile.lastName" form={form} {...form.register('profile.lastName')} />
+            <FormField label="First Name" {...form.register('profile.firstName')} />
+            <FormField label="Last Name" {...form.register('profile.lastName')} />
           </div>
 
           <div className="mb-8">

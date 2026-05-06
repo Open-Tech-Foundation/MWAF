@@ -20,7 +20,7 @@ export function onMount(fn) {
   if (isSSG) return;
   if (currentInstance) {
     if (!currentInstance._onMounts) {
-       Object.defineProperty(currentInstance, "_onMounts", { value: [], enumerable: false, writable: true });
+       Object.defineProperty(currentInstance, "_onMounts", { value: [], enumerable: false, writable: true, configurable: true });
     }
     currentInstance._onMounts.push(fn);
   }
@@ -30,7 +30,7 @@ export function onUnmount(fn) {
   if (isSSG) return;
   if (currentInstance) {
     if (!currentInstance._onCleanups) {
-       Object.defineProperty(currentInstance, "_onCleanups", { value: [], enumerable: false, writable: true });
+       Object.defineProperty(currentInstance, "_onCleanups", { value: [], enumerable: false, writable: true, configurable: true });
     }
     currentInstance._onCleanups.push(fn);
   }
@@ -52,7 +52,7 @@ export function hookEffect(fn) {
 // Metadata initializer for Web Components
 export function _initWafComponent(el) {
   if (!el._propsSignals) {
-    Object.defineProperty(el, "_propsSignals", { value: {}, enumerable: false, writable: true });
+    Object.defineProperty(el, "_propsSignals", { value: {}, enumerable: false, writable: true, configurable: true });
   }
   return el;
 }

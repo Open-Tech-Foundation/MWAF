@@ -1,9 +1,9 @@
 import { signal as _signal, setProperty as _setProperty, effect as _effect, createPropsProxy as _createPropsProxy, _clearChildren, withInstance as _withInstance } from "@opentf/web";
 class StylingTestElement extends HTMLElement {
   static observedAttributes = ["theme"];
-  set theme(val) {
-    if (!this._propsSignals["theme"]) this._propsSignals["theme"] = _signal(val);
-    this._propsSignals["theme"].value = val;
+  set theme(_val) {
+    if (!this._propsSignals["theme"]) this._propsSignals["theme"] = _signal(_val);
+    this._propsSignals["theme"].value = _val;
   }
   get theme() {
     const _sig = this._propsSignals["theme"];
@@ -50,27 +50,26 @@ class StylingTestElement extends HTMLElement {
   connectedCallback() {
     if (this._mounted) return;
     this._mounted = true;
-    const props = _createPropsProxy(this);
+    const _waf_props = _createPropsProxy(this);
     this._children = Array.from(this.childNodes);
     _clearChildren(this);
     _withInstance(this, () => {
+      const props = _waf_props;
       let active = _signal(true);
-      const rootElement = (() => {
-        const el0 = document.createElement("div");
-        _setProperty(el0, "className", "static-class");
-        _setProperty(el0, "className", "static-classname");
-        const el1 = document.createElement("span");
-        _effect(() => _setProperty(el1, "className", active.value ? "active" : "inactive"));
-        const text2 = document.createTextNode(" Reactive Class ");
-        el1.appendChild(text2);
-        el0.appendChild(el1);
-        const el3 = document.createElement("button");
-        _effect(() => _setProperty(el3, "className", props.theme));
-        const text4 = document.createTextNode(" Reactive ClassName from Props ");
-        el3.appendChild(text4);
-        el0.appendChild(el3);
-        return el0;
-      })();
+      const el0 = document.createElement("div");
+      _setProperty(el0, "className", "static-class", false);
+      _setProperty(el0, "className", "static-classname", false);
+      const el1 = document.createElement("span");
+      _effect(() => _setProperty(el1, "className", active.value ? "active" : "inactive", false));
+      const text2 = document.createTextNode(" Reactive Class ");
+      el1.appendChild(text2);
+      el0.appendChild(el1);
+      const el3 = document.createElement("button");
+      _effect(() => _setProperty(el3, "className", props.theme.value, false));
+      const text4 = document.createTextNode(" Reactive ClassName from Props ");
+      el3.appendChild(text4);
+      el0.appendChild(el3);
+      const rootElement = el0;
       this.appendChild(rootElement);
     });
     this._onMounts.forEach(fn => fn());

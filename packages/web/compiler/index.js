@@ -12,7 +12,9 @@ export default function (babel) {
           state.runtimeSource = state.opts.runtimeSource || "@opentf/web";
           state.importsNeeded = new Map();
           state.importSources = new Map();
-          state.components = new Map(); 
+          state.components = new Map();
+          state.stateVars = new Set();
+          state.refVars = new Set();
           
           const filename = state.filename || "";
           const pagePatterns = ["page.jsx", "page.tsx", "layout.jsx", "layout.tsx", "404.jsx", "404.tsx"];
@@ -58,7 +60,7 @@ export default function (babel) {
           
           if (t.isObjectPattern(propsNode)) {
             propsNode.properties.forEach(prop => {
-              if (t.isObjectProperty(prop) && t.isIdentifier(prop.key)) {
+              if (t.isObjectProperty(prop) && t.isIdentifier(prop.key) && !prop.key.name.startsWith("on")) {
                 observedAttributes.add(prop.key.name);
               }
             });
@@ -191,6 +193,19 @@ export default function (babel) {
         }
       },
 
+      MemberExpression(path, state) {
+        if (path.node._processed) return;
+        if (t.isIdentifier(path.node.object, { name: "props" }) && t.isIdentifier(path.node.property) && path.node.property.name !== "children" && !path.node.property.name.startsWith("on")) {
+          // Skip if already has .value
+          if (t.isMemberExpression(path.parentPath.node) && t.isIdentifier(path.parentPath.node.property, { name: "value" })) return;
+          
+          path.node._processed = true;
+          const newNode = t.memberExpression(path.node, t.identifier("value"));
+          newNode._processed = true;
+          path.replaceWith(newNode);
+        }
+      },
+
       Identifier(path, state) {
         if (!state.stateVars || !state.stateVars.has(path.node.name)) return;
         if (path.node._processed) return;
@@ -207,14 +222,23 @@ export default function (babel) {
           if (path.parentPath.node.property === path.node) return;
         }
 
-        if (path.parentPath.isVariableDeclarator() && path.parentPath.node.id === path.node) return;
+        if (path.parentPath.isVariableDeclarator({ id: path.node })) return;
+        if (path.parentPath.isAssignmentPattern({ left: path.node })) return;
+        if (path.parentPath.isObjectProperty({ value: path.node }) && path.parentPath.parentPath.isObjectPattern()) return;
+        if (path.parentPath.isRestElement()) return;
         if (path.parentPath.isObjectProperty() && path.parentPath.node.key === path.node && !path.parentPath.node.computed) return;
         if (path.parentPath.isClassProperty() && path.parentPath.node.key === path.node) return;
         if (path.parentPath.isClassMethod() && path.parentPath.node.key === path.node) return;
+        
+        // Skip if it's a 'ref' attribute in JSX
+        if (path.parentPath.isJSXExpressionContainer() && 
+            path.parentPath.parentPath.isJSXAttribute() && 
+            path.parentPath.parentPath.node.name.name === "ref") return;
 
         const innerId = t.identifier(path.node.name);
         innerId._processed = true;
         const newNode = t.memberExpression(innerId, t.identifier("value"));
+        newNode._processed = true;
         path.replaceWith(newNode);
       },
 
@@ -235,10 +259,12 @@ export default function (babel) {
       },
 
       JSXElement(path, state) {
+        if (path.findParent(p => (p.isFunctionDeclaration() || p.isVariableDeclarator()) && /^[A-Z]/.test(p.node.id?.name || p.node.name))) return;
         handleJSXVisitor(path, state, t);
       },
 
       JSXFragment(path, state) {
+        if (path.findParent(p => (p.isFunctionDeclaration() || p.isVariableDeclarator()) && /^[A-Z]/.test(p.node.id?.name || p.node.name))) return;
         handleJSXVisitor(path, state, t);
       }
     }

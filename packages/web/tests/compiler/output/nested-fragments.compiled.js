@@ -40,33 +40,31 @@ class NestedFragmentsElement extends HTMLElement {
   connectedCallback() {
     if (this._mounted) return;
     this._mounted = true;
-    const props = _createPropsProxy(this);
+    const _waf_props = _createPropsProxy(this);
     this._children = Array.from(this.childNodes);
     _clearChildren(this);
     _withInstance(this, () => {
       let show = _signal(true);
-      const rootElement = (() => {
-        const el0 = document.createElement("div");
-        _renderDynamic(el0, () => show.value && (() => {
-          const frag0 = document.createDocumentFragment();
-          const el1 = document.createElement("span");
-          const text2 = document.createTextNode("A");
-          el1.appendChild(text2);
-          frag0.appendChild(el1);
-          const frag3 = document.createDocumentFragment();
-          const el4 = document.createElement("span");
-          const text5 = document.createTextNode("B");
-          el4.appendChild(text5);
-          frag3.appendChild(el4);
-          const el6 = document.createElement("span");
-          const text7 = document.createTextNode("C");
-          el6.appendChild(text7);
-          frag3.appendChild(el6);
-          frag0.appendChild(frag3);
-          return frag0;
-        })());
-        return el0;
-      })();
+      const el0 = document.createElement("div");
+      _renderDynamic(el0, () => show.value && (() => {
+        const frag0 = document.createDocumentFragment();
+        const el1 = document.createElement("span");
+        const text2 = document.createTextNode("A");
+        el1.appendChild(text2);
+        frag0.appendChild(el1);
+        const frag3 = document.createDocumentFragment();
+        const el4 = document.createElement("span");
+        const text5 = document.createTextNode("B");
+        el4.appendChild(text5);
+        frag3.appendChild(el4);
+        const el6 = document.createElement("span");
+        const text7 = document.createTextNode("C");
+        el6.appendChild(text7);
+        frag3.appendChild(el6);
+        frag0.appendChild(frag3);
+        return frag0;
+      })());
+      const rootElement = el0;
       this.appendChild(rootElement);
     });
     this._onMounts.forEach(fn => fn());
