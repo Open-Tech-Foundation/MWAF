@@ -1,14 +1,6 @@
 import { signal as _signal, setProperty as _setProperty, effect as _effect, createPropsProxy as _createPropsProxy, _initWafComponent, _clearChildren, withInstance as _withInstance } from "@opentf/web";
 class StylingTestElement extends HTMLElement {
   static observedAttributes = ["theme"];
-  set theme(_val) {
-    if (!this._propsSignals["theme"]) this._propsSignals["theme"] = _signal(_val);
-    this._propsSignals["theme"].value = _val;
-  }
-  get theme() {
-    const _sig = this._propsSignals["theme"];
-    return _sig ? _sig.value : undefined;
-  }
   constructor() {
     super();
     _initWafComponent(this);

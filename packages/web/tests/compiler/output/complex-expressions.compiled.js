@@ -1,46 +1,6 @@
 import { signal as _signal, effect as _effect, setProperty as _setProperty, renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy, _initWafComponent, _clearChildren, withInstance as _withInstance } from "@opentf/web";
 class ComplexExpressionsElement extends HTMLElement {
   static observedAttributes = ["theme", "color", "loading", "title", "logMessage"];
-  set theme(_val) {
-    if (!this._propsSignals["theme"]) this._propsSignals["theme"] = _signal(_val);
-    this._propsSignals["theme"].value = _val;
-  }
-  set color(_val) {
-    if (!this._propsSignals["color"]) this._propsSignals["color"] = _signal(_val);
-    this._propsSignals["color"].value = _val;
-  }
-  set loading(_val) {
-    if (!this._propsSignals["loading"]) this._propsSignals["loading"] = _signal(_val);
-    this._propsSignals["loading"].value = _val;
-  }
-  set title(_val) {
-    if (!this._propsSignals["title"]) this._propsSignals["title"] = _signal(_val);
-    this._propsSignals["title"].value = _val;
-  }
-  set logMessage(_val) {
-    if (!this._propsSignals["logMessage"]) this._propsSignals["logMessage"] = _signal(_val);
-    this._propsSignals["logMessage"].value = _val;
-  }
-  get theme() {
-    const _sig = this._propsSignals["theme"];
-    return _sig ? _sig.value : undefined;
-  }
-  get color() {
-    const _sig = this._propsSignals["color"];
-    return _sig ? _sig.value : undefined;
-  }
-  get loading() {
-    const _sig = this._propsSignals["loading"];
-    return _sig ? _sig.value : undefined;
-  }
-  get title() {
-    const _sig = this._propsSignals["title"];
-    return _sig ? _sig.value : undefined;
-  }
-  get logMessage() {
-    const _sig = this._propsSignals["logMessage"];
-    return _sig ? _sig.value : undefined;
-  }
   constructor() {
     super();
     _initWafComponent(this);

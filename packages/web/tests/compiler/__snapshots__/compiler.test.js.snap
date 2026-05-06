@@ -4,46 +4,6 @@ exports[`Web App Framework Compiler Compiles complex-expressions.jsx 1`] = `
 "import { signal as _signal, effect as _effect, setProperty as _setProperty, renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy, _initWafComponent, _clearChildren, withInstance as _withInstance } from "@opentf/web";
 class ComplexExpressionsElement extends HTMLElement {
   static observedAttributes = ["theme", "color", "loading", "title", "logMessage"];
-  set theme(_val) {
-    if (!this._propsSignals["theme"]) this._propsSignals["theme"] = _signal(_val);
-    this._propsSignals["theme"].value = _val;
-  }
-  set color(_val) {
-    if (!this._propsSignals["color"]) this._propsSignals["color"] = _signal(_val);
-    this._propsSignals["color"].value = _val;
-  }
-  set loading(_val) {
-    if (!this._propsSignals["loading"]) this._propsSignals["loading"] = _signal(_val);
-    this._propsSignals["loading"].value = _val;
-  }
-  set title(_val) {
-    if (!this._propsSignals["title"]) this._propsSignals["title"] = _signal(_val);
-    this._propsSignals["title"].value = _val;
-  }
-  set logMessage(_val) {
-    if (!this._propsSignals["logMessage"]) this._propsSignals["logMessage"] = _signal(_val);
-    this._propsSignals["logMessage"].value = _val;
-  }
-  get theme() {
-    const _sig = this._propsSignals["theme"];
-    return _sig ? _sig.value : undefined;
-  }
-  get color() {
-    const _sig = this._propsSignals["color"];
-    return _sig ? _sig.value : undefined;
-  }
-  get loading() {
-    const _sig = this._propsSignals["loading"];
-    return _sig ? _sig.value : undefined;
-  }
-  get title() {
-    const _sig = this._propsSignals["title"];
-    return _sig ? _sig.value : undefined;
-  }
-  get logMessage() {
-    const _sig = this._propsSignals["logMessage"];
-    return _sig ? _sig.value : undefined;
-  }
   constructor() {
     super();
     _initWafComponent(this);
@@ -101,22 +61,6 @@ exports[`Web App Framework Compiler Compiles conditional.jsx 1`] = `
 "import { setProperty as _setProperty, renderDynamic as _renderDynamic, signal as _signal, createPropsProxy as _createPropsProxy, _initWafComponent, _clearChildren, withInstance as _withInstance } from "@opentf/web";
 class ItemElement extends HTMLElement {
   static observedAttributes = ["name", "isPacked"];
-  set name(_val) {
-    if (!this._propsSignals["name"]) this._propsSignals["name"] = _signal(_val);
-    this._propsSignals["name"].value = _val;
-  }
-  set isPacked(_val) {
-    if (!this._propsSignals["isPacked"]) this._propsSignals["isPacked"] = _signal(_val);
-    this._propsSignals["isPacked"].value = _val;
-  }
-  get name() {
-    const _sig = this._propsSignals["name"];
-    return _sig ? _sig.value : undefined;
-  }
-  get isPacked() {
-    const _sig = this._propsSignals["isPacked"];
-    return _sig ? _sig.value : undefined;
-  }
   constructor() {
     super();
     _initWafComponent(this);
@@ -266,14 +210,6 @@ exports[`Web App Framework Compiler Compiles reactivity.jsx 1`] = `
 import { signal } from "@preact/signals";
 class ReactivityElement extends HTMLElement {
   static observedAttributes = ["title"];
-  set title(_val) {
-    if (!this._propsSignals["title"]) this._propsSignals["title"] = _signal(_val);
-    this._propsSignals["title"].value = _val;
-  }
-  get title() {
-    const _sig = this._propsSignals["title"];
-    return _sig ? _sig.value : undefined;
-  }
   constructor() {
     super();
     _initWafComponent(this);
@@ -363,22 +299,6 @@ exports[`Web App Framework Compiler Compiles react-patterns.jsx 1`] = `
 import { UI } from './ui-lib';
 class ReactPatternsElement extends HTMLElement {
   static observedAttributes = ["user", "notifications"];
-  set user(_val) {
-    if (!this._propsSignals["user"]) this._propsSignals["user"] = _signal(_val);
-    this._propsSignals["user"].value = _val;
-  }
-  set notifications(_val) {
-    if (!this._propsSignals["notifications"]) this._propsSignals["notifications"] = _signal(_val);
-    this._propsSignals["notifications"].value = _val;
-  }
-  get user() {
-    const _sig = this._propsSignals["user"];
-    return _sig ? _sig.value : undefined;
-  }
-  get notifications() {
-    const _sig = this._propsSignals["notifications"];
-    return _sig ? _sig.value : undefined;
-  }
   constructor() {
     super();
     _initWafComponent(this);
@@ -527,14 +447,6 @@ exports[`Web App Framework Compiler Compiles nested-reactivity.jsx 1`] = `
 "import { signal as _signal, effect as _effect, setProperty as _setProperty, renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy, _initWafComponent, _clearChildren, withInstance as _withInstance } from "@opentf/web";
 class NestedReactivityElement extends HTMLElement {
   static observedAttributes = ["title"];
-  set title(_val) {
-    if (!this._propsSignals["title"]) this._propsSignals["title"] = _signal(_val);
-    this._propsSignals["title"].value = _val;
-  }
-  get title() {
-    const _sig = this._propsSignals["title"];
-    return _sig ? _sig.value : undefined;
-  }
   constructor() {
     super();
     _initWafComponent(this);
@@ -728,14 +640,6 @@ exports[`Web App Framework Compiler Compiles styling.jsx 1`] = `
 "import { signal as _signal, setProperty as _setProperty, effect as _effect, createPropsProxy as _createPropsProxy, _initWafComponent, _clearChildren, withInstance as _withInstance } from "@opentf/web";
 class StylingTestElement extends HTMLElement {
   static observedAttributes = ["theme"];
-  set theme(_val) {
-    if (!this._propsSignals["theme"]) this._propsSignals["theme"] = _signal(_val);
-    this._propsSignals["theme"].value = _val;
-  }
-  get theme() {
-    const _sig = this._propsSignals["theme"];
-    return _sig ? _sig.value : undefined;
-  }
   constructor() {
     super();
     _initWafComponent(this);
@@ -1114,14 +1018,6 @@ customElements.define("web-parent", ParentElement);
 export default ParentElement;
 class ChildElement extends HTMLElement {
   static observedAttributes = ["val"];
-  set val(_val) {
-    if (!this._propsSignals["val"]) this._propsSignals["val"] = _signal(_val);
-    this._propsSignals["val"].value = _val;
-  }
-  get val() {
-    const _sig = this._propsSignals["val"];
-    return _sig ? _sig.value : undefined;
-  }
   constructor() {
     super();
     _initWafComponent(this);
@@ -1192,14 +1088,6 @@ customElements.define("web-multiplecomponents", MultipleComponentsElement);
 export default MultipleComponentsElement;
 class AElement extends HTMLElement {
   static observedAttributes = ["val"];
-  set val(_val) {
-    if (!this._propsSignals["val"]) this._propsSignals["val"] = _signal(_val);
-    this._propsSignals["val"].value = _val;
-  }
-  get val() {
-    const _sig = this._propsSignals["val"];
-    return _sig ? _sig.value : undefined;
-  }
   constructor() {
     super();
     _initWafComponent(this);
@@ -1229,14 +1117,6 @@ class AElement extends HTMLElement {
 customElements.define("web-a", AElement);
 class BElement extends HTMLElement {
   static observedAttributes = ["val"];
-  set val(_val) {
-    if (!this._propsSignals["val"]) this._propsSignals["val"] = _signal(_val);
-    this._propsSignals["val"].value = _val;
-  }
-  get val() {
-    const _sig = this._propsSignals["val"];
-    return _sig ? _sig.value : undefined;
-  }
   constructor() {
     super();
     _initWafComponent(this);
@@ -1438,6 +1318,249 @@ customElements.define("web-macrotest", MacroTestElement);
 export default MacroTestElement;"
 `;
 
+exports[`Web App Framework Compiler Compiles spec-compliance.jsx 1`] = `
+"import { signal as _signal, computed as _computed, renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy, _initWafComponent, _clearChildren, withInstance as _withInstance, setProperty as _setProperty, effect as _effect } from "@opentf/web";
+// Section 2.7, 2.10: Destructured Props with Defaults and Aliases
+export class PropPatterns extends HTMLElement {
+  static observedAttributes = ["name", "age"];
+  constructor() {
+    super();
+    _initWafComponent(this);
+  }
+  attributeChangedCallback(name, _, value) {
+    if (this._propsSignals[name]) this._propsSignals[name].value = value;
+  }
+  connectedCallback() {
+    if (this._mounted) return;
+    this._mounted = true;
+    const _waf_props = _createPropsProxy(this);
+    this._children = Array.from(this.childNodes);
+    _clearChildren(this);
+    _withInstance(this, () => {
+      const {
+        name = "Guest",
+        age: years = 25,
+        ...others
+      } = _waf_props;
+      const el0 = document.createElement("div");
+      const el1 = document.createElement("p");
+      const text2 = document.createTextNode("Name: ");
+      el1.appendChild(text2);
+      _renderDynamic(el1, () => _waf_props.name.value);
+      el0.appendChild(el1);
+      const el3 = document.createElement("p");
+      const text4 = document.createTextNode("Age: ");
+      el3.appendChild(text4);
+      _renderDynamic(el3, () => _waf_props.age.value);
+      el0.appendChild(el3);
+      const el5 = document.createElement("p");
+      const text6 = document.createTextNode("Other: ");
+      el5.appendChild(text6);
+      _renderDynamic(el5, () => others.role);
+      el0.appendChild(el5);
+      const rootElement = el0;
+      this.appendChild(rootElement);
+    });
+    this._onMounts.forEach(fn => fn());
+  }
+  disconnectedCallback() {
+    this._onCleanups.forEach(fn => fn());
+  }
+} // Section 5.3.1: Event Normalization (Native vs Component)
+customElements.define("web-proppatterns", PropPatterns);
+export class EventPatterns extends HTMLElement {
+  static observedAttributes = [];
+  constructor() {
+    super();
+    _initWafComponent(this);
+  }
+  attributeChangedCallback(name, _, value) {
+    if (this._propsSignals[name]) this._propsSignals[name].value = value;
+  }
+  connectedCallback() {
+    if (this._mounted) return;
+    this._mounted = true;
+    const _waf_props = _createPropsProxy(this);
+    this._children = Array.from(this.childNodes);
+    _clearChildren(this);
+    _withInstance(this, () => {
+      const handleNative = () => console.log("native");
+      const handleComp = () => console.log("comp");
+      const el0 = document.createElement("div");
+      el0.onclick = handleNative;
+      const el1 = document.createElement("web-proppatterns");
+      _effect(() => _setProperty(el1, "onCustomEvent", handleComp, true));
+      _effect(() => _setProperty(el1, "onClick", handleComp, true));
+      el0.appendChild(el1);
+      const rootElement = el0;
+      this.appendChild(rootElement);
+    });
+    this._onMounts.forEach(fn => fn());
+  }
+  disconnectedCallback() {
+    this._onCleanups.forEach(fn => fn());
+  }
+} // Section 5.2.1, 5.2.3: Special Attributes
+customElements.define("web-eventpatterns", EventPatterns);
+export class AttrPatterns extends HTMLElement {
+  static observedAttributes = [];
+  constructor() {
+    super();
+    _initWafComponent(this);
+  }
+  attributeChangedCallback(name, _, value) {
+    if (this._propsSignals[name]) this._propsSignals[name].value = value;
+  }
+  connectedCallback() {
+    if (this._mounted) return;
+    this._mounted = true;
+    const _waf_props = _createPropsProxy(this);
+    this._children = Array.from(this.childNodes);
+    _clearChildren(this);
+    _withInstance(this, () => {
+      let isTrue = true;
+      let isNull = null;
+      const el0 = document.createElement("div");
+      _effect(() => el0.setAttribute("tab-index", 0));
+      _effect(() => _setProperty(el0, "disabled", isTrue, false));
+      _effect(() => el0.setAttribute("hidden", false));
+      el0.setAttribute("aria-label", "test");
+      _effect(() => el0.setAttribute("data-id", 123));
+      _effect(() => _setProperty(el0, "title", isNull, false));
+      const text1 = document.createTextNode(" Content ");
+      el0.appendChild(text1);
+      const rootElement = el0;
+      this.appendChild(rootElement);
+    });
+    this._onMounts.forEach(fn => fn());
+  }
+  disconnectedCallback() {
+    this._onCleanups.forEach(fn => fn());
+  }
+} // Section 5.4.1: HTML Entities
+customElements.define("web-attrpatterns", AttrPatterns);
+export class TextPatterns extends HTMLElement {
+  static observedAttributes = [];
+  constructor() {
+    super();
+    _initWafComponent(this);
+  }
+  attributeChangedCallback(name, _, value) {
+    if (this._propsSignals[name]) this._propsSignals[name].value = value;
+  }
+  connectedCallback() {
+    if (this._mounted) return;
+    this._mounted = true;
+    const _waf_props = _createPropsProxy(this);
+    this._children = Array.from(this.childNodes);
+    _clearChildren(this);
+    _withInstance(this, () => {
+      const el0 = document.createElement("div");
+      const text1 = document.createTextNode(" \\xA9 2024 WAF & Co. ");
+      el0.appendChild(text1);
+      const el2 = document.createElement("br");
+      el0.appendChild(el2);
+      const text3 = document.createTextNode(" Void element test: ");
+      el0.appendChild(text3);
+      const el4 = document.createElement("input");
+      el0.appendChild(el4);
+      const rootElement = el0;
+      this.appendChild(rootElement);
+    });
+    this._onMounts.forEach(fn => fn());
+  }
+  disconnectedCallback() {
+    this._onCleanups.forEach(fn => fn());
+  }
+} // Section 3.2, 4.6: Macros ($derived expressions, $expose)
+customElements.define("web-textpatterns", TextPatterns);
+export class MacroPatterns extends HTMLElement {
+  static observedAttributes = [];
+  constructor() {
+    super();
+    _initWafComponent(this);
+  }
+  attributeChangedCallback(name, _, value) {
+    if (this._propsSignals[name]) this._propsSignals[name].value = value;
+  }
+  connectedCallback() {
+    if (this._mounted) return;
+    this._mounted = true;
+    const _waf_props = _createPropsProxy(this);
+    this._children = Array.from(this.childNodes);
+    _clearChildren(this);
+    _withInstance(this, () => {
+      let a = _signal(10);
+      let b = _signal(20);
+      // Auto-wrapping expression in computed
+      let sum = _computed(() => a.value + b.value);
+      Object.assign(this, {
+        getSum: () => sum.value
+      });
+      const el0 = document.createElement("div");
+      const text1 = document.createTextNode("Sum: ");
+      el0.appendChild(text1);
+      _renderDynamic(el0, () => sum.value);
+      const rootElement = el0;
+      this.appendChild(rootElement);
+    });
+    this._onMounts.forEach(fn => fn());
+  }
+  disconnectedCallback() {
+    this._onCleanups.forEach(fn => fn());
+  }
+} // Section 3.5: $signal() First-Access Rule
+customElements.define("web-macropatterns", MacroPatterns);
+export class SignalPatterns extends HTMLElement {
+  static observedAttributes = [];
+  constructor() {
+    super();
+    _initWafComponent(this);
+  }
+  attributeChangedCallback(name, _, value) {
+    if (this._propsSignals[name]) this._propsSignals[name].value = value;
+  }
+  connectedCallback() {
+    if (this._mounted) return;
+    this._mounted = true;
+    const _waf_props = _createPropsProxy(this);
+    this._children = Array.from(this.childNodes);
+    _clearChildren(this);
+    _withInstance(this, () => {
+      const store = $signal({
+        user: {
+          name: "Alice"
+        },
+        count: 0
+      });
+      const {
+        count
+      } = $signal({
+        count: 100
+      });
+      const el0 = document.createElement("div");
+      const el1 = document.createElement("p");
+      const text2 = document.createTextNode("User: ");
+      el1.appendChild(text2);
+      _renderDynamic(el1, () => store.user.name);
+      el0.appendChild(el1);
+      const el3 = document.createElement("p");
+      const text4 = document.createTextNode("Count: ");
+      el3.appendChild(text4);
+      _renderDynamic(el3, () => count);
+      el0.appendChild(el3);
+      const rootElement = el0;
+      this.appendChild(rootElement);
+    });
+    this._onMounts.forEach(fn => fn());
+  }
+  disconnectedCallback() {
+    this._onCleanups.forEach(fn => fn());
+  }
+}
+customElements.define("web-signalpatterns", SignalPatterns);"
+`;
+
 exports[`Web App Framework Compiler Compiles list-rendering.jsx 1`] = `
 "import { signal as _signal, _mapped, renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy, _initWafComponent, _clearChildren, withInstance as _withInstance } from "@opentf/web";
 class ListRenderingElement extends HTMLElement {
@@ -1532,22 +1655,6 @@ customElements.define("web-icongallery", IconGalleryElement);
 export default IconGalleryElement;
 class CameraIconElement extends HTMLElement {
   static observedAttributes = ["size", "color"];
-  set size(_val) {
-    if (!this._propsSignals["size"]) this._propsSignals["size"] = _signal(_val);
-    this._propsSignals["size"].value = _val;
-  }
-  set color(_val) {
-    if (!this._propsSignals["color"]) this._propsSignals["color"] = _signal(_val);
-    this._propsSignals["color"].value = _val;
-  }
-  get size() {
-    const _sig = this._propsSignals["size"];
-    return _sig ? _sig.value : undefined;
-  }
-  get color() {
-    const _sig = this._propsSignals["color"];
-    return _sig ? _sig.value : undefined;
-  }
   constructor() {
     super();
     _initWafComponent(this);
@@ -1598,14 +1705,6 @@ class CameraIconElement extends HTMLElement {
 customElements.define("web-cameraicon", CameraIconElement);
 class UserIconElement extends HTMLElement {
   static observedAttributes = ["size"];
-  set size(_val) {
-    if (!this._propsSignals["size"]) this._propsSignals["size"] = _signal(_val);
-    this._propsSignals["size"].value = _val;
-  }
-  get size() {
-    const _sig = this._propsSignals["size"];
-    return _sig ? _sig.value : undefined;
-  }
   constructor() {
     super();
     _initWafComponent(this);
@@ -1655,14 +1754,6 @@ class UserIconElement extends HTMLElement {
 customElements.define("web-usericon", UserIconElement);
 class SettingsIconElement extends HTMLElement {
   static observedAttributes = ["strokeWidth"];
-  set strokeWidth(_val) {
-    if (!this._propsSignals["strokeWidth"]) this._propsSignals["strokeWidth"] = _signal(_val);
-    this._propsSignals["strokeWidth"].value = _val;
-  }
-  get strokeWidth() {
-    const _sig = this._propsSignals["strokeWidth"];
-    return _sig ? _sig.value : undefined;
-  }
   constructor() {
     super();
     _initWafComponent(this);

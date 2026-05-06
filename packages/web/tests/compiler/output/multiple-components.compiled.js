@@ -36,14 +36,6 @@ customElements.define("web-multiplecomponents", MultipleComponentsElement);
 export default MultipleComponentsElement;
 class AElement extends HTMLElement {
   static observedAttributes = ["val"];
-  set val(_val) {
-    if (!this._propsSignals["val"]) this._propsSignals["val"] = _signal(_val);
-    this._propsSignals["val"].value = _val;
-  }
-  get val() {
-    const _sig = this._propsSignals["val"];
-    return _sig ? _sig.value : undefined;
-  }
   constructor() {
     super();
     _initWafComponent(this);
@@ -73,14 +65,6 @@ class AElement extends HTMLElement {
 customElements.define("web-a", AElement);
 class BElement extends HTMLElement {
   static observedAttributes = ["val"];
-  set val(_val) {
-    if (!this._propsSignals["val"]) this._propsSignals["val"] = _signal(_val);
-    this._propsSignals["val"].value = _val;
-  }
-  get val() {
-    const _sig = this._propsSignals["val"];
-    return _sig ? _sig.value : undefined;
-  }
   constructor() {
     super();
     _initWafComponent(this);

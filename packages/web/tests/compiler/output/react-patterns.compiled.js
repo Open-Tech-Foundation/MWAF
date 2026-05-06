@@ -2,22 +2,6 @@ import { setProperty as _setProperty, effect as _effect, renderDynamic as _rende
 import { UI } from './ui-lib';
 class ReactPatternsElement extends HTMLElement {
   static observedAttributes = ["user", "notifications"];
-  set user(_val) {
-    if (!this._propsSignals["user"]) this._propsSignals["user"] = _signal(_val);
-    this._propsSignals["user"].value = _val;
-  }
-  set notifications(_val) {
-    if (!this._propsSignals["notifications"]) this._propsSignals["notifications"] = _signal(_val);
-    this._propsSignals["notifications"].value = _val;
-  }
-  get user() {
-    const _sig = this._propsSignals["user"];
-    return _sig ? _sig.value : undefined;
-  }
-  get notifications() {
-    const _sig = this._propsSignals["notifications"];
-    return _sig ? _sig.value : undefined;
-  }
   constructor() {
     super();
     _initWafComponent(this);

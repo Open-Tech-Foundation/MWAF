@@ -1,22 +1,6 @@
 import { setProperty as _setProperty, renderDynamic as _renderDynamic, signal as _signal, createPropsProxy as _createPropsProxy, _initWafComponent, _clearChildren, withInstance as _withInstance } from "@opentf/web";
 class ItemElement extends HTMLElement {
   static observedAttributes = ["name", "isPacked"];
-  set name(_val) {
-    if (!this._propsSignals["name"]) this._propsSignals["name"] = _signal(_val);
-    this._propsSignals["name"].value = _val;
-  }
-  set isPacked(_val) {
-    if (!this._propsSignals["isPacked"]) this._propsSignals["isPacked"] = _signal(_val);
-    this._propsSignals["isPacked"].value = _val;
-  }
-  get name() {
-    const _sig = this._propsSignals["name"];
-    return _sig ? _sig.value : undefined;
-  }
-  get isPacked() {
-    const _sig = this._propsSignals["isPacked"];
-    return _sig ? _sig.value : undefined;
-  }
   constructor() {
     super();
     _initWafComponent(this);

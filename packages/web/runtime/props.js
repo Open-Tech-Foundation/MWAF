@@ -117,3 +117,29 @@ export function createPropsProxy(el) {
     }
   });
 }
+
+export function _syncPropGet(el, key) {
+  const sig = el._propsSignals[key];
+  return sig ? sig.value : undefined;
+}
+
+export function _syncPropSet(el, key, val) {
+  if (!el._propsSignals[key]) {
+    el._propsSignals[key] = signal(val);
+  }
+  el._propsSignals[key].value = val;
+}
+
+export function _defineWafProps(ctor) {
+  const attrs = ctor.observedAttributes;
+  if (!attrs) return;
+  attrs.forEach(attr => {
+    if (attr in ctor.prototype) return;
+    Object.defineProperty(ctor.prototype, attr, {
+      get() { return _syncPropGet(this, attr); },
+      set(val) { _syncPropSet(this, attr, val); },
+      enumerable: true,
+      configurable: true
+    });
+  });
+}

@@ -42,22 +42,6 @@ customElements.define("web-icongallery", IconGalleryElement);
 export default IconGalleryElement;
 class CameraIconElement extends HTMLElement {
   static observedAttributes = ["size", "color"];
-  set size(_val) {
-    if (!this._propsSignals["size"]) this._propsSignals["size"] = _signal(_val);
-    this._propsSignals["size"].value = _val;
-  }
-  set color(_val) {
-    if (!this._propsSignals["color"]) this._propsSignals["color"] = _signal(_val);
-    this._propsSignals["color"].value = _val;
-  }
-  get size() {
-    const _sig = this._propsSignals["size"];
-    return _sig ? _sig.value : undefined;
-  }
-  get color() {
-    const _sig = this._propsSignals["color"];
-    return _sig ? _sig.value : undefined;
-  }
   constructor() {
     super();
     _initWafComponent(this);
@@ -108,14 +92,6 @@ class CameraIconElement extends HTMLElement {
 customElements.define("web-cameraicon", CameraIconElement);
 class UserIconElement extends HTMLElement {
   static observedAttributes = ["size"];
-  set size(_val) {
-    if (!this._propsSignals["size"]) this._propsSignals["size"] = _signal(_val);
-    this._propsSignals["size"].value = _val;
-  }
-  get size() {
-    const _sig = this._propsSignals["size"];
-    return _sig ? _sig.value : undefined;
-  }
   constructor() {
     super();
     _initWafComponent(this);
@@ -165,14 +141,6 @@ class UserIconElement extends HTMLElement {
 customElements.define("web-usericon", UserIconElement);
 class SettingsIconElement extends HTMLElement {
   static observedAttributes = ["strokeWidth"];
-  set strokeWidth(_val) {
-    if (!this._propsSignals["strokeWidth"]) this._propsSignals["strokeWidth"] = _signal(_val);
-    this._propsSignals["strokeWidth"].value = _val;
-  }
-  get strokeWidth() {
-    const _sig = this._propsSignals["strokeWidth"];
-    return _sig ? _sig.value : undefined;
-  }
   constructor() {
     super();
     _initWafComponent(this);

@@ -51,9 +51,21 @@ function collectMapParams(path, t) {
 
 function extractPropsInfo(t, node) {
   const propNames = new Set();
+  const aliases = new Map(); // localName -> originalPropName
   let propsId = t.identifier("props");
   const param = node.params[0];
-  if (!param) return { propNames, propsId };
+  if (!param) return { propNames, aliases, propsId };
+
+  const addProp = (original, local) => {
+    propNames.add(original);
+    aliases.set(local, original);
+  };
+
+  const getName = (n) => {
+    if (t.isIdentifier(n)) return n.name;
+    if (t.isAssignmentPattern(n) && t.isIdentifier(n.left)) return n.left.name;
+    return null;
+  };
 
   if (t.isIdentifier(param)) {
     propsId = param;
@@ -64,10 +76,11 @@ function extractPropsInfo(t, node) {
           stmt.declarations.forEach(decl => {
             if (t.isVariableDeclarator(decl) && t.isObjectPattern(decl.id) && t.isIdentifier(decl.init, { name })) {
               decl.id.properties.forEach(prop => {
-                if (t.isObjectProperty(prop) && t.isIdentifier(prop.key))
-                  propNames.add(prop.key.name);
-                if (t.isObjectProperty(prop) && t.isIdentifier(prop.value) && prop.value.name !== prop.key.name)
-                  propNames.add(prop.value.name);
+                if (t.isObjectProperty(prop) && t.isIdentifier(prop.key)) {
+                  const original = prop.key.name;
+                  const local = getName(prop.value) || original;
+                  addProp(original, local);
+                }
               });
             }
           });
@@ -75,14 +88,16 @@ function extractPropsInfo(t, node) {
       });
     }
   } else if (t.isObjectPattern(param)) {
+    propsId = t.identifier("_waf_props");
     param.properties.forEach(prop => {
-      if (t.isObjectProperty(prop) && t.isIdentifier(prop.key))
-        propNames.add(prop.key.name);
-      if (t.isObjectProperty(prop) && t.isIdentifier(prop.value) && prop.value.name !== prop.key.name)
-        propNames.add(prop.value.name);
+      if (t.isObjectProperty(prop) && t.isIdentifier(prop.key)) {
+        const original = prop.key.name;
+        const local = getName(prop.value) || original;
+        addProp(original, local);
+      }
     });
   }
-  return { propNames, propsId };
+  return { propNames, aliases, propsId };
 }
 
 export function handleJSXVisitor(path, state, t) {
@@ -93,9 +108,11 @@ export function handleJSXVisitor(path, state, t) {
   const helpers = getHelpers(t);
   const mapParams = collectMapParams(path, t);
 
+  const { propNames, aliases } = extractPropsInfo(t, path.findParent(p => p.isFunction())?.node || { params: [] });
+
   const { statements, rootId, signals } = transformJSX(
     path.node, t, state, getImport, path, helpers,
-    null, mapParams, runtimeSource, new Set()
+    null, mapParams, runtimeSource, propNames
   );
 
   const parentFunc = path.findParent(p =>
@@ -116,6 +133,7 @@ export function handleJSXVisitor(path, state, t) {
         signals.forEach(s => {
           if (!s.startsWith("on")) info.observedAttributes.add(s);
         });
+        propNames.forEach(s => info.observedAttributes.add(s));
       }
     }
   }
@@ -155,12 +173,12 @@ export function transformComponent(componentPath, name, isRenderFn, t, state) {
   }
   if (!jsxNode) return;
 
-  const { propNames, propsId } = extractPropsInfo(t, node);
+  const { propNames, aliases, propsId } = extractPropsInfo(t, node);
 
-  if (propNames.size > 0) {
+  if (aliases.size > 0) {
     componentPath.traverse({
       Identifier(p) {
-        if (!propNames.has(p.node.name) || p.node._processed) return;
+        if (!aliases.has(p.node.name) || p.node._processed) return;
         if (p.parentPath.isObjectProperty({ key: p.node }) && !p.parentPath.node.computed) return;
         if (p.parentPath.isMemberExpression({ property: p.node }) && !p.parentPath.node.computed) return;
         
@@ -170,11 +188,12 @@ export function transformComponent(componentPath, name, isRenderFn, t, state) {
         if (p.parentPath.isObjectProperty({ value: p.node }) && p.parentPath.parentPath.isObjectPattern()) return;
         if (p.parentPath.isRestElement()) return;
 
-        const isEvent = p.node.name.startsWith("on");
-        const isChildren = p.node.name === "children";
+        const originalName = aliases.get(p.node.name);
+        const isEvent = originalName.startsWith("on");
+        const isChildren = originalName === "children";
         const hasValue = p.parentPath.isMemberExpression() && !p.parentPath.node.computed && t.isIdentifier(p.parentPath.node.property, { name: "value" });
         
-        const inner = t.memberExpression(t.identifier("_waf_props"), t.identifier(p.node.name));
+        const inner = t.memberExpression(t.identifier("_waf_props"), t.identifier(originalName));
         inner._processed = true;
         const repl = (isEvent || isChildren || hasValue)
           ? inner
@@ -254,43 +273,7 @@ export function transformComponent(componentPath, name, isRenderFn, t, state) {
         t.arrayExpression(observedAttributes.map(s => t.stringLiteral(s))),
         null, null, false, true
       ),
-      ...observedAttributes.map(s =>
-        t.classMethod("set", t.identifier(s), [t.identifier("_val")],
-          t.blockStatement([
-            t.ifStatement(
-              t.unaryExpression("!", t.memberExpression(t.memberExpression(t.thisExpression(), t.identifier("_propsSignals")), t.stringLiteral(s), true)),
-              t.expressionStatement(
-                t.assignmentExpression("=", t.memberExpression(t.memberExpression(t.thisExpression(), t.identifier("_propsSignals")), t.stringLiteral(s), true),
-                  t.callExpression(signalId, [t.identifier("_val")])
-                )
-              )
-            ),
-            t.expressionStatement(
-              t.assignmentExpression(
-                "=",
-                t.memberExpression(t.memberExpression(t.memberExpression(t.thisExpression(), t.identifier("_propsSignals")), t.stringLiteral(s), true), t.identifier("value")),
-                t.identifier("_val")
-              )
-            ),
-          ])
-        )
-      ),
-      ...observedAttributes.map(s =>
-        t.classMethod("get", t.identifier(s), [],
-          t.blockStatement([
-            t.variableDeclaration("const", [
-              t.variableDeclarator(t.identifier("_sig"), t.memberExpression(t.memberExpression(t.thisExpression(), t.identifier("_propsSignals")), t.stringLiteral(s), true)),
-            ]),
-            t.returnStatement(
-              t.conditionalExpression(
-                t.identifier("_sig"),
-                t.memberExpression(t.identifier("_sig"), t.identifier("value")),
-                t.identifier("undefined")
-              )
-            ),
-          ])
-        )
-      ),
+
       t.classMethod("constructor", t.identifier("constructor"), [],
         t.blockStatement([
           t.expressionStatement(t.callExpression(t.super(), [])),

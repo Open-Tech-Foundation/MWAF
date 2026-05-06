@@ -2,14 +2,6 @@ import { signal as _signal, effect as _effect, setProperty as _setProperty, rend
 import { signal } from "@preact/signals";
 class ReactivityElement extends HTMLElement {
   static observedAttributes = ["title"];
-  set title(_val) {
-    if (!this._propsSignals["title"]) this._propsSignals["title"] = _signal(_val);
-    this._propsSignals["title"].value = _val;
-  }
-  get title() {
-    const _sig = this._propsSignals["title"];
-    return _sig ? _sig.value : undefined;
-  }
   constructor() {
     super();
     _initWafComponent(this);

@@ -49,6 +49,8 @@ export function hookEffect(fn) {
 }
 
 
+import { _defineWafProps } from "./props.js";
+
 // Metadata initializer for Web Components
 export function _initWafComponent(el) {
   const props = {
@@ -69,5 +71,8 @@ export function _initWafComponent(el) {
       });
     }
   }
+
+  _defineWafProps(el.constructor);
+
   return el;
 }
