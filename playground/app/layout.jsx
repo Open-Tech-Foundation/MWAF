@@ -20,6 +20,7 @@ export default function GlobalLayout(props) {
         <Link href="/ref-demo" className="text-indigo-400 font-bold hover:text-indigo-300 transition-colors">Ref & Expose</Link>
         <Link href="/forms-demo" className="text-emerald-400 font-bold hover:text-emerald-300 transition-colors">Forms Demo</Link>
         <Link href="/icons" className="text-amber-400 font-bold hover:text-amber-300 transition-colors">SVG Icons</Link>
+        <Link href="/reconnect-demo" className="text-pink-400 font-bold hover:text-pink-300 transition-colors">Memory Leak Demo</Link>
       </nav>
       <main className="bg-slate-800 p-8 rounded shadow border border-slate-700">
         {props.children}

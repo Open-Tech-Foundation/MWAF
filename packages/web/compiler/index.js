@@ -15,7 +15,7 @@ export default function (babel) {
           state.components = new Map();
           state.stateVars = new Set();
           state.refVars = new Set();
-          
+
           const filename = state.filename || "";
           const pagePatterns = ["page.jsx", "page.tsx", "layout.jsx", "layout.tsx", "404.jsx", "404.tsx"];
           state.isPageFile = pagePatterns.some(p => filename.endsWith(p));
@@ -31,7 +31,7 @@ export default function (babel) {
       VariableDeclarator(path, state) {
         if (!t.isIdentifier(path.node.id) || !/^[A-Z]/.test(path.node.id.name)) return;
         const name = path.node.id.name;
-        
+
         let hasJSX = false;
         path.traverse({
           JSXElement() { hasJSX = true; },
@@ -57,7 +57,7 @@ export default function (babel) {
 
           const propsNode = path.node.params[0];
           const observedAttributes = new Set();
-          
+
           if (t.isObjectPattern(propsNode)) {
             propsNode.properties.forEach(prop => {
               if (t.isObjectProperty(prop) && t.isIdentifier(prop.key) && !prop.key.name.startsWith("on")) {
@@ -65,7 +65,7 @@ export default function (babel) {
               }
             });
           }
-          
+
           if (state.components.has(name)) {
             const info = state.components.get(name);
             info.observedAttributes = observedAttributes;
@@ -144,7 +144,7 @@ export default function (babel) {
               path.get("callee").replaceWith(getImport("signal", state.runtimeSource));
             }
           } else if (name === "$effect") {
-            const effectId = getImport("effect", state.runtimeSource);
+            const effectId = getImport("hookEffect", state.runtimeSource);
             const isSSGId = getImport("isSSG", state.runtimeSource);
             const parent = path.parentPath;
             const effectCall = t.callExpression(effectId, path.node.arguments);
@@ -152,7 +152,7 @@ export default function (babel) {
               t.unaryExpression("!", isSSGId),
               t.expressionStatement(effectCall)
             );
-            
+
             if (parent.isExpressionStatement()) {
               parent.replaceWith(ifStmt);
             } else {
@@ -198,7 +198,7 @@ export default function (babel) {
         if (t.isIdentifier(path.node.object, { name: "props" }) && t.isIdentifier(path.node.property) && path.node.property.name !== "children" && !path.node.property.name.startsWith("on")) {
           // Skip if already has .value
           if (t.isMemberExpression(path.parentPath.node) && t.isIdentifier(path.parentPath.node.property, { name: "value" })) return;
-          
+
           path.node._processed = true;
           const newNode = t.memberExpression(path.node, t.identifier("value"));
           newNode._processed = true;
@@ -209,7 +209,7 @@ export default function (babel) {
       Identifier(path, state) {
         if (!state.stateVars || !state.stateVars.has(path.node.name)) return;
         if (path.node._processed) return;
-        
+
         // Skip if it's a parameter of the function we are currently in
         if (path.parentPath.isFunction() && path.parentPath.node.params.includes(path.node)) return;
 
@@ -229,11 +229,11 @@ export default function (babel) {
         if (path.parentPath.isObjectProperty() && path.parentPath.node.key === path.node && !path.parentPath.node.computed) return;
         if (path.parentPath.isClassProperty() && path.parentPath.node.key === path.node) return;
         if (path.parentPath.isClassMethod() && path.parentPath.node.key === path.node) return;
-        
+
         // Skip if it's a 'ref' attribute in JSX
-        if (path.parentPath.isJSXExpressionContainer() && 
-            path.parentPath.parentPath.isJSXAttribute() && 
-            path.parentPath.parentPath.node.name.name === "ref") return;
+        if (path.parentPath.isJSXExpressionContainer() &&
+          path.parentPath.parentPath.isJSXAttribute() &&
+          path.parentPath.parentPath.node.name.name === "ref") return;
 
         const innerId = t.identifier(path.node.name);
         innerId._processed = true;

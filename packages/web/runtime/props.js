@@ -119,11 +119,15 @@ export function createPropsProxy(el) {
 }
 
 export function _syncPropGet(el, key) {
+  if (!el._propsSignals) return undefined;
   const sig = el._propsSignals[key];
   return sig ? sig.value : undefined;
 }
 
 export function _syncPropSet(el, key, val) {
+  if (!el._propsSignals) {
+    Object.defineProperty(el, "_propsSignals", { value: {}, enumerable: false, writable: true, configurable: true });
+  }
   if (!el._propsSignals[key]) {
     el._propsSignals[key] = signal(val);
   }

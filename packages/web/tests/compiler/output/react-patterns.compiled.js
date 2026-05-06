@@ -1,16 +1,67 @@
-import { setProperty as _setProperty, effect as _effect, renderDynamic as _renderDynamic, applySpread as _applySpread, signal as _signal, createPropsProxy as _createPropsProxy, _initWafComponent, _clearChildren, withInstance as _withInstance } from "@opentf/web";
+import { setProperty as _setProperty, hookEffect as _hookEffect, renderDynamic as _renderDynamic, applySpread as _applySpread, signal as _signal, createPropsProxy as _createPropsProxy, _reconnectWafComponent, _clearChildren, withInstance as _withInstance, _disconnectWafComponent } from "@opentf/web";
 import { UI } from './ui-lib';
 class ReactPatternsElement extends HTMLElement {
   static observedAttributes = ["user", "notifications"];
+  set user(_val) {
+    if (!this._propsSignals["user"]) this._propsSignals["user"] = _signal(_val);
+    this._propsSignals["user"].value = _val;
+  }
+  set notifications(_val) {
+    if (!this._propsSignals["notifications"]) this._propsSignals["notifications"] = _signal(_val);
+    this._propsSignals["notifications"].value = _val;
+  }
+  get user() {
+    const _sig = this._propsSignals["user"];
+    return _sig ? _sig.value : undefined;
+  }
+  get notifications() {
+    const _sig = this._propsSignals["notifications"];
+    return _sig ? _sig.value : undefined;
+  }
   constructor() {
     super();
-    _initWafComponent(this);
+    Object.defineProperty(this, "_propsSignals", {
+      value: {
+        user: _signal(null),
+        notifications: _signal(null)
+      },
+      enumerable: false,
+      writable: true,
+      configurable: true
+    });
+    Object.defineProperty(this, "_onMounts", {
+      value: [],
+      enumerable: false,
+      writable: true,
+      configurable: true
+    });
+    Object.defineProperty(this, "_onCleanups", {
+      value: [],
+      enumerable: false,
+      writable: true,
+      configurable: true
+    });
+    Object.defineProperty(this, "_children", {
+      value: [],
+      enumerable: false,
+      writable: true,
+      configurable: true
+    });
+    Object.defineProperty(this, "_mounted", {
+      value: false,
+      enumerable: false,
+      writable: true,
+      configurable: true
+    });
   }
   attributeChangedCallback(name, _, value) {
     if (this._propsSignals[name]) this._propsSignals[name].value = value;
   }
   connectedCallback() {
-    if (this._mounted) return;
+    if (this._mounted) {
+      _reconnectWafComponent(this);
+      return;
+    }
     this._mounted = true;
     const _waf_props = _createPropsProxy(this);
     this._children = Array.from(this.childNodes);
@@ -24,8 +75,8 @@ class ReactPatternsElement extends HTMLElement {
       el0.setAttribute("data-testid", "main-div");
       const el1 = document.createElement("input");
       _setProperty(el1, "disabled", true, false);
-      _effect(() => el1.setAttribute("tab-index", -1));
-      _effect(() => el1.setAttribute("max-length", 5));
+      _hookEffect(() => el1.setAttribute("tab-index", -1));
+      _hookEffect(() => el1.setAttribute("max-length", 5));
       el0.appendChild(el1);
       const el2 = document.createElement(Tag);
       const text3 = document.createTextNode("Dynamic Heading");
@@ -49,7 +100,7 @@ class ReactPatternsElement extends HTMLElement {
       el6.appendChild(text10);
       el0.appendChild(el6);
       const el11 = document.createElement("div");
-      _effect(() => _applySpread(el11, props.extra.value, false));
+      _hookEffect(() => _applySpread(el11, props.extra.value, false));
       _setProperty(el11, "className", "override", false);
       _setProperty(el11, "id", "constant", false);
       const text12 = document.createTextNode(" Spread Test ");
@@ -99,10 +150,12 @@ class ReactPatternsElement extends HTMLElement {
       const rootElement = el0;
       this.appendChild(rootElement);
     });
-    this._onMounts.forEach(fn => fn());
+    _withInstance(this, () => {
+      this._onMounts.forEach(fn => fn());
+    });
   }
   disconnectedCallback() {
-    this._onCleanups.forEach(fn => fn());
+    _disconnectWafComponent(this);
   }
 }
 customElements.define("web-reactpatterns", ReactPatternsElement);
@@ -119,13 +172,45 @@ class CustomComponentElement extends HTMLElement {
   static observedAttributes = [];
   constructor() {
     super();
-    _initWafComponent(this);
+    Object.defineProperty(this, "_propsSignals", {
+      value: {},
+      enumerable: false,
+      writable: true,
+      configurable: true
+    });
+    Object.defineProperty(this, "_onMounts", {
+      value: [],
+      enumerable: false,
+      writable: true,
+      configurable: true
+    });
+    Object.defineProperty(this, "_onCleanups", {
+      value: [],
+      enumerable: false,
+      writable: true,
+      configurable: true
+    });
+    Object.defineProperty(this, "_children", {
+      value: [],
+      enumerable: false,
+      writable: true,
+      configurable: true
+    });
+    Object.defineProperty(this, "_mounted", {
+      value: false,
+      enumerable: false,
+      writable: true,
+      configurable: true
+    });
   }
   attributeChangedCallback(name, _, value) {
     if (this._propsSignals[name]) this._propsSignals[name].value = value;
   }
   connectedCallback() {
-    if (this._mounted) return;
+    if (this._mounted) {
+      _reconnectWafComponent(this);
+      return;
+    }
     this._mounted = true;
     const _waf_props = _createPropsProxy(this);
     this._children = Array.from(this.childNodes);
@@ -137,10 +222,12 @@ class CustomComponentElement extends HTMLElement {
       const rootElement = el0;
       this.appendChild(rootElement);
     });
-    this._onMounts.forEach(fn => fn());
+    _withInstance(this, () => {
+      this._onMounts.forEach(fn => fn());
+    });
   }
   disconnectedCallback() {
-    this._onCleanups.forEach(fn => fn());
+    _disconnectWafComponent(this);
   }
 }
 customElements.define("web-customcomponent", CustomComponentElement);

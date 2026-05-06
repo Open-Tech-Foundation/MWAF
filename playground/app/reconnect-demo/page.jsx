@@ -35,8 +35,8 @@ export default function ReconnectDemo() {
         1. Open DevTools Console.<br/>
         2. Click "Global++" a few times. You'll see the [Child Effect] log fire.<br/>
         3. Click "Toggle Child" to unmount it.<br/>
-        4. Click "Global++" again. You will STILL see the [Child Effect] log fire because the effect is not disposed!<br/>
-        5. Toggle Child back ON. It mounts a NEW instance. Now clicking Global++ fires TWO effects!
+        4. Click "Global++" again. **Notice the [Child Effect] log NO LONGER fires!** (The effect is correctly disposed).<br/>
+        5. Toggle Child back ON. It mounts a NEW instance. Clicking Global++ fires only ONE effect.
       </p>
       
       <div style="margin-bottom: 20px;">

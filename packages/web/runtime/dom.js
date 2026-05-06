@@ -1,4 +1,5 @@
 import { signal, effect, isSSG, untracked, Signal, PREACT_SIGNALS_BRAND } from "../core/signals.js";
+import { hookEffect } from "./lifecycle.js";
 import { IS_PROPERTY } from "../core/constants.js";
 
 console.log("@opentf/web: dom.js loaded");
@@ -65,7 +66,7 @@ export function renderDynamic(parent, fn) {
 
   let currentNodes = [];
 
-  effect(() => {
+  hookEffect(() => {
     let value = fn();
     if (value === undefined || value === null) value = [];
     const newNodes = (Array.isArray(value) ? value : [value])
@@ -101,7 +102,7 @@ export function _mapped(sourceFn, mapFn) {
   const cache = new Map();
   const result = signal([]);
 
-  effect(() => {
+  hookEffect(() => {
     const source = sourceFn();
     const data = Array.isArray(source) ? source : [];
     

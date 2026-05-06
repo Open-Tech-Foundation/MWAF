@@ -1,16 +1,48 @@
-import { effect as _effect, applySpread as _applySpread, renderDynamic as _renderDynamic, signal as _signal, createPropsProxy as _createPropsProxy, _initWafComponent, _clearChildren, withInstance as _withInstance } from "@opentf/web";
+import { hookEffect as _hookEffect, applySpread as _applySpread, renderDynamic as _renderDynamic, signal as _signal, createPropsProxy as _createPropsProxy, _reconnectWafComponent, _clearChildren, withInstance as _withInstance, _disconnectWafComponent } from "@opentf/web";
 import { createForm } from "@opentf/web-form";
 class FormCaseElement extends HTMLElement {
   static observedAttributes = [];
   constructor() {
     super();
-    _initWafComponent(this);
+    Object.defineProperty(this, "_propsSignals", {
+      value: {},
+      enumerable: false,
+      writable: true,
+      configurable: true
+    });
+    Object.defineProperty(this, "_onMounts", {
+      value: [],
+      enumerable: false,
+      writable: true,
+      configurable: true
+    });
+    Object.defineProperty(this, "_onCleanups", {
+      value: [],
+      enumerable: false,
+      writable: true,
+      configurable: true
+    });
+    Object.defineProperty(this, "_children", {
+      value: [],
+      enumerable: false,
+      writable: true,
+      configurable: true
+    });
+    Object.defineProperty(this, "_mounted", {
+      value: false,
+      enumerable: false,
+      writable: true,
+      configurable: true
+    });
   }
   attributeChangedCallback(name, _, value) {
     if (this._propsSignals[name]) this._propsSignals[name].value = value;
   }
   connectedCallback() {
-    if (this._mounted) return;
+    if (this._mounted) {
+      _reconnectWafComponent(this);
+      return;
+    }
     this._mounted = true;
     const _waf_props = _createPropsProxy(this);
     this._children = Array.from(this.childNodes);
@@ -23,7 +55,7 @@ class FormCaseElement extends HTMLElement {
       });
       const el0 = document.createElement("div");
       const el1 = document.createElement("input");
-      _effect(() => _applySpread(el1, form.register('name'), false));
+      _hookEffect(() => _applySpread(el1, form.register('name'), false));
       el0.appendChild(el1);
       const el2 = document.createElement("p");
       const text3 = document.createTextNode("Hello, ");
@@ -38,10 +70,12 @@ class FormCaseElement extends HTMLElement {
       const rootElement = el0;
       this.appendChild(rootElement);
     });
-    this._onMounts.forEach(fn => fn());
+    _withInstance(this, () => {
+      this._onMounts.forEach(fn => fn());
+    });
   }
   disconnectedCallback() {
-    this._onCleanups.forEach(fn => fn());
+    _disconnectWafComponent(this);
   }
 }
 customElements.define("web-formcase", FormCaseElement);

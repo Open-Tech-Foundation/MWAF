@@ -51,21 +51,9 @@ function collectMapParams(path, t) {
 
 function extractPropsInfo(t, node) {
   const propNames = new Set();
-  const aliases = new Map(); // localName -> originalPropName
   let propsId = t.identifier("props");
   const param = node.params[0];
-  if (!param) return { propNames, aliases, propsId };
-
-  const addProp = (original, local) => {
-    propNames.add(original);
-    aliases.set(local, original);
-  };
-
-  const getName = (n) => {
-    if (t.isIdentifier(n)) return n.name;
-    if (t.isAssignmentPattern(n) && t.isIdentifier(n.left)) return n.left.name;
-    return null;
-  };
+  if (!param) return { propNames, propsId };
 
   if (t.isIdentifier(param)) {
     propsId = param;
@@ -76,11 +64,10 @@ function extractPropsInfo(t, node) {
           stmt.declarations.forEach(decl => {
             if (t.isVariableDeclarator(decl) && t.isObjectPattern(decl.id) && t.isIdentifier(decl.init, { name })) {
               decl.id.properties.forEach(prop => {
-                if (t.isObjectProperty(prop) && t.isIdentifier(prop.key)) {
-                  const original = prop.key.name;
-                  const local = getName(prop.value) || original;
-                  addProp(original, local);
-                }
+                if (t.isObjectProperty(prop) && t.isIdentifier(prop.key))
+                  propNames.add(prop.key.name);
+                if (t.isObjectProperty(prop) && t.isIdentifier(prop.value) && prop.value.name !== prop.key.name)
+                  propNames.add(prop.value.name);
               });
             }
           });
@@ -88,16 +75,14 @@ function extractPropsInfo(t, node) {
       });
     }
   } else if (t.isObjectPattern(param)) {
-    propsId = t.identifier("_waf_props");
     param.properties.forEach(prop => {
-      if (t.isObjectProperty(prop) && t.isIdentifier(prop.key)) {
-        const original = prop.key.name;
-        const local = getName(prop.value) || original;
-        addProp(original, local);
-      }
+      if (t.isObjectProperty(prop) && t.isIdentifier(prop.key))
+        propNames.add(prop.key.name);
+      if (t.isObjectProperty(prop) && t.isIdentifier(prop.value) && prop.value.name !== prop.key.name)
+        propNames.add(prop.value.name);
     });
   }
-  return { propNames, aliases, propsId };
+  return { propNames, propsId };
 }
 
 export function handleJSXVisitor(path, state, t) {
@@ -108,11 +93,9 @@ export function handleJSXVisitor(path, state, t) {
   const helpers = getHelpers(t);
   const mapParams = collectMapParams(path, t);
 
-  const { propNames, aliases } = extractPropsInfo(t, path.findParent(p => p.isFunction())?.node || { params: [] });
-
   const { statements, rootId, signals } = transformJSX(
     path.node, t, state, getImport, path, helpers,
-    null, mapParams, runtimeSource, propNames
+    null, mapParams, runtimeSource, new Set()
   );
 
   const parentFunc = path.findParent(p =>
@@ -133,7 +116,6 @@ export function handleJSXVisitor(path, state, t) {
         signals.forEach(s => {
           if (!s.startsWith("on")) info.observedAttributes.add(s);
         });
-        propNames.forEach(s => info.observedAttributes.add(s));
       }
     }
   }
@@ -173,27 +155,26 @@ export function transformComponent(componentPath, name, isRenderFn, t, state) {
   }
   if (!jsxNode) return;
 
-  const { propNames, aliases, propsId } = extractPropsInfo(t, node);
+  const { propNames, propsId } = extractPropsInfo(t, node);
 
-  if (aliases.size > 0) {
+  if (propNames.size > 0) {
     componentPath.traverse({
       Identifier(p) {
-        if (!aliases.has(p.node.name) || p.node._processed) return;
+        if (!propNames.has(p.node.name) || p.node._processed) return;
         if (p.parentPath.isObjectProperty({ key: p.node }) && !p.parentPath.node.computed) return;
         if (p.parentPath.isMemberExpression({ property: p.node }) && !p.parentPath.node.computed) return;
-        
+
         // Skip if it's a binding identifier (declaration/pattern)
         if (p.parentPath.isVariableDeclarator({ id: p.node })) return;
         if (p.parentPath.isAssignmentPattern({ left: p.node })) return;
         if (p.parentPath.isObjectProperty({ value: p.node }) && p.parentPath.parentPath.isObjectPattern()) return;
         if (p.parentPath.isRestElement()) return;
 
-        const originalName = aliases.get(p.node.name);
-        const isEvent = originalName.startsWith("on");
-        const isChildren = originalName === "children";
+        const isEvent = p.node.name.startsWith("on");
+        const isChildren = p.node.name === "children";
         const hasValue = p.parentPath.isMemberExpression() && !p.parentPath.node.computed && t.isIdentifier(p.parentPath.node.property, { name: "value" });
-        
-        const inner = t.memberExpression(t.identifier("_waf_props"), t.identifier(originalName));
+
+        const inner = t.memberExpression(t.identifier("_waf_props"), t.identifier(p.node.name));
         inner._processed = true;
         const repl = (isEvent || isChildren || hasValue)
           ? inner
@@ -264,6 +245,21 @@ export function transformComponent(componentPath, name, isRenderFn, t, state) {
   const createPropsProxy = getImport("createPropsProxy", runtimeSource);
   const classId = t.identifier(name + "Element");
 
+  // Helper to define internal properties as non-enumerable with an initial value
+  const defineInternalProp = (prop, value) => t.expressionStatement(t.callExpression(
+    t.memberExpression(t.identifier("Object"), t.identifier("defineProperty")),
+    [
+      t.thisExpression(),
+      t.stringLiteral(prop),
+      t.objectExpression([
+        t.objectProperty(t.identifier("value"), value),
+        t.objectProperty(t.identifier("enumerable"), t.booleanLiteral(false)),
+        t.objectProperty(t.identifier("writable"), t.booleanLiteral(true)),
+        t.objectProperty(t.identifier("configurable"), t.booleanLiteral(true))
+      ])
+    ]
+  ));
+
   const classDecl = t.classDeclaration(
     classId,
     t.identifier("HTMLElement"),
@@ -273,13 +269,53 @@ export function transformComponent(componentPath, name, isRenderFn, t, state) {
         t.arrayExpression(observedAttributes.map(s => t.stringLiteral(s))),
         null, null, false, true
       ),
-
+      ...observedAttributes.map(s =>
+        t.classMethod("set", t.identifier(s), [t.identifier("_val")],
+          t.blockStatement([
+            t.ifStatement(
+              t.unaryExpression("!", t.memberExpression(t.memberExpression(t.thisExpression(), t.identifier("_propsSignals")), t.stringLiteral(s), true)),
+              t.expressionStatement(
+                t.assignmentExpression("=", t.memberExpression(t.memberExpression(t.thisExpression(), t.identifier("_propsSignals")), t.stringLiteral(s), true),
+                  t.callExpression(signalId, [t.identifier("_val")])
+                )
+              )
+            ),
+            t.expressionStatement(
+              t.assignmentExpression(
+                "=",
+                t.memberExpression(t.memberExpression(t.memberExpression(t.thisExpression(), t.identifier("_propsSignals")), t.stringLiteral(s), true), t.identifier("value")),
+                t.identifier("_val")
+              )
+            ),
+          ])
+        )
+      ),
+      ...observedAttributes.map(s =>
+        t.classMethod("get", t.identifier(s), [],
+          t.blockStatement([
+            t.variableDeclaration("const", [
+              t.variableDeclarator(t.identifier("_sig"), t.memberExpression(t.memberExpression(t.thisExpression(), t.identifier("_propsSignals")), t.stringLiteral(s), true)),
+            ]),
+            t.returnStatement(
+              t.conditionalExpression(
+                t.identifier("_sig"),
+                t.memberExpression(t.identifier("_sig"), t.identifier("value")),
+                t.identifier("undefined")
+              )
+            ),
+          ])
+        )
+      ),
       t.classMethod("constructor", t.identifier("constructor"), [],
         t.blockStatement([
           t.expressionStatement(t.callExpression(t.super(), [])),
-          t.expressionStatement(
-            t.callExpression(getImport("_initWafComponent", runtimeSource), [t.thisExpression()])
-          )
+          defineInternalProp("_propsSignals", t.objectExpression(
+            observedAttributes.map(s => t.objectProperty(t.identifier(s), t.callExpression(signalId, [t.nullLiteral()])))
+          )),
+          defineInternalProp("_onMounts", t.arrayExpression([])),
+          defineInternalProp("_onCleanups", t.arrayExpression([])),
+          defineInternalProp("_children", t.arrayExpression([])),
+          defineInternalProp("_mounted", t.booleanLiteral(false))
         ])
       ),
       t.classMethod(
@@ -313,7 +349,10 @@ export function transformComponent(componentPath, name, isRenderFn, t, state) {
         t.blockStatement([
           t.ifStatement(
             t.memberExpression(t.thisExpression(), t.identifier("_mounted")),
-            t.returnStatement()
+            t.blockStatement([
+              t.expressionStatement(t.callExpression(getImport("_reconnectWafComponent", runtimeSource), [t.thisExpression()])),
+              t.returnStatement()
+            ])
           ),
           t.expressionStatement(
             t.assignmentExpression(
@@ -361,11 +400,21 @@ export function transformComponent(componentPath, name, isRenderFn, t, state) {
           ),
           t.expressionStatement(
             t.callExpression(
-              t.memberExpression(
-                t.memberExpression(t.thisExpression(), t.identifier("_onMounts")),
-                t.identifier("forEach")
-              ),
-              [t.arrowFunctionExpression([t.identifier("fn")], t.callExpression(t.identifier("fn"), []))]
+              getImport("withInstance", runtimeSource),
+              [
+                t.thisExpression(),
+                t.arrowFunctionExpression([], t.blockStatement([
+                  t.expressionStatement(
+                    t.callExpression(
+                      t.memberExpression(
+                        t.memberExpression(t.thisExpression(), t.identifier("_onMounts")),
+                        t.identifier("forEach")
+                      ),
+                      [t.arrowFunctionExpression([t.identifier("fn")], t.callExpression(t.identifier("fn"), []))]
+                    )
+                  )
+                ]))
+              ]
             )
           ),
         ])
@@ -373,14 +422,8 @@ export function transformComponent(componentPath, name, isRenderFn, t, state) {
       t.classMethod("method", t.identifier("disconnectedCallback"), [],
         t.blockStatement([
           t.expressionStatement(
-            t.callExpression(
-              t.memberExpression(
-                t.memberExpression(t.thisExpression(), t.identifier("_onCleanups")),
-                t.identifier("forEach")
-              ),
-              [t.arrowFunctionExpression([t.identifier("fn")], t.callExpression(t.identifier("fn"), []))]
-            )
-          ),
+            t.callExpression(getImport("_disconnectWafComponent", runtimeSource), [t.thisExpression()])
+          )
         ])
       ),
     ])
@@ -522,7 +565,7 @@ function transformJSX(node, t, state, getImport, path, helpers, rootIdentifier, 
 
         n.openingElement.attributes.forEach(attr => {
           if (t.isJSXSpreadAttribute(attr)) {
-            const effectId = getImport("effect", runtimeSource);
+            const effectId = getImport("hookEffect", runtimeSource);
             const applySpread = getImport("applySpread", runtimeSource);
             statements.push(t.expressionStatement(
               t.callExpression(effectId, [
@@ -546,7 +589,7 @@ function transformJSX(node, t, state, getImport, path, helpers, rootIdentifier, 
             }
             transformNoValue(value);
             const setProperty = getImport("setProperty", runtimeSource);
-            const effectId = getImport("effect", runtimeSource);
+            const effectId = getImport("hookEffect", runtimeSource);
             statements.push(t.expressionStatement(
               t.callExpression(effectId, [
                 t.arrowFunctionExpression([], t.callExpression(setProperty, [
@@ -586,7 +629,7 @@ function transformJSX(node, t, state, getImport, path, helpers, rootIdentifier, 
 
       n.openingElement.attributes.forEach(attr => {
         if (t.isJSXSpreadAttribute(attr)) {
-          const effectId = getImport("effect", runtimeSource);
+          const effectId = getImport("hookEffect", runtimeSource);
           const applySpread = getImport("applySpread", runtimeSource);
           statements.push(t.expressionStatement(
             t.callExpression(effectId, [
@@ -637,7 +680,7 @@ function transformJSX(node, t, state, getImport, path, helpers, rootIdentifier, 
           const finalAttrName = isSvgCamel
             ? originalName
             : (attrProp === "className" ? "class" : toKebabCase(originalName));
-          const effectId = getImport("effect", runtimeSource);
+          const effectId = getImport("hookEffect", runtimeSource);
 
           if (attrProp === "key") {
             statements.push(t.expressionStatement(

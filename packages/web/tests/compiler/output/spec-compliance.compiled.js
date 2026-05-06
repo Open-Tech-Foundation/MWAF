@@ -1,4 +1,4 @@
-import { signal as _signal, computed as _computed, renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy, _initWafComponent, _clearChildren, withInstance as _withInstance, setProperty as _setProperty, effect as _effect } from "@opentf/web";
+import { signal as _signal, computed as _computed, renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy, _initWafComponent, _reconnectWafComponent, _clearChildren, withInstance as _withInstance, _disconnectWafComponent, setProperty as _setProperty, hookEffect as _hookEffect } from "@opentf/web";
 // Section 2.7, 2.10: Destructured Props with Defaults and Aliases
 export class PropPatterns extends HTMLElement {
   static observedAttributes = ["name", "age"];
@@ -10,7 +10,10 @@ export class PropPatterns extends HTMLElement {
     if (this._propsSignals[name]) this._propsSignals[name].value = value;
   }
   connectedCallback() {
-    if (this._mounted) return;
+    if (this._mounted) {
+      _reconnectWafComponent(this);
+      return;
+    }
     this._mounted = true;
     const _waf_props = _createPropsProxy(this);
     this._children = Array.from(this.childNodes);
@@ -43,7 +46,7 @@ export class PropPatterns extends HTMLElement {
     this._onMounts.forEach(fn => fn());
   }
   disconnectedCallback() {
-    this._onCleanups.forEach(fn => fn());
+    _disconnectWafComponent(this);
   }
 } // Section 5.3.1: Event Normalization (Native vs Component)
 customElements.define("web-proppatterns", PropPatterns);
@@ -57,7 +60,10 @@ export class EventPatterns extends HTMLElement {
     if (this._propsSignals[name]) this._propsSignals[name].value = value;
   }
   connectedCallback() {
-    if (this._mounted) return;
+    if (this._mounted) {
+      _reconnectWafComponent(this);
+      return;
+    }
     this._mounted = true;
     const _waf_props = _createPropsProxy(this);
     this._children = Array.from(this.childNodes);
@@ -68,8 +74,8 @@ export class EventPatterns extends HTMLElement {
       const el0 = document.createElement("div");
       el0.onclick = handleNative;
       const el1 = document.createElement("web-proppatterns");
-      _effect(() => _setProperty(el1, "onCustomEvent", handleComp, true));
-      _effect(() => _setProperty(el1, "onClick", handleComp, true));
+      _hookEffect(() => _setProperty(el1, "onCustomEvent", handleComp, true));
+      _hookEffect(() => _setProperty(el1, "onClick", handleComp, true));
       el0.appendChild(el1);
       const rootElement = el0;
       this.appendChild(rootElement);
@@ -77,7 +83,7 @@ export class EventPatterns extends HTMLElement {
     this._onMounts.forEach(fn => fn());
   }
   disconnectedCallback() {
-    this._onCleanups.forEach(fn => fn());
+    _disconnectWafComponent(this);
   }
 } // Section 5.2.1, 5.2.3: Special Attributes
 customElements.define("web-eventpatterns", EventPatterns);
@@ -91,7 +97,10 @@ export class AttrPatterns extends HTMLElement {
     if (this._propsSignals[name]) this._propsSignals[name].value = value;
   }
   connectedCallback() {
-    if (this._mounted) return;
+    if (this._mounted) {
+      _reconnectWafComponent(this);
+      return;
+    }
     this._mounted = true;
     const _waf_props = _createPropsProxy(this);
     this._children = Array.from(this.childNodes);
@@ -100,12 +109,12 @@ export class AttrPatterns extends HTMLElement {
       let isTrue = true;
       let isNull = null;
       const el0 = document.createElement("div");
-      _effect(() => el0.setAttribute("tab-index", 0));
-      _effect(() => _setProperty(el0, "disabled", isTrue, false));
-      _effect(() => el0.setAttribute("hidden", false));
+      _hookEffect(() => el0.setAttribute("tab-index", 0));
+      _hookEffect(() => _setProperty(el0, "disabled", isTrue, false));
+      _hookEffect(() => el0.setAttribute("hidden", false));
       el0.setAttribute("aria-label", "test");
-      _effect(() => el0.setAttribute("data-id", 123));
-      _effect(() => _setProperty(el0, "title", isNull, false));
+      _hookEffect(() => el0.setAttribute("data-id", 123));
+      _hookEffect(() => _setProperty(el0, "title", isNull, false));
       const text1 = document.createTextNode(" Content ");
       el0.appendChild(text1);
       const rootElement = el0;
@@ -114,7 +123,7 @@ export class AttrPatterns extends HTMLElement {
     this._onMounts.forEach(fn => fn());
   }
   disconnectedCallback() {
-    this._onCleanups.forEach(fn => fn());
+    _disconnectWafComponent(this);
   }
 } // Section 5.4.1: HTML Entities
 customElements.define("web-attrpatterns", AttrPatterns);
@@ -128,7 +137,10 @@ export class TextPatterns extends HTMLElement {
     if (this._propsSignals[name]) this._propsSignals[name].value = value;
   }
   connectedCallback() {
-    if (this._mounted) return;
+    if (this._mounted) {
+      _reconnectWafComponent(this);
+      return;
+    }
     this._mounted = true;
     const _waf_props = _createPropsProxy(this);
     this._children = Array.from(this.childNodes);
@@ -149,7 +161,7 @@ export class TextPatterns extends HTMLElement {
     this._onMounts.forEach(fn => fn());
   }
   disconnectedCallback() {
-    this._onCleanups.forEach(fn => fn());
+    _disconnectWafComponent(this);
   }
 } // Section 3.2, 4.6: Macros ($derived expressions, $expose)
 customElements.define("web-textpatterns", TextPatterns);
@@ -163,7 +175,10 @@ export class MacroPatterns extends HTMLElement {
     if (this._propsSignals[name]) this._propsSignals[name].value = value;
   }
   connectedCallback() {
-    if (this._mounted) return;
+    if (this._mounted) {
+      _reconnectWafComponent(this);
+      return;
+    }
     this._mounted = true;
     const _waf_props = _createPropsProxy(this);
     this._children = Array.from(this.childNodes);
@@ -186,7 +201,7 @@ export class MacroPatterns extends HTMLElement {
     this._onMounts.forEach(fn => fn());
   }
   disconnectedCallback() {
-    this._onCleanups.forEach(fn => fn());
+    _disconnectWafComponent(this);
   }
 } // Section 3.5: $signal() First-Access Rule
 customElements.define("web-macropatterns", MacroPatterns);
@@ -200,7 +215,10 @@ export class SignalPatterns extends HTMLElement {
     if (this._propsSignals[name]) this._propsSignals[name].value = value;
   }
   connectedCallback() {
-    if (this._mounted) return;
+    if (this._mounted) {
+      _reconnectWafComponent(this);
+      return;
+    }
     this._mounted = true;
     const _waf_props = _createPropsProxy(this);
     this._children = Array.from(this.childNodes);
@@ -234,7 +252,7 @@ export class SignalPatterns extends HTMLElement {
     this._onMounts.forEach(fn => fn());
   }
   disconnectedCallback() {
-    this._onCleanups.forEach(fn => fn());
+    _disconnectWafComponent(this);
   }
 }
 customElements.define("web-signalpatterns", SignalPatterns);

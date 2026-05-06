@@ -1,4 +1,4 @@
-import { signal as _signal, setProperty as _setProperty, _mapped, effect as _effect, renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy } from "@opentf/web";
+import { signal as _signal, setProperty as _setProperty, _mapped, hookEffect as _hookEffect, renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy } from "@opentf/web";
 export function render(root, _props) {
   const _holder = {
     _children: _props.children || []
