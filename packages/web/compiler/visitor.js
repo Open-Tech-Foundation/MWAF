@@ -245,21 +245,6 @@ export function transformComponent(componentPath, name, isRenderFn, t, state) {
   const createPropsProxy = getImport("createPropsProxy", runtimeSource);
   const classId = t.identifier(name + "Element");
 
-  // Helper to define internal properties as non-enumerable with an initial value
-  const defineInternalProp = (prop, value) => t.expressionStatement(t.callExpression(
-    t.memberExpression(t.identifier("Object"), t.identifier("defineProperty")),
-    [
-      t.thisExpression(),
-      t.stringLiteral(prop),
-      t.objectExpression([
-        t.objectProperty(t.identifier("value"), value),
-        t.objectProperty(t.identifier("enumerable"), t.booleanLiteral(false)),
-        t.objectProperty(t.identifier("writable"), t.booleanLiteral(true)),
-        t.objectProperty(t.identifier("configurable"), t.booleanLiteral(true))
-      ])
-    ]
-  ));
-
   const classDecl = t.classDeclaration(
     classId,
     t.identifier("HTMLElement"),
@@ -309,13 +294,9 @@ export function transformComponent(componentPath, name, isRenderFn, t, state) {
       t.classMethod("constructor", t.identifier("constructor"), [],
         t.blockStatement([
           t.expressionStatement(t.callExpression(t.super(), [])),
-          defineInternalProp("_propsSignals", t.objectExpression(
-            observedAttributes.map(s => t.objectProperty(t.identifier(s), t.callExpression(signalId, [t.nullLiteral()])))
-          )),
-          defineInternalProp("_onMounts", t.arrayExpression([])),
-          defineInternalProp("_onCleanups", t.arrayExpression([])),
-          defineInternalProp("_children", t.arrayExpression([])),
-          defineInternalProp("_mounted", t.booleanLiteral(false))
+          t.expressionStatement(
+            t.callExpression(getImport("_initWafComponent", runtimeSource), [t.thisExpression()])
+          )
         ])
       ),
       t.classMethod(

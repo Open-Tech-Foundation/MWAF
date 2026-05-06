@@ -32,7 +32,7 @@ export function createPropsProxy(el) {
       
       const val = (el[key] !== undefined)
         ? el[key]
-        : (el instanceof Element ? el.getAttribute(key) : undefined);
+        : (typeof el.getAttribute === "function" ? el.getAttribute(key) : undefined);
       
       if (typeof val === "function" || key.startsWith("on")) {
         t[key] = val;

@@ -51,8 +51,23 @@ export function hookEffect(fn) {
 
 // Metadata initializer for Web Components
 export function _initWafComponent(el) {
-  if (!el._propsSignals) {
-    Object.defineProperty(el, "_propsSignals", { value: {}, enumerable: false, writable: true, configurable: true });
+  const props = {
+    _propsSignals: {},
+    _onMounts: [],
+    _onCleanups: [],
+    _children: [],
+    _mounted: false
+  };
+  
+  for (const key in props) {
+    if (!(key in el)) {
+      Object.defineProperty(el, key, {
+        value: props[key],
+        enumerable: false,
+        writable: true,
+        configurable: true
+      });
+    }
   }
   return el;
 }
