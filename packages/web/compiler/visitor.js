@@ -431,12 +431,22 @@ export function transformComponent(componentPath, name, isRenderFn, t, state) {
     ])
   );
 
-  const defineCall = t.expressionStatement(
-    t.callExpression(
-      t.memberExpression(t.identifier("customElements"), t.identifier("define")),
-      [t.stringLiteral(tagName), classId]
-    )
-  );
+  const defineCall = state.dev
+    ? t.ifStatement(
+        t.unaryExpression("!", t.callExpression(t.memberExpression(t.identifier("customElements"), t.identifier("get")), [t.stringLiteral(tagName)])),
+        t.expressionStatement(
+          t.callExpression(
+            t.memberExpression(t.identifier("customElements"), t.identifier("define")),
+            [t.stringLiteral(tagName), classId]
+          )
+        )
+      )
+    : t.expressionStatement(
+        t.callExpression(
+          t.memberExpression(t.identifier("customElements"), t.identifier("define")),
+          [t.stringLiteral(tagName), classId]
+        )
+      );
 
   const parent = componentPath.parentPath;
   if (parent.isExportDefaultDeclaration()) {
@@ -448,14 +458,23 @@ export function transformComponent(componentPath, name, isRenderFn, t, state) {
       t.identifier(name), t.identifier("HTMLElement"), classDecl.body
     );
     parent.replaceWith(t.exportNamedDeclaration(exportedClass, []));
-    parent.insertAfter(
-      t.expressionStatement(
-        t.callExpression(
-          t.memberExpression(t.identifier("customElements"), t.identifier("define")),
-          [t.stringLiteral(tagName), t.identifier(name)]
+    const finalDefine = state.dev
+      ? t.ifStatement(
+          t.unaryExpression("!", t.callExpression(t.memberExpression(t.identifier("customElements"), t.identifier("get")), [t.stringLiteral(tagName)])),
+          t.expressionStatement(
+            t.callExpression(
+              t.memberExpression(t.identifier("customElements"), t.identifier("define")),
+              [t.stringLiteral(tagName), t.identifier(name)]
+            )
+          )
         )
-      )
-    );
+      : t.expressionStatement(
+          t.callExpression(
+            t.memberExpression(t.identifier("customElements"), t.identifier("define")),
+            [t.stringLiteral(tagName), t.identifier(name)]
+          )
+        );
+    parent.insertAfter(finalDefine);
   } else {
     let targetPath = componentPath;
     if (componentPath.isVariableDeclarator() && componentPath.parentPath.isVariableDeclaration())

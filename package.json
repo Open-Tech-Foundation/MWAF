@@ -21,6 +21,7 @@
     "test": "bun test",
     "deploy": "bun run website:build && wrangler deploy",
     "build:web": "bun run --cwd packages/web build",
+    "build:repl": "bun run scripts/build-standalone.js",
     "changeset": "changeset",
     "version-packages": "changeset version",
     "release": "changeset publish"

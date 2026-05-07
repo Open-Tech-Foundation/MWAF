@@ -8,6 +8,7 @@ const guards = import.meta.glob('./app/routeGuard.{js,ts,jsx,tsx}', { eager: tru
 const guard = Object.values(guards)[0]?.default;
 
 // 3. Bootstrap
+console.log("📑 Discovered Pages:", Object.keys(pages));
 mountApp({ 
   pages, 
   guard 

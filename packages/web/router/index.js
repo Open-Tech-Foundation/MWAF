@@ -15,6 +15,7 @@ const routerSignals = {
   hash: signal(isBrowser ? window.location.hash : ''),
   isGuarding: signal(false),
   guard: null,
+  currentPage: signal(null),
   config: signal({
     navigation: 'spa'
   })
@@ -61,12 +62,14 @@ export function registerRoutes(pages) {
     
     if (route === '') route = '/';
     
+    const isDev = typeof process !== 'undefined' && process.env.NODE_ENV !== 'production';
+    
     if (isNotFound) {
-      routes.notFound = pages[path];
+      routes.notFound = isDev ? { module: pages[path], sourceFile: path } : pages[path];
     } else if (isLayout) {
-      routes.layouts[route] = pages[path];
+      routes.layouts[route] = isDev ? { module: pages[path], sourceFile: path } : pages[path];
     } else {
-      routes.pages[route] = pages[path];
+      routes.pages[route] = isDev ? { module: pages[path], sourceFile: path } : pages[path];
     }
   }
 }
@@ -88,10 +91,12 @@ function matchRoute(path) {
         }
       }
 
+      const isDev = typeof process !== 'undefined' && process.env.NODE_ENV !== 'production';
       return { 
-        page: routes.pages[route], 
+        page: isDev ? routes.pages[route].module : routes.pages[route], 
         params,
-        route
+        route,
+        sourceFile: isDev ? routes.pages[route].sourceFile : null
       };
     }
   }
@@ -181,10 +186,19 @@ export async function navigate(path, root, replace = false, isPopState = false) 
     return;
   }
 
-  const match = matchRoute(pathname) || (routes.notFound ? { page: routes.notFound, params: {}, route: null } : null);
+  const isDev = typeof process !== 'undefined' && process.env.NODE_ENV !== 'production';
+  const match = matchRoute(pathname) || (routes.notFound ? { 
+    page: isDev ? routes.notFound.module : routes.notFound, 
+    params: {}, 
+    route: null, 
+    sourceFile: isDev ? routes.notFound.sourceFile : null 
+  } : null);
   
   if (match) {
-    const { page, params, route } = match;
+    const { page, params, route, sourceFile } = match;
+    if (typeof process !== 'undefined' && process.env.NODE_ENV !== 'production') {
+      routerSignals.currentPage.value = { route, sourceFile };
+    }
     
     if (currentPageInstance && currentPageInstance._onCleanups) {
       currentPageInstance._onCleanups.forEach(fn => fn());
@@ -196,9 +210,10 @@ export async function navigate(path, root, replace = false, isPopState = false) 
     const layoutChain = [];
     if (route) {
       let currentPath = route;
+      const isDev = typeof process !== 'undefined' && process.env.NODE_ENV !== 'production';
       while (true) {
         if (routes.layouts[currentPath]) {
-          layoutChain.unshift(routes.layouts[currentPath]);
+          layoutChain.unshift(isDev ? routes.layouts[currentPath].module : routes.layouts[currentPath]);
         }
         if (currentPath === '/') break;
         currentPath = currentPath.substring(0, currentPath.lastIndexOf('/')) || '/';

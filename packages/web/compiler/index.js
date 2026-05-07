@@ -10,6 +10,7 @@ export default function (babel) {
       Program: {
         enter(p, state) {
           state.runtimeSource = state.opts.runtimeSource || "@opentf/web";
+          state.dev = state.opts.dev === true;
           state.importsNeeded = new Map();
           state.importSources = new Map();
           state.components = new Map();
@@ -108,11 +109,21 @@ export default function (babel) {
 
       ImportDeclaration(path, state) {
         const source = path.node.source.value;
-        path.node.specifiers.forEach(spec => {
+        const macros = ["$state", "$derived", "$effect", "$ref", "$signal", "$expose"];
+        
+        path.node.specifiers = path.node.specifiers.filter(spec => {
+          if (t.isImportSpecifier(spec) && macros.includes(spec.imported.name)) {
+            return false;
+          }
           if (t.isImportDefaultSpecifier(spec) || t.isImportSpecifier(spec)) {
             state.importSources.set(spec.local.name, source);
           }
+          return true;
         });
+
+        if (path.node.specifiers.length === 0) {
+          path.remove();
+        }
       },
 
       CallExpression(path, state) {
