@@ -1,6 +1,6 @@
 import * as Signals from "@preact/signals-core";
 
-if (typeof globalThis !== 'undefined') {
+if (typeof window !== 'undefined') {
   if (globalThis.__WAF_SIGNALS_LOADED__) {
     console.warn("@opentf/web: Multiple instances of signals detected! This may cause reactivity loss.");
   }

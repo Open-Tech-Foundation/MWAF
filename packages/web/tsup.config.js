@@ -32,18 +32,10 @@ export default defineConfig({
     'ssg/index': 'ssg/index.js',
     'ssg/render': 'ssg/render.js',
   },
-  format: ['esm', 'cjs'],
+  format: ['esm'],
   dts: false,
   clean: true,
   shims: true,
   esbuildPlugins: [frameworkJSXPlugin],
   external: ['@babel/core', '@preact/signals-core', '@babel/helper-module-imports'],
-  outExtension({ format }) {
-    return {
-      js: format === 'cjs' ? '.cjs' : '.js',
-    }
-  },
-  footer: {
-    js: 'if (typeof module !== "undefined" && module.exports && module.exports.default) module.exports = module.exports.default;',
-  },
 })

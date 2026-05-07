@@ -17,6 +17,7 @@ export function createServerDOM(html = '<!DOCTYPE html><html><head></head><body>
     window: globalThis.window,
     HTMLElement: globalThis.HTMLElement,
     SVGElement: globalThis.SVGElement,
+    Element: globalThis.Element,
     Node: globalThis.Node,
     customElements: globalThis.customElements,
     navigator: globalThis.navigator,
@@ -48,6 +49,7 @@ export function createServerDOM(html = '<!DOCTYPE html><html><head></head><body>
   setGlobal('window', window);
   setGlobal('HTMLElement', window.HTMLElement);
   setGlobal('SVGElement', window.SVGElement || window.HTMLElement);
+  setGlobal('Element', window.Element || window.HTMLElement);
   setGlobal('Node', window.Node);
   setGlobal('navigator', window.navigator || { userAgent: '' });
   setGlobal('location', window.location || { pathname: '/', search: '', hash: '' });

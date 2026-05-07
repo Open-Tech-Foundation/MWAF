@@ -1,19 +1,22 @@
-import { onMount, $ref, hookEffect } from "@opentf/web";
-import Prism from "prismjs";
-import "prismjs/components/prism-javascript";
+import { onMount, $ref, hookEffect, signal } from "@opentf/web";
 import "prismjs/themes/prism-tomorrow.css";
-
-// Ensure Prism is available globally for some components
-if (typeof window !== "undefined") {
-  window.Prism = Prism;
-}
 
 export default function CodeHighlighter({ code, language = "javascript" }) {
   const preRef = $ref();
+  const Prism = signal(null);
+  onMount(async () => {
+    if (typeof window !== "undefined") {
+      const mod = await import("prismjs");
+      await import("prismjs/components/prism-javascript");
+      Prism.value = mod.default;
+      window.Prism = Prism.value;
+    }
+  });
 
   hookEffect(() => {
-    if (preRef) {
-      const html = Prism.highlight(code, Prism.languages[language] || Prism.languages.javascript, language);
+    const prismInst = Prism.value;
+    if (preRef && prismInst && code) {
+      const html = prismInst.highlight(code, prismInst.languages[language] || prismInst.languages.javascript, language);
       preRef.innerHTML = html;
     }
   });

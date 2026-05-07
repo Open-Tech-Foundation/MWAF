@@ -1374,4 +1374,3 @@ function index_default(babel) {
 export {
   index_default as default
 };
-if (typeof module !== "undefined" && module.exports && module.exports.default) module.exports = module.exports.default;

@@ -636,8 +636,12 @@ function setProperty(el, key, value, isComponent) {
   if (value && typeof value === "object" && (value instanceof Signal2 || value.brand === PREACT_SIGNALS_BRAND || PREACT_SIGNALS_BRAND in value)) {
     value = value.value;
   }
-  if (key === "style" && typeof value === "object") {
-    Object.assign(el.style, value);
+  if (key === "style") {
+    if (typeof value === "object") {
+      Object.assign(el.style, value);
+    } else {
+      el.setAttribute("style", value);
+    }
   } else if (key.startsWith("on") && typeof value === "function") {
     el[isComponent ? key : key.toLowerCase()] = value;
   } else if (IS_PROPERTY.includes(key)) {
@@ -839,4 +843,3 @@ export {
   untracked2 as untracked,
   withInstance
 };
-if (typeof module !== "undefined" && module.exports && module.exports.default) module.exports = module.exports.default;

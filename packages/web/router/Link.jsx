@@ -16,6 +16,9 @@ export default function Link(props) {
           e.button !== 0
         ) return
 
+        // Respect the navigation mode from the config
+        if (router.config.navigation === "mpa") return;
+
         // If Navigation API is supported, let it handle the interception globally.
         // Otherwise, fallback to manual navigation.
         if (!window.navigation) {

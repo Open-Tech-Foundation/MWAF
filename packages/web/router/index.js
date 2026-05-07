@@ -17,7 +17,7 @@ const routerSignals = {
   guard: null,
   currentPage: signal(null),
   config: signal({
-    navigation: 'spa'
+    navigation: (isBrowser && window.__WAF_CONFIG__?.mode?.navigation) || 'spa'
   })
 };
 
@@ -258,6 +258,9 @@ export async function navigate(path, root, replace = false, isPopState = false) 
 if (typeof window !== 'undefined') {
   if (window.navigation) {
     window.navigation.addEventListener('navigate', (event) => {
+      // Respect MPA mode
+      if (routerSignals.config.peek().navigation === 'mpa') return;
+
       if (!event.canIntercept || event.hashChange || event.downloadRequest || event.formData) {
         return;
       }
@@ -277,6 +280,7 @@ if (typeof window !== 'undefined') {
     });
   } else {
     window.addEventListener('popstate', () => {
+      if (routerSignals.config.peek().navigation === 'mpa') return;
       const fullPath = window.location.pathname + window.location.search + window.location.hash;
       routerSignals.pathname.value = window.location.pathname;
       routerSignals.searchParams.value = new URLSearchParams(window.location.search);
