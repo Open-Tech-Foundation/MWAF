@@ -1,4 +1,4 @@
-import { signal as _signal, hookEffect as _hookEffect, setProperty as _setProperty, renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy, _reconnectWafComponent, _clearChildren, withInstance as _withInstance, _disconnectWafComponent } from "@opentf/web";
+import { signal as _signal, _element, _text, _svg, _fragment, hookEffect as _hookEffect, setProperty as _setProperty, renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy, _initInternalState, _reconnectWafComponent, _clearChildren, withInstance as _withInstance, _disconnectWafComponent } from "@opentf/web";
 class ComplexExpressionsElement extends HTMLElement {
   static observedAttributes = ["theme", "color", "loading", "title", "logMessage"];
   set theme(_val) {
@@ -43,41 +43,12 @@ class ComplexExpressionsElement extends HTMLElement {
   }
   constructor() {
     super();
-    Object.defineProperty(this, "_propsSignals", {
-      value: {
-        theme: _signal(null),
-        color: _signal(null),
-        loading: _signal(null),
-        title: _signal(null),
-        logMessage: _signal(null)
-      },
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_onMounts", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_onCleanups", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_children", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_mounted", {
-      value: false,
-      enumerable: false,
-      writable: true,
-      configurable: true
+    _initInternalState(this, {
+      theme: _signal(null),
+      color: _signal(null),
+      loading: _signal(null),
+      title: _signal(null),
+      logMessage: _signal(null)
     });
   }
   attributeChangedCallback(name, _, value) {
@@ -90,37 +61,40 @@ class ComplexExpressionsElement extends HTMLElement {
     }
     this._mounted = true;
     const _waf_props = _createPropsProxy(this);
-    this._children = Array.from(this.childNodes);
-    _clearChildren(this);
+    const _isHydrating = this.hasAttribute("data-ssg");
+    if (!_isHydrating) {
+      this._children = Array.from(this.childNodes);
+      _clearChildren(this);
+    }
     _withInstance(this, () => {
       const props = _waf_props;
       let count = _signal(0);
-      const el0 = document.createElement("div");
+      const el0 = _element("div");
       _hookEffect(() => _setProperty(el0, "className", props.theme.value, false));
       _hookEffect(() => Object.assign(el0.style, {
         color: props.color.value,
         opacity: count.value > 5 ? 1 : 0.5
       }));
       _renderDynamic(el0, () => props.loading.value ? (() => {
-        const el0 = document.createElement("span");
-        const text1 = document.createTextNode("Loading...");
+        const el0 = _element("span");
+        const text1 = _text("Loading...");
         el0.appendChild(text1);
         return el0;
       })() : (() => {
-        const el0 = document.createElement("div");
-        const el1 = document.createElement("h1");
+        const el0 = _element("div");
+        const el1 = _element("h1");
         _renderDynamic(el1, () => props.title.value);
         el0.appendChild(el1);
-        const el2 = document.createElement("button");
+        const el2 = _element("button");
         el2.onclick = () => console.log(props.logMessage.value);
-        const text3 = document.createTextNode(" Log ");
+        const text3 = _text(" Log ");
         el2.appendChild(text3);
         _renderDynamic(el2, () => count.value);
         el0.appendChild(el2);
         return el0;
       })());
       const rootElement = el0;
-      this.appendChild(rootElement);
+      if (!_isHydrating) this.appendChild(rootElement);
     });
     _withInstance(this, () => {
       this._onMounts.forEach(fn => fn());

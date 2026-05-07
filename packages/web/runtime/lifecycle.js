@@ -5,10 +5,20 @@ let currentInstance = null;
 export function withInstance(inst, fn) {
   const prev = currentInstance;
   currentInstance = inst;
+  let prevWalker = null;
+  if (inst && typeof inst.hasAttribute === 'function') {
+    prevWalker = inst._walker;
+    if (inst.hasAttribute('data-ssg') && !inst._walker) {
+      inst._walker = document.createTreeWalker(inst, NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_TEXT);
+      // Skip the root element itself
+      inst._walker.nextNode();
+    }
+  }
   try {
     return fn();
   } finally {
     currentInstance = prev;
+    if (inst) inst._walker = prevWalker;
   }
 }
 
@@ -86,25 +96,19 @@ export function _reconnectWafComponent(el) {
 
 import { _defineWafProps } from "./props.js";
 
+export function _initInternalState(el, propsSignals) {
+  Object.defineProperties(el, {
+    _propsSignals: { value: propsSignals || {}, enumerable: false, writable: true, configurable: true },
+    _onMounts: { value: [], enumerable: false, writable: true, configurable: true },
+    _onCleanups: { value: [], enumerable: false, writable: true, configurable: true },
+    _children: { value: [], enumerable: false, writable: true, configurable: true },
+    _mounted: { value: false, enumerable: false, writable: true, configurable: true }
+  });
+}
+
 // Metadata initializer for Web Components
 export function _initWafComponent(el) {
-  if (!el._propsSignals) {
-    Object.defineProperty(el, "_propsSignals", { value: {}, enumerable: false, writable: true, configurable: true });
-  }
-  if (!el._onMounts) {
-    Object.defineProperty(el, "_onMounts", { value: [], enumerable: false, writable: true, configurable: true });
-  }
-  if (!el._onCleanups) {
-    Object.defineProperty(el, "_onCleanups", { value: [], enumerable: false, writable: true, configurable: true });
-  }
-  if (!el._children) {
-    Object.defineProperty(el, "_children", { value: [], enumerable: false, writable: true, configurable: true });
-  }
-  if (!("_mounted" in el)) {
-    Object.defineProperty(el, "_mounted", { value: false, enumerable: false, writable: true, configurable: true });
-  }
-
+  _initInternalState(el, el._propsSignals);
   _defineWafProps(el.constructor);
-
   return el;
 }

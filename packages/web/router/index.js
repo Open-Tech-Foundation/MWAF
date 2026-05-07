@@ -44,6 +44,7 @@ export const router = new Proxy(routerSignals, {
 });
 
 let currentPageInstance = null;
+let _routerRoot = null;
 
 export function setRouterConfig(config) {
   routerSignals.config.value = { ...routerSignals.config.value, ...config };
@@ -107,9 +108,18 @@ function scrollToHash(hash) {
   }
 }
 
-export async function navigate(path, root = document.getElementById("app"), replace = false, isPopState = false) {
+export async function navigate(path, root, replace = false, isPopState = false) {
   if (!path) return;
-  
+  if (root) _routerRoot = root;
+  const targetRoot = _routerRoot || (typeof document !== 'undefined' ? document.getElementById("app") : null);
+
+  if (typeof window !== 'undefined' && window.navigation && !isPopState) {
+    const url = new URL(path, window.location.origin);
+    if (url.pathname + url.search + url.hash !== window.location.pathname + window.location.search + window.location.hash) {
+      return window.navigation.navigate(path, { history: replace ? 'replace' : 'push' });
+    }
+  }
+
   const url = new URL(path, window.location.origin);
   const pathname = url.pathname;
   const oldPathname = window.location.pathname;
@@ -207,11 +217,10 @@ export async function navigate(path, root = document.getElementById("app"), repl
       }
     });
 
-    if (!root) root = document.getElementById("app");
-    if (root) {
+    if (targetRoot) {
       if (typeof window !== 'undefined') {
-        root.innerHTML = '';
-        root.appendChild(content);
+        targetRoot.innerHTML = '';
+        targetRoot.appendChild(content);
       }
     }
 
@@ -232,15 +241,36 @@ export async function navigate(path, root = document.getElementById("app"), repl
 }
 
 if (typeof window !== 'undefined') {
-  window.addEventListener('popstate', () => {
-    const fullPath = window.location.pathname + window.location.search + window.location.hash;
-    routerSignals.pathname.value = window.location.pathname;
-    routerSignals.searchParams.value = new URLSearchParams(window.location.search);
-    routerSignals.hash.value = window.location.hash;
-    navigate(fullPath, undefined, false, true);
-  });
-  window.addEventListener('hashchange', () => {
-    routerSignals.hash.value = window.location.hash;
-    scrollToHash(window.location.hash);
-  });
+  if (window.navigation) {
+    window.navigation.addEventListener('navigate', (event) => {
+      if (!event.canIntercept || event.hashChange || event.downloadRequest || event.formData) {
+        return;
+      }
+
+      const url = new URL(event.destination.url);
+      if (url.origin !== window.location.origin) return;
+
+      event.intercept({
+        async handler() {
+          const fullPath = url.pathname + url.search + url.hash;
+          routerSignals.pathname.value = url.pathname;
+          routerSignals.searchParams.value = new URLSearchParams(url.search);
+          routerSignals.hash.value = url.hash;
+          await navigate(fullPath, _routerRoot, false, true);
+        }
+      });
+    });
+  } else {
+    window.addEventListener('popstate', () => {
+      const fullPath = window.location.pathname + window.location.search + window.location.hash;
+      routerSignals.pathname.value = window.location.pathname;
+      routerSignals.searchParams.value = new URLSearchParams(window.location.search);
+      routerSignals.hash.value = window.location.hash;
+      navigate(fullPath, _routerRoot, false, true);
+    });
+    window.addEventListener('hashchange', () => {
+      routerSignals.hash.value = window.location.hash;
+      scrollToHash(window.location.hash);
+    });
+  }
 }

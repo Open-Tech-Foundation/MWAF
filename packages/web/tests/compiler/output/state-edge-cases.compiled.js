@@ -1,38 +1,9 @@
-import { signal as _signal, renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy, _reconnectWafComponent, _clearChildren, withInstance as _withInstance, _disconnectWafComponent } from "@opentf/web";
+import { signal as _signal, _element, _text, _svg, _fragment, renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy, _initInternalState, _reconnectWafComponent, _clearChildren, withInstance as _withInstance, _disconnectWafComponent } from "@opentf/web";
 class StateEdgeCasesElement extends HTMLElement {
   static observedAttributes = [];
   constructor() {
     super();
-    Object.defineProperty(this, "_propsSignals", {
-      value: {},
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_onMounts", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_onCleanups", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_children", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_mounted", {
-      value: false,
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
+    _initInternalState(this, {});
   }
   attributeChangedCallback(name, _, value) {
     if (this._propsSignals[name]) this._propsSignals[name].value = value;
@@ -44,8 +15,11 @@ class StateEdgeCasesElement extends HTMLElement {
     }
     this._mounted = true;
     const _waf_props = _createPropsProxy(this);
-    this._children = Array.from(this.childNodes);
-    _clearChildren(this);
+    const _isHydrating = this.hasAttribute("data-ssg");
+    if (!_isHydrating) {
+      this._children = Array.from(this.childNodes);
+      _clearChildren(this);
+    }
     _withInstance(this, () => {
       let count = _signal(0);
       let user = _signal({
@@ -84,23 +58,23 @@ class StateEdgeCasesElement extends HTMLElement {
 
       // 7. Passing as argument
       console.log(count.value, user.value);
-      const el0 = document.createElement("div");
-      const el1 = document.createElement("span");
+      const el0 = _element("div");
+      const el1 = _element("span");
       _renderDynamic(el1, () => count.value);
       el0.appendChild(el1);
-      const el2 = document.createElement("span");
+      const el2 = _element("span");
       _renderDynamic(el2, () => user.value.name);
       el0.appendChild(el2);
-      const el3 = document.createElement("button");
+      const el3 = _element("button");
       el3.onclick = () => {
         count.value++;
         user.value.age++;
       };
-      const text4 = document.createTextNode("Increment");
+      const text4 = _text("Increment");
       el3.appendChild(text4);
       el0.appendChild(el3);
       const rootElement = el0;
-      this.appendChild(rootElement);
+      if (!_isHydrating) this.appendChild(rootElement);
     });
     _withInstance(this, () => {
       this._onMounts.forEach(fn => fn());

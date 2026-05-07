@@ -13,7 +13,8 @@ export default function (babel) {
           state.importsNeeded = new Map();
           state.importSources = new Map();
           state.components = new Map();
-          state.stateVars = new Set();
+          state.macroSignals = new Set();
+          state.wrapperSignals = new Set();
           state.refVars = new Set();
 
           const filename = state.filename || "";
@@ -122,8 +123,7 @@ export default function (babel) {
           if (name === "$state" || name === "$derived" || name === "$ref") {
             const parent = path.findParent(p => p.isVariableDeclarator());
             if (parent && t.isIdentifier(parent.node.id)) {
-              if (!state.stateVars) state.stateVars = new Set();
-              state.stateVars.add(parent.node.id.name);
+              state.macroSignals.add(parent.node.id.name);
             }
             if (name === "$state") {
               path.get("callee").replaceWith(getImport("signal", state.runtimeSource));
@@ -136,10 +136,8 @@ export default function (babel) {
             } else if (name === "$ref") {
               const parent = path.findParent(p => p.isVariableDeclarator());
               if (parent && t.isIdentifier(parent.node.id)) {
-                if (!state.refVars) state.refVars = new Set();
                 state.refVars.add(parent.node.id.name);
-                if (!state.stateVars) state.stateVars = new Set();
-                state.stateVars.add(parent.node.id.name);
+                state.macroSignals.add(parent.node.id.name);
               }
               path.get("callee").replaceWith(getImport("signal", state.runtimeSource));
             }
@@ -148,15 +146,35 @@ export default function (babel) {
             const isSSGId = getImport("isSSG", state.runtimeSource);
             const parent = path.parentPath;
             const effectCall = t.callExpression(effectId, path.node.arguments);
-            const ifStmt = t.ifStatement(
-              t.unaryExpression("!", isSSGId),
-              t.expressionStatement(effectCall)
-            );
-
+            
             if (parent.isExpressionStatement()) {
-              parent.replaceWith(ifStmt);
+              parent.replaceWith(
+                t.ifStatement(
+                  t.unaryExpression("!", isSSGId),
+                  t.expressionStatement(effectCall)
+                )
+              );
             } else {
-              path.replaceWith(effectCall); // Fallback for nested expressions (rare)
+              // For nested expressions, use a conditional: !isSSG ? hookEffect(...) : undefined
+              path.replaceWith(
+                t.conditionalExpression(
+                  t.unaryExpression("!", isSSGId),
+                  effectCall,
+                  t.identifier("undefined")
+                )
+              );
+            }
+          } else if (name === "$signal") {
+            // $signal is a compiler hint, it should be removed at runtime
+            // const x = $signal(obj) -> const x = obj
+            const arg = path.node.arguments[0];
+            if (arg) {
+              path.replaceWith(arg);
+              // Mark the variable as a signal for the identifier visitor
+              const parent = path.findParent(p => p.isVariableDeclarator());
+              if (parent && t.isIdentifier(parent.node.id)) {
+                state.wrapperSignals.add(parent.node.id.name);
+              }
             }
           } else if (name === "$expose") {
             path.get("callee").replaceWith(t.memberExpression(t.identifier("Object"), t.identifier("assign")));
@@ -174,10 +192,9 @@ export default function (babel) {
       Function: {
         enter(path, state) {
           if (path.node._isMapCallback) {
-            if (!state.stateVars) state.stateVars = new Set();
             path.node.params.forEach(param => {
               if (t.isIdentifier(param)) {
-                state.stateVars.add(param.name);
+                state.macroSignals.add(param.name);
               }
             });
           }
@@ -186,7 +203,7 @@ export default function (babel) {
           if (path.node._isMapCallback) {
             path.node.params.forEach(param => {
               if (t.isIdentifier(param)) {
-                state.stateVars.delete(param.name);
+                state.macroSignals.delete(param.name);
               }
             });
           }
@@ -195,6 +212,8 @@ export default function (babel) {
 
       MemberExpression(path, state) {
         if (path.node._processed) return;
+        
+        // 1. First-Access Rule for 'props'
         if (t.isIdentifier(path.node.object, { name: "props" }) && t.isIdentifier(path.node.property) && path.node.property.name !== "children" && !path.node.property.name.startsWith("on")) {
           // Skip if already has .value
           if (t.isMemberExpression(path.parentPath.node) && t.isIdentifier(path.parentPath.node.property, { name: "value" })) return;
@@ -203,11 +222,23 @@ export default function (babel) {
           const newNode = t.memberExpression(path.node, t.identifier("value"));
           newNode._processed = true;
           path.replaceWith(newNode);
+          return;
+        }
+
+        // 2. First-Access Rule for wrapperSignals ($signal)
+        if (t.isIdentifier(path.node.object) && state.wrapperSignals.has(path.node.object.name) && t.isIdentifier(path.node.property)) {
+           // Skip if already has .value
+           if (t.isMemberExpression(path.parentPath.node) && t.isIdentifier(path.parentPath.node.property, { name: "value" })) return;
+
+           path.node._processed = true;
+           const newNode = t.memberExpression(path.node, t.identifier("value"));
+           newNode._processed = true;
+           path.replaceWith(newNode);
         }
       },
 
       Identifier(path, state) {
-        if (!state.stateVars || !state.stateVars.has(path.node.name)) return;
+        if (!state.macroSignals.has(path.node.name)) return;
         if (path.node._processed) return;
 
         // Skip if it's a parameter of the function we are currently in
@@ -243,7 +274,7 @@ export default function (babel) {
       },
 
       AssignmentExpression(path, state) {
-        if (t.isIdentifier(path.node.left) && state.stateVars?.has(path.node.left.name)) {
+        if (t.isIdentifier(path.node.left) && state.macroSignals.has(path.node.left.name)) {
           const innerId = t.identifier(path.node.left.name);
           innerId._processed = true;
           path.node.left = t.memberExpression(innerId, t.identifier("value"));
@@ -251,7 +282,7 @@ export default function (babel) {
       },
 
       UpdateExpression(path, state) {
-        if (t.isIdentifier(path.node.argument) && state.stateVars?.has(path.node.argument.name)) {
+        if (t.isIdentifier(path.node.argument) && state.macroSignals.has(path.node.argument.name)) {
           const innerId = t.identifier(path.node.argument.name);
           innerId._processed = true;
           path.node.argument = t.memberExpression(innerId, t.identifier("value"));

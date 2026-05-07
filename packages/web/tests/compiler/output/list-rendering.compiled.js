@@ -1,38 +1,9 @@
-import { signal as _signal, _mapped, renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy, _reconnectWafComponent, _clearChildren, withInstance as _withInstance, _disconnectWafComponent } from "@opentf/web";
+import { signal as _signal, _element, _text, _svg, _fragment, _mapped, renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy, _initInternalState, _reconnectWafComponent, _clearChildren, withInstance as _withInstance, _disconnectWafComponent } from "@opentf/web";
 class ListRenderingElement extends HTMLElement {
   static observedAttributes = [];
   constructor() {
     super();
-    Object.defineProperty(this, "_propsSignals", {
-      value: {},
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_onMounts", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_onCleanups", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_children", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_mounted", {
-      value: false,
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
+    _initInternalState(this, {});
   }
   attributeChangedCallback(name, _, value) {
     if (this._propsSignals[name]) this._propsSignals[name].value = value;
@@ -44,29 +15,32 @@ class ListRenderingElement extends HTMLElement {
     }
     this._mounted = true;
     const _waf_props = _createPropsProxy(this);
-    this._children = Array.from(this.childNodes);
-    _clearChildren(this);
+    const _isHydrating = this.hasAttribute("data-ssg");
+    if (!_isHydrating) {
+      this._children = Array.from(this.childNodes);
+      _clearChildren(this);
+    }
     _withInstance(this, () => {
       const props = _waf_props;
       let items = _signal(['A', 'B', 'C']);
-      const el0 = document.createElement("div");
-      const el1 = document.createElement("ul");
+      const el0 = _element("div");
+      const el1 = _element("ul");
       const mapped2 = _mapped(() => items.value, item => (() => {
-        const el0 = document.createElement("li");
-        const text1 = document.createTextNode("Item ");
+        const el0 = _element("li");
+        const text1 = _text("Item ");
         el0.appendChild(text1);
         _renderDynamic(el0, () => item.value);
         return el0;
       })());
       _renderDynamic(el1, () => mapped2());
       el0.appendChild(el1);
-      const el3 = document.createElement("button");
+      const el3 = _element("button");
       el3.onclick = () => items.value = [...items.value, 'D'];
-      const text4 = document.createTextNode(" Add ");
+      const text4 = _text(" Add ");
       el3.appendChild(text4);
       el0.appendChild(el3);
       const rootElement = el0;
-      this.appendChild(rootElement);
+      if (!_isHydrating) this.appendChild(rootElement);
     });
     _withInstance(this, () => {
       this._onMounts.forEach(fn => fn());

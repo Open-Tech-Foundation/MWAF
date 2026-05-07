@@ -1,38 +1,9 @@
-import { setProperty as _setProperty, hookEffect as _hookEffect, signal as _signal, createPropsProxy as _createPropsProxy, _reconnectWafComponent, _clearChildren, withInstance as _withInstance, _disconnectWafComponent, applySpread as _applySpread } from "@opentf/web";
+import { _element, _text, _svg, _fragment, setProperty as _setProperty, hookEffect as _hookEffect, signal as _signal, createPropsProxy as _createPropsProxy, _initInternalState, _reconnectWafComponent, _clearChildren, withInstance as _withInstance, _disconnectWafComponent, applySpread as _applySpread } from "@opentf/web";
 class IconGalleryElement extends HTMLElement {
   static observedAttributes = [];
   constructor() {
     super();
-    Object.defineProperty(this, "_propsSignals", {
-      value: {},
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_onMounts", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_onCleanups", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_children", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_mounted", {
-      value: false,
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
+    _initInternalState(this, {});
   }
   attributeChangedCallback(name, _, value) {
     if (this._propsSignals[name]) this._propsSignals[name].value = value;
@@ -44,25 +15,28 @@ class IconGalleryElement extends HTMLElement {
     }
     this._mounted = true;
     const _waf_props = _createPropsProxy(this);
-    this._children = Array.from(this.childNodes);
-    _clearChildren(this);
+    const _isHydrating = this.hasAttribute("data-ssg");
+    if (!_isHydrating) {
+      this._children = Array.from(this.childNodes);
+      _clearChildren(this);
+    }
     _withInstance(this, () => {
       const props = _waf_props;
-      const el0 = document.createElement("div");
+      const el0 = _element("div");
       _setProperty(el0, "className", "flex gap-4", false);
-      const el1 = document.createElement("web-cameraicon");
+      const el1 = _element("web-cameraicon");
       _hookEffect(() => _setProperty(el1, "size", 32, true));
       _setProperty(el1, "color", "red", true);
       el0.appendChild(el1);
-      const el2 = document.createElement("web-usericon");
+      const el2 = _element("web-usericon");
       _hookEffect(() => _setProperty(el2, "size", 24, true));
       _setProperty(el2, "className", "text-blue-500", true);
       el0.appendChild(el2);
-      const el3 = document.createElement("web-settingsicon");
+      const el3 = _element("web-settingsicon");
       _hookEffect(() => _setProperty(el3, "strokeWidth", 3, true));
       el0.appendChild(el3);
       const rootElement = el0;
-      this.appendChild(rootElement);
+      if (!_isHydrating) this.appendChild(rootElement);
     });
     _withInstance(this, () => {
       this._onMounts.forEach(fn => fn());
@@ -94,38 +68,9 @@ class CameraIconElement extends HTMLElement {
   }
   constructor() {
     super();
-    Object.defineProperty(this, "_propsSignals", {
-      value: {
-        size: _signal(null),
-        color: _signal(null)
-      },
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_onMounts", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_onCleanups", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_children", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_mounted", {
-      value: false,
-      enumerable: false,
-      writable: true,
-      configurable: true
+    _initInternalState(this, {
+      size: _signal(null),
+      color: _signal(null)
     });
   }
   attributeChangedCallback(name, _, value) {
@@ -138,15 +83,18 @@ class CameraIconElement extends HTMLElement {
     }
     this._mounted = true;
     const _waf_props = _createPropsProxy(this);
-    this._children = Array.from(this.childNodes);
-    _clearChildren(this);
+    const _isHydrating = this.hasAttribute("data-ssg");
+    if (!_isHydrating) {
+      this._children = Array.from(this.childNodes);
+      _clearChildren(this);
+    }
     _withInstance(this, () => {
       const {
         size = 24,
         color = "currentColor",
         ...props
       } = _waf_props;
-      const el0 = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      const el0 = _svg("svg");
       el0.setAttribute("xmlns", "http://www.w3.org/2000/svg");
       _hookEffect(() => el0.setAttribute("width", _waf_props.size.value));
       _hookEffect(() => el0.setAttribute("height", _waf_props.size.value));
@@ -157,16 +105,16 @@ class CameraIconElement extends HTMLElement {
       el0.setAttribute("strokeLinecap", "round");
       el0.setAttribute("strokeLinejoin", "round");
       _hookEffect(() => _applySpread(el0, props, false));
-      const el1 = document.createElementNS("http://www.w3.org/2000/svg", "path");
+      const el1 = _svg("path");
       el1.setAttribute("d", "M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z");
       el0.appendChild(el1);
-      const el2 = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+      const el2 = _svg("circle");
       el2.setAttribute("cx", "12");
       el2.setAttribute("cy", "13");
       el2.setAttribute("r", "4");
       el0.appendChild(el2);
       const rootElement = el0;
-      this.appendChild(rootElement);
+      if (!_isHydrating) this.appendChild(rootElement);
     });
     _withInstance(this, () => {
       this._onMounts.forEach(fn => fn());
@@ -189,37 +137,8 @@ class UserIconElement extends HTMLElement {
   }
   constructor() {
     super();
-    Object.defineProperty(this, "_propsSignals", {
-      value: {
-        size: _signal(null)
-      },
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_onMounts", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_onCleanups", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_children", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_mounted", {
-      value: false,
-      enumerable: false,
-      writable: true,
-      configurable: true
+    _initInternalState(this, {
+      size: _signal(null)
     });
   }
   attributeChangedCallback(name, _, value) {
@@ -232,14 +151,17 @@ class UserIconElement extends HTMLElement {
     }
     this._mounted = true;
     const _waf_props = _createPropsProxy(this);
-    this._children = Array.from(this.childNodes);
-    _clearChildren(this);
+    const _isHydrating = this.hasAttribute("data-ssg");
+    if (!_isHydrating) {
+      this._children = Array.from(this.childNodes);
+      _clearChildren(this);
+    }
     _withInstance(this, () => {
       const {
         size = 24,
         ...props
       } = _waf_props;
-      const el0 = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      const el0 = _svg("svg");
       el0.setAttribute("xmlns", "http://www.w3.org/2000/svg");
       _hookEffect(() => el0.setAttribute("width", _waf_props.size.value));
       _hookEffect(() => el0.setAttribute("height", _waf_props.size.value));
@@ -250,16 +172,16 @@ class UserIconElement extends HTMLElement {
       el0.setAttribute("strokeLinecap", "round");
       el0.setAttribute("strokeLinejoin", "round");
       _hookEffect(() => _applySpread(el0, props, false));
-      const el1 = document.createElementNS("http://www.w3.org/2000/svg", "path");
+      const el1 = _svg("path");
       el1.setAttribute("d", "M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2");
       el0.appendChild(el1);
-      const el2 = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+      const el2 = _svg("circle");
       el2.setAttribute("cx", "12");
       el2.setAttribute("cy", "7");
       el2.setAttribute("r", "4");
       el0.appendChild(el2);
       const rootElement = el0;
-      this.appendChild(rootElement);
+      if (!_isHydrating) this.appendChild(rootElement);
     });
     _withInstance(this, () => {
       this._onMounts.forEach(fn => fn());
@@ -282,37 +204,8 @@ class SettingsIconElement extends HTMLElement {
   }
   constructor() {
     super();
-    Object.defineProperty(this, "_propsSignals", {
-      value: {
-        strokeWidth: _signal(null)
-      },
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_onMounts", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_onCleanups", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_children", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_mounted", {
-      value: false,
-      enumerable: false,
-      writable: true,
-      configurable: true
+    _initInternalState(this, {
+      strokeWidth: _signal(null)
     });
   }
   attributeChangedCallback(name, _, value) {
@@ -325,14 +218,17 @@ class SettingsIconElement extends HTMLElement {
     }
     this._mounted = true;
     const _waf_props = _createPropsProxy(this);
-    this._children = Array.from(this.childNodes);
-    _clearChildren(this);
+    const _isHydrating = this.hasAttribute("data-ssg");
+    if (!_isHydrating) {
+      this._children = Array.from(this.childNodes);
+      _clearChildren(this);
+    }
     _withInstance(this, () => {
       const {
         strokeWidth = 2,
         ...props
       } = _waf_props;
-      const el0 = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      const el0 = _svg("svg");
       el0.setAttribute("xmlns", "http://www.w3.org/2000/svg");
       el0.setAttribute("width", "24");
       el0.setAttribute("height", "24");
@@ -343,16 +239,16 @@ class SettingsIconElement extends HTMLElement {
       el0.setAttribute("strokeLinecap", "round");
       el0.setAttribute("strokeLinejoin", "round");
       _hookEffect(() => _applySpread(el0, props, false));
-      const el1 = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+      const el1 = _svg("circle");
       el1.setAttribute("cx", "12");
       el1.setAttribute("cy", "12");
       el1.setAttribute("r", "3");
       el0.appendChild(el1);
-      const el2 = document.createElementNS("http://www.w3.org/2000/svg", "path");
+      const el2 = _svg("path");
       el2.setAttribute("d", "M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z");
       el0.appendChild(el2);
       const rootElement = el0;
-      this.appendChild(rootElement);
+      if (!_isHydrating) this.appendChild(rootElement);
     });
     _withInstance(this, () => {
       this._onMounts.forEach(fn => fn());

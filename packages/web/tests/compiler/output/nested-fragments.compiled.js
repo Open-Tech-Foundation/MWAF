@@ -1,38 +1,9 @@
-import { signal as _signal, renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy, _reconnectWafComponent, _clearChildren, withInstance as _withInstance, _disconnectWafComponent } from "@opentf/web";
+import { signal as _signal, _element, _text, _svg, _fragment, renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy, _initInternalState, _reconnectWafComponent, _clearChildren, withInstance as _withInstance, _disconnectWafComponent } from "@opentf/web";
 class NestedFragmentsElement extends HTMLElement {
   static observedAttributes = [];
   constructor() {
     super();
-    Object.defineProperty(this, "_propsSignals", {
-      value: {},
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_onMounts", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_onCleanups", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_children", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_mounted", {
-      value: false,
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
+    _initInternalState(this, {});
   }
   attributeChangedCallback(name, _, value) {
     if (this._propsSignals[name]) this._propsSignals[name].value = value;
@@ -44,31 +15,34 @@ class NestedFragmentsElement extends HTMLElement {
     }
     this._mounted = true;
     const _waf_props = _createPropsProxy(this);
-    this._children = Array.from(this.childNodes);
-    _clearChildren(this);
+    const _isHydrating = this.hasAttribute("data-ssg");
+    if (!_isHydrating) {
+      this._children = Array.from(this.childNodes);
+      _clearChildren(this);
+    }
     _withInstance(this, () => {
       let show = _signal(true);
-      const el0 = document.createElement("div");
+      const el0 = _element("div");
       _renderDynamic(el0, () => show.value && (() => {
-        const frag0 = document.createDocumentFragment();
-        const el1 = document.createElement("span");
-        const text2 = document.createTextNode("A");
+        const frag0 = _fragment();
+        const el1 = _element("span");
+        const text2 = _text("A");
         el1.appendChild(text2);
         frag0.appendChild(el1);
-        const frag3 = document.createDocumentFragment();
-        const el4 = document.createElement("span");
-        const text5 = document.createTextNode("B");
+        const frag3 = _fragment();
+        const el4 = _element("span");
+        const text5 = _text("B");
         el4.appendChild(text5);
         frag3.appendChild(el4);
-        const el6 = document.createElement("span");
-        const text7 = document.createTextNode("C");
+        const el6 = _element("span");
+        const text7 = _text("C");
         el6.appendChild(text7);
         frag3.appendChild(el6);
         frag0.appendChild(frag3);
         return frag0;
       })());
       const rootElement = el0;
-      this.appendChild(rootElement);
+      if (!_isHydrating) this.appendChild(rootElement);
     });
     _withInstance(this, () => {
       this._onMounts.forEach(fn => fn());

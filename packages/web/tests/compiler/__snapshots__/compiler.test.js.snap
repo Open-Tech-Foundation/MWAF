@@ -1,7 +1,7 @@
 // Bun Snapshot v1, https://bun.sh/docs/test/snapshots
 
 exports[`Web App Framework Compiler Compiles complex-expressions.jsx 1`] = `
-"import { signal as _signal, hookEffect as _hookEffect, setProperty as _setProperty, renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy, _reconnectWafComponent, _clearChildren, withInstance as _withInstance, _disconnectWafComponent } from "@opentf/web";
+"import { signal as _signal, _element, _text, _svg, _fragment, hookEffect as _hookEffect, setProperty as _setProperty, renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy, _initInternalState, _reconnectWafComponent, _clearChildren, withInstance as _withInstance, _disconnectWafComponent } from "@opentf/web";
 class ComplexExpressionsElement extends HTMLElement {
   static observedAttributes = ["theme", "color", "loading", "title", "logMessage"];
   set theme(_val) {
@@ -46,41 +46,12 @@ class ComplexExpressionsElement extends HTMLElement {
   }
   constructor() {
     super();
-    Object.defineProperty(this, "_propsSignals", {
-      value: {
-        theme: _signal(null),
-        color: _signal(null),
-        loading: _signal(null),
-        title: _signal(null),
-        logMessage: _signal(null)
-      },
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_onMounts", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_onCleanups", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_children", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_mounted", {
-      value: false,
-      enumerable: false,
-      writable: true,
-      configurable: true
+    _initInternalState(this, {
+      theme: _signal(null),
+      color: _signal(null),
+      loading: _signal(null),
+      title: _signal(null),
+      logMessage: _signal(null)
     });
   }
   attributeChangedCallback(name, _, value) {
@@ -93,37 +64,40 @@ class ComplexExpressionsElement extends HTMLElement {
     }
     this._mounted = true;
     const _waf_props = _createPropsProxy(this);
-    this._children = Array.from(this.childNodes);
-    _clearChildren(this);
+    const _isHydrating = this.hasAttribute("data-ssg");
+    if (!_isHydrating) {
+      this._children = Array.from(this.childNodes);
+      _clearChildren(this);
+    }
     _withInstance(this, () => {
       const props = _waf_props;
       let count = _signal(0);
-      const el0 = document.createElement("div");
+      const el0 = _element("div");
       _hookEffect(() => _setProperty(el0, "className", props.theme.value, false));
       _hookEffect(() => Object.assign(el0.style, {
         color: props.color.value,
         opacity: count.value > 5 ? 1 : 0.5
       }));
       _renderDynamic(el0, () => props.loading.value ? (() => {
-        const el0 = document.createElement("span");
-        const text1 = document.createTextNode("Loading...");
+        const el0 = _element("span");
+        const text1 = _text("Loading...");
         el0.appendChild(text1);
         return el0;
       })() : (() => {
-        const el0 = document.createElement("div");
-        const el1 = document.createElement("h1");
+        const el0 = _element("div");
+        const el1 = _element("h1");
         _renderDynamic(el1, () => props.title.value);
         el0.appendChild(el1);
-        const el2 = document.createElement("button");
+        const el2 = _element("button");
         el2.onclick = () => console.log(props.logMessage.value);
-        const text3 = document.createTextNode(" Log ");
+        const text3 = _text(" Log ");
         el2.appendChild(text3);
         _renderDynamic(el2, () => count.value);
         el0.appendChild(el2);
         return el0;
       })());
       const rootElement = el0;
-      this.appendChild(rootElement);
+      if (!_isHydrating) this.appendChild(rootElement);
     });
     _withInstance(this, () => {
       this._onMounts.forEach(fn => fn());
@@ -138,7 +112,7 @@ export default ComplexExpressionsElement;"
 `;
 
 exports[`Web App Framework Compiler Compiles conditional.jsx 1`] = `
-"import { setProperty as _setProperty, renderDynamic as _renderDynamic, signal as _signal, createPropsProxy as _createPropsProxy, _reconnectWafComponent, _clearChildren, withInstance as _withInstance, _disconnectWafComponent } from "@opentf/web";
+"import { _element, _text, _svg, _fragment, setProperty as _setProperty, renderDynamic as _renderDynamic, signal as _signal, createPropsProxy as _createPropsProxy, _initInternalState, _reconnectWafComponent, _clearChildren, withInstance as _withInstance, _disconnectWafComponent } from "@opentf/web";
 class ItemElement extends HTMLElement {
   static observedAttributes = ["name", "isPacked"];
   set name(_val) {
@@ -159,38 +133,9 @@ class ItemElement extends HTMLElement {
   }
   constructor() {
     super();
-    Object.defineProperty(this, "_propsSignals", {
-      value: {
-        name: _signal(null),
-        isPacked: _signal(null)
-      },
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_onMounts", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_onCleanups", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_children", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_mounted", {
-      value: false,
-      enumerable: false,
-      writable: true,
-      configurable: true
+    _initInternalState(this, {
+      name: _signal(null),
+      isPacked: _signal(null)
     });
   }
   attributeChangedCallback(name, _, value) {
@@ -203,22 +148,25 @@ class ItemElement extends HTMLElement {
     }
     this._mounted = true;
     const _waf_props = _createPropsProxy(this);
-    this._children = Array.from(this.childNodes);
-    _clearChildren(this);
+    const _isHydrating = this.hasAttribute("data-ssg");
+    if (!_isHydrating) {
+      this._children = Array.from(this.childNodes);
+      _clearChildren(this);
+    }
     _withInstance(this, () => {
       const {
         name,
         isPacked
       } = _waf_props;
-      const el0 = document.createElement("li");
+      const el0 = _element("li");
       _setProperty(el0, "className", "item", false);
       _renderDynamic(el0, () => _waf_props.isPacked.value ? (() => {
-        const el0 = document.createElement("del");
+        const el0 = _element("del");
         _renderDynamic(el0, () => _waf_props.name.value + ' ✅');
         return el0;
       })() : _waf_props.name.value);
       const rootElement = el0;
-      this.appendChild(rootElement);
+      if (!_isHydrating) this.appendChild(rootElement);
     });
     _withInstance(this, () => {
       this._onMounts.forEach(fn => fn());
@@ -233,20 +181,20 @@ export default ItemElement;"
 `;
 
 exports[`Web App Framework Compiler Compiles routing-404.404.jsx 1`] = `
-"import { createPropsProxy as _createPropsProxy } from "@opentf/web";
+"import { _element, _text, _svg, _fragment, createPropsProxy as _createPropsProxy } from "@opentf/web";
 export function render(root, _props) {
   const _holder = {
     _children: _props.children || []
   };
   const _waf_props = _createPropsProxy(_holder);
   Object.assign(_waf_props, _props);
-  const el0 = document.createElement("div");
-  const el1 = document.createElement("h1");
-  const text2 = document.createTextNode("404 - Not Found");
+  const el0 = _element("div");
+  const el1 = _element("h1");
+  const text2 = _text("404 - Not Found");
   el1.appendChild(text2);
   el0.appendChild(el1);
-  const el3 = document.createElement("p");
-  const text4 = document.createTextNode("The page you are looking for does not exist.");
+  const el3 = _element("p");
+  const text4 = _text("The page you are looking for does not exist.");
   el3.appendChild(text4);
   el0.appendChild(el3);
   const rootElement = el0;
@@ -255,41 +203,12 @@ export function render(root, _props) {
 `;
 
 exports[`Web App Framework Compiler Compiles children-projection.jsx 1`] = `
-"import { setProperty as _setProperty, signal as _signal, createPropsProxy as _createPropsProxy, _reconnectWafComponent, _clearChildren, withInstance as _withInstance, _disconnectWafComponent } from "@opentf/web";
+"import { _element, _text, _svg, _fragment, setProperty as _setProperty, signal as _signal, createPropsProxy as _createPropsProxy, _initInternalState, _reconnectWafComponent, _clearChildren, withInstance as _withInstance, _disconnectWafComponent } from "@opentf/web";
 class WrapperElement extends HTMLElement {
   static observedAttributes = [];
   constructor() {
     super();
-    Object.defineProperty(this, "_propsSignals", {
-      value: {},
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_onMounts", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_onCleanups", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_children", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_mounted", {
-      value: false,
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
+    _initInternalState(this, {});
   }
   attributeChangedCallback(name, _, value) {
     if (this._propsSignals[name]) this._propsSignals[name].value = value;
@@ -301,24 +220,27 @@ class WrapperElement extends HTMLElement {
     }
     this._mounted = true;
     const _waf_props = _createPropsProxy(this);
-    this._children = Array.from(this.childNodes);
-    _clearChildren(this);
+    const _isHydrating = this.hasAttribute("data-ssg");
+    if (!_isHydrating) {
+      this._children = Array.from(this.childNodes);
+      _clearChildren(this);
+    }
     _withInstance(this, () => {
       const props = _waf_props;
-      const el0 = document.createElement("div");
+      const el0 = _element("div");
       _setProperty(el0, "className", "wrapper", false);
-      const el1 = document.createElement("header");
-      const text2 = document.createTextNode("Header");
+      const el1 = _element("header");
+      const text2 = _text("Header");
       el1.appendChild(text2);
       el0.appendChild(el1);
-      const el3 = document.createElement("main");
+      const el3 = _element("main");
       el0.appendChild(el3);
-      const el4 = document.createElement("footer");
-      const text5 = document.createTextNode("Footer");
+      const el4 = _element("footer");
+      const text5 = _text("Footer");
       el4.appendChild(text5);
       el0.appendChild(el4);
       const rootElement = el0;
-      this.appendChild(rootElement);
+      if (!_isHydrating) this.appendChild(rootElement);
     });
     _withInstance(this, () => {
       this._onMounts.forEach(fn => fn());
@@ -333,41 +255,12 @@ export default WrapperElement;"
 `;
 
 exports[`Web App Framework Compiler Compiles lifecycle.jsx 1`] = `
-"import { onMount as _onMount, onCleanup as _onCleanup, signal as _signal, createPropsProxy as _createPropsProxy, _reconnectWafComponent, _clearChildren, withInstance as _withInstance, _disconnectWafComponent } from "@opentf/web";
+"import { onMount as _onMount, onCleanup as _onCleanup, _element, _text, _svg, _fragment, signal as _signal, createPropsProxy as _createPropsProxy, _initInternalState, _reconnectWafComponent, _clearChildren, withInstance as _withInstance, _disconnectWafComponent } from "@opentf/web";
 class LifecycleElement extends HTMLElement {
   static observedAttributes = [];
   constructor() {
     super();
-    Object.defineProperty(this, "_propsSignals", {
-      value: {},
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_onMounts", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_onCleanups", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_children", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_mounted", {
-      value: false,
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
+    _initInternalState(this, {});
   }
   attributeChangedCallback(name, _, value) {
     if (this._propsSignals[name]) this._propsSignals[name].value = value;
@@ -379,8 +272,11 @@ class LifecycleElement extends HTMLElement {
     }
     this._mounted = true;
     const _waf_props = _createPropsProxy(this);
-    this._children = Array.from(this.childNodes);
-    _clearChildren(this);
+    const _isHydrating = this.hasAttribute("data-ssg");
+    if (!_isHydrating) {
+      this._children = Array.from(this.childNodes);
+      _clearChildren(this);
+    }
     _withInstance(this, () => {
       _onMount(() => {
         console.log("mounted");
@@ -388,11 +284,11 @@ class LifecycleElement extends HTMLElement {
       _onCleanup(() => {
         console.log("cleaned up");
       });
-      const el0 = document.createElement("div");
-      const text1 = document.createTextNode("Lifecycle");
+      const el0 = _element("div");
+      const text1 = _text("Lifecycle");
       el0.appendChild(text1);
       const rootElement = el0;
-      this.appendChild(rootElement);
+      if (!_isHydrating) this.appendChild(rootElement);
     });
     _withInstance(this, () => {
       this._onMounts.forEach(fn => fn());
@@ -407,7 +303,7 @@ export default LifecycleElement;"
 `;
 
 exports[`Web App Framework Compiler Compiles reactivity.jsx 1`] = `
-"import { signal as _signal, hookEffect as _hookEffect, setProperty as _setProperty, renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy, _reconnectWafComponent, _clearChildren, withInstance as _withInstance, _disconnectWafComponent } from "@opentf/web";
+"import { signal as _signal, _element, _text, _svg, _fragment, hookEffect as _hookEffect, setProperty as _setProperty, renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy, _initInternalState, _reconnectWafComponent, _clearChildren, withInstance as _withInstance, _disconnectWafComponent } from "@opentf/web";
 import { signal } from "@preact/signals";
 class ReactivityElement extends HTMLElement {
   static observedAttributes = ["title"];
@@ -421,37 +317,8 @@ class ReactivityElement extends HTMLElement {
   }
   constructor() {
     super();
-    Object.defineProperty(this, "_propsSignals", {
-      value: {
-        title: _signal(null)
-      },
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_onMounts", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_onCleanups", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_children", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_mounted", {
-      value: false,
-      enumerable: false,
-      writable: true,
-      configurable: true
+    _initInternalState(this, {
+      title: _signal(null)
     });
   }
   attributeChangedCallback(name, _, value) {
@@ -464,23 +331,26 @@ class ReactivityElement extends HTMLElement {
     }
     this._mounted = true;
     const _waf_props = _createPropsProxy(this);
-    this._children = Array.from(this.childNodes);
-    _clearChildren(this);
+    const _isHydrating = this.hasAttribute("data-ssg");
+    if (!_isHydrating) {
+      this._children = Array.from(this.childNodes);
+      _clearChildren(this);
+    }
     _withInstance(this, () => {
       const props = _waf_props;
       let count = _signal(0);
-      const el0 = document.createElement("div");
+      const el0 = _element("div");
       _hookEffect(() => _setProperty(el0, "title", props.title.value, false));
-      const el1 = document.createElement("span");
+      const el1 = _element("span");
       _renderDynamic(el1, () => count.value);
       el0.appendChild(el1);
-      const el2 = document.createElement("button");
+      const el2 = _element("button");
       el2.onclick = () => count.value++;
-      const text3 = document.createTextNode("Add");
+      const text3 = _text("Add");
       el2.appendChild(text3);
       el0.appendChild(el2);
       const rootElement = el0;
-      this.appendChild(rootElement);
+      if (!_isHydrating) this.appendChild(rootElement);
     });
     _withInstance(this, () => {
       this._onMounts.forEach(fn => fn());
@@ -495,42 +365,13 @@ export default ReactivityElement;"
 `;
 
 exports[`Web App Framework Compiler Compiles basic-form-verify.jsx 1`] = `
-"import { computed as _computed, hookEffect as _hookEffect, setProperty as _setProperty, renderDynamic as _renderDynamic, signal as _signal, createPropsProxy as _createPropsProxy, _reconnectWafComponent, _clearChildren, withInstance as _withInstance, _disconnectWafComponent } from "@opentf/web";
+"import { computed as _computed, _element, _text, _svg, _fragment, hookEffect as _hookEffect, setProperty as _setProperty, renderDynamic as _renderDynamic, signal as _signal, createPropsProxy as _createPropsProxy, _initInternalState, _reconnectWafComponent, _clearChildren, withInstance as _withInstance, _disconnectWafComponent } from "@opentf/web";
 import { createForm } from "@opentf/web-form";
 export class BasicForm extends HTMLElement {
   static observedAttributes = [];
   constructor() {
     super();
-    Object.defineProperty(this, "_propsSignals", {
-      value: {},
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_onMounts", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_onCleanups", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_children", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_mounted", {
-      value: false,
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
+    _initInternalState(this, {});
   }
   attributeChangedCallback(name, _, value) {
     if (this._propsSignals[name]) this._propsSignals[name].value = value;
@@ -542,8 +383,11 @@ export class BasicForm extends HTMLElement {
     }
     this._mounted = true;
     const _waf_props = _createPropsProxy(this);
-    this._children = Array.from(this.childNodes);
-    _clearChildren(this);
+    const _isHydrating = this.hasAttribute("data-ssg");
+    if (!_isHydrating) {
+      this._children = Array.from(this.childNodes);
+      _clearChildren(this);
+    }
     _withInstance(this, () => {
       const form = createForm({
         initialValues: {
@@ -553,14 +397,14 @@ export class BasicForm extends HTMLElement {
       const isValid = _computed(() => form.isValid);
       const isSubmitting = _computed(() => form.isSubmitting);
       const canSubmit = _computed(() => isValid.value && !isSubmitting.value);
-      const el0 = document.createElement("section");
-      const el1 = document.createElement("button");
+      const el0 = _element("section");
+      const el1 = _element("button");
       el1.setAttribute("type", "submit");
       _hookEffect(() => _setProperty(el1, "disabled", (() => !canSubmit.value)(), false));
       _renderDynamic(el1, () => isSubmitting.value ? "Processing..." : "Save Changes");
       el0.appendChild(el1);
       const rootElement = el0;
-      this.appendChild(rootElement);
+      if (!_isHydrating) this.appendChild(rootElement);
     });
     _withInstance(this, () => {
       this._onMounts.forEach(fn => fn());
@@ -574,7 +418,7 @@ customElements.define("web-basicform", BasicForm);"
 `;
 
 exports[`Web App Framework Compiler Compiles react-patterns.jsx 1`] = `
-"import { setProperty as _setProperty, hookEffect as _hookEffect, renderDynamic as _renderDynamic, applySpread as _applySpread, signal as _signal, createPropsProxy as _createPropsProxy, _reconnectWafComponent, _clearChildren, withInstance as _withInstance, _disconnectWafComponent } from "@opentf/web";
+"import { _element, _text, _svg, _fragment, setProperty as _setProperty, hookEffect as _hookEffect, renderDynamic as _renderDynamic, applySpread as _applySpread, signal as _signal, createPropsProxy as _createPropsProxy, _initInternalState, _reconnectWafComponent, _clearChildren, withInstance as _withInstance, _disconnectWafComponent } from "@opentf/web";
 import { UI } from './ui-lib';
 class ReactPatternsElement extends HTMLElement {
   static observedAttributes = ["user", "notifications"];
@@ -596,38 +440,9 @@ class ReactPatternsElement extends HTMLElement {
   }
   constructor() {
     super();
-    Object.defineProperty(this, "_propsSignals", {
-      value: {
-        user: _signal(null),
-        notifications: _signal(null)
-      },
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_onMounts", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_onCleanups", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_children", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_mounted", {
-      value: false,
-      enumerable: false,
-      writable: true,
-      configurable: true
+    _initInternalState(this, {
+      user: _signal(null),
+      notifications: _signal(null)
     });
   }
   attributeChangedCallback(name, _, value) {
@@ -640,76 +455,79 @@ class ReactPatternsElement extends HTMLElement {
     }
     this._mounted = true;
     const _waf_props = _createPropsProxy(this);
-    this._children = Array.from(this.childNodes);
-    _clearChildren(this);
+    const _isHydrating = this.hasAttribute("data-ssg");
+    if (!_isHydrating) {
+      this._children = Array.from(this.childNodes);
+      _clearChildren(this);
+    }
     _withInstance(this, () => {
       const props = _waf_props;
       const Tag = props.isHeader.value ? 'h1' : 'h2';
       const items = ['A', 'B'];
-      const el0 = document.createElement("div");
+      const el0 = _element("div");
       _setProperty(el0, "className", "container", false);
       el0.setAttribute("data-testid", "main-div");
-      const el1 = document.createElement("input");
+      const el1 = _element("input");
       _setProperty(el1, "disabled", true, false);
       _hookEffect(() => el1.setAttribute("tab-index", -1));
       _hookEffect(() => el1.setAttribute("max-length", 5));
       el0.appendChild(el1);
-      const el2 = document.createElement(Tag);
-      const text3 = document.createTextNode("Dynamic Heading");
+      const el2 = _element(Tag);
+      const text3 = _text("Dynamic Heading");
       el2.appendChild(text3);
       el0.appendChild(el2);
-      const el4 = document.createElement("web-ui-button");
+      const el4 = _element("web-ui-button");
       _setProperty(el4, "variant", "primary", true);
-      const text5 = document.createTextNode("Click Me");
+      const text5 = _text("Click Me");
       el4.appendChild(text5);
       el0.appendChild(el4);
-      const el6 = document.createElement("p");
-      const text7 = document.createTextNode(" Welcome, ");
+      const el6 = _element("p");
+      const text7 = _text(" Welcome, ");
       el6.appendChild(text7);
-      const el8 = document.createElement("strong");
+      const el8 = _element("strong");
       _renderDynamic(el8, () => props.user.value.name);
       el6.appendChild(el8);
-      const text9 = document.createTextNode("!  You have ");
+      const text9 = _text("!  You have ");
       el6.appendChild(text9);
       _renderDynamic(el6, () => props.notifications.value.length);
-      const text10 = document.createTextNode(" new messages. ");
+      const text10 = _text(" new messages. ");
       el6.appendChild(text10);
       el0.appendChild(el6);
-      const el11 = document.createElement("div");
+      const el11 = _element("div");
       _hookEffect(() => _applySpread(el11, props.extra.value, false));
       _setProperty(el11, "className", "override", false);
       _setProperty(el11, "id", "constant", false);
-      const text12 = document.createTextNode(" Spread Test ");
+      const text12 = _text(" Spread Test ");
       el11.appendChild(text12);
       el0.appendChild(el11);
-      const el13 = document.createElement("ul");
+      const el13 = _element("ul");
       _renderDynamic(el13, () => [() => {
-        const el0 = document.createElement("li");
+        const el0 = _element("li");
         _setProperty(el0, "_key", "1", false);
-        const text1 = document.createTextNode("One");
+        const text1 = _text("One");
         el0.appendChild(text1);
         return el0;
       }, () => {
-        const el0 = document.createElement("li");
+        const el0 = _element("li");
         _setProperty(el0, "_key", "2", false);
-        const text1 = document.createTextNode("Two");
+        const text1 = _text("Two");
         el0.appendChild(text1);
         return el0;
       }]);
       el0.appendChild(el13);
-      const el14 = document.createElement("web-dataprovider");
+      const el14 = _element("web-dataprovider");
       _renderDynamic(el14, data => (() => {
-        const el0 = document.createElement("div");
-        const text1 = document.createTextNode("Data: ");
+        const el0 = _element("div");
+        const text1 = _text("Data: ");
         el0.appendChild(text1);
         _renderDynamic(el0, () => data.value);
         return el0;
       })());
       el0.appendChild(el14);
-      const el15 = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      const el15 = _svg("svg");
       el15.setAttribute("viewBox", "0 0 100 100");
       el15.setAttribute("xmlns", "http://www.w3.org/2000/svg");
-      const el16 = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+      const el16 = _svg("circle");
       el16.setAttribute("cx", "50");
       el16.setAttribute("cy", "50");
       el16.setAttribute("r", "40");
@@ -717,14 +535,14 @@ class ReactPatternsElement extends HTMLElement {
       el16.setAttribute("fill", "red");
       el15.appendChild(el16);
       el0.appendChild(el15);
-      const el17 = document.createElement("web-customcomponent");
+      const el17 = _element("web-customcomponent");
       el0.appendChild(el17);
-      const el18 = document.createElement("br");
+      const el18 = _element("br");
       el0.appendChild(el18);
-      const el19 = document.createElement("hr");
+      const el19 = _element("hr");
       el0.appendChild(el19);
       const rootElement = el0;
-      this.appendChild(rootElement);
+      if (!_isHydrating) this.appendChild(rootElement);
     });
     _withInstance(this, () => {
       this._onMounts.forEach(fn => fn());
@@ -748,36 +566,7 @@ class CustomComponentElement extends HTMLElement {
   static observedAttributes = [];
   constructor() {
     super();
-    Object.defineProperty(this, "_propsSignals", {
-      value: {},
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_onMounts", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_onCleanups", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_children", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_mounted", {
-      value: false,
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
+    _initInternalState(this, {});
   }
   attributeChangedCallback(name, _, value) {
     if (this._propsSignals[name]) this._propsSignals[name].value = value;
@@ -789,14 +578,17 @@ class CustomComponentElement extends HTMLElement {
     }
     this._mounted = true;
     const _waf_props = _createPropsProxy(this);
-    this._children = Array.from(this.childNodes);
-    _clearChildren(this);
+    const _isHydrating = this.hasAttribute("data-ssg");
+    if (!_isHydrating) {
+      this._children = Array.from(this.childNodes);
+      _clearChildren(this);
+    }
     _withInstance(this, () => {
-      const el0 = document.createElement("div");
-      const text1 = document.createTextNode("Custom");
+      const el0 = _element("div");
+      const text1 = _text("Custom");
       el0.appendChild(text1);
       const rootElement = el0;
-      this.appendChild(rootElement);
+      if (!_isHydrating) this.appendChild(rootElement);
     });
     _withInstance(this, () => {
       this._onMounts.forEach(fn => fn());
@@ -810,7 +602,7 @@ customElements.define("web-customcomponent", CustomComponentElement);"
 `;
 
 exports[`Web App Framework Compiler Compiles nested-reactivity.jsx 1`] = `
-"import { signal as _signal, hookEffect as _hookEffect, setProperty as _setProperty, renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy, _reconnectWafComponent, _clearChildren, withInstance as _withInstance, _disconnectWafComponent } from "@opentf/web";
+"import { signal as _signal, _element, _text, _svg, _fragment, hookEffect as _hookEffect, setProperty as _setProperty, renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy, _initInternalState, _reconnectWafComponent, _clearChildren, withInstance as _withInstance, _disconnectWafComponent } from "@opentf/web";
 class NestedReactivityElement extends HTMLElement {
   static observedAttributes = ["title"];
   set title(_val) {
@@ -823,37 +615,8 @@ class NestedReactivityElement extends HTMLElement {
   }
   constructor() {
     super();
-    Object.defineProperty(this, "_propsSignals", {
-      value: {
-        title: _signal(null)
-      },
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_onMounts", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_onCleanups", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_children", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_mounted", {
-      value: false,
-      enumerable: false,
-      writable: true,
-      configurable: true
+    _initInternalState(this, {
+      title: _signal(null)
     });
   }
   attributeChangedCallback(name, _, value) {
@@ -866,21 +629,24 @@ class NestedReactivityElement extends HTMLElement {
     }
     this._mounted = true;
     const _waf_props = _createPropsProxy(this);
-    this._children = Array.from(this.childNodes);
-    _clearChildren(this);
+    const _isHydrating = this.hasAttribute("data-ssg");
+    if (!_isHydrating) {
+      this._children = Array.from(this.childNodes);
+      _clearChildren(this);
+    }
     _withInstance(this, () => {
       const props = _waf_props;
       let show = _signal(true);
-      const el0 = document.createElement("div");
+      const el0 = _element("div");
       _renderDynamic(el0, () => show.value && (() => {
-        const el0 = document.createElement("span");
+        const el0 = _element("span");
         _hookEffect(() => _setProperty(el0, "title", props.title.value, false));
-        const text1 = document.createTextNode("Hello");
+        const text1 = _text("Hello");
         el0.appendChild(text1);
         return el0;
       })());
       const rootElement = el0;
-      this.appendChild(rootElement);
+      if (!_isHydrating) this.appendChild(rootElement);
     });
     _withInstance(this, () => {
       this._onMounts.forEach(fn => fn());
@@ -895,20 +661,20 @@ export default NestedReactivityElement;"
 `;
 
 exports[`Web App Framework Compiler Compiles basic-elements.page.jsx 1`] = `
-"import { createPropsProxy as _createPropsProxy } from "@opentf/web";
+"import { _element, _text, _svg, _fragment, createPropsProxy as _createPropsProxy } from "@opentf/web";
 export function render(root, _props) {
   const _holder = {
     _children: _props.children || []
   };
   const _waf_props = _createPropsProxy(_holder);
   Object.assign(_waf_props, _props);
-  const el0 = document.createElement("div");
-  const el1 = document.createElement("h1");
-  const text2 = document.createTextNode("Hello");
+  const el0 = _element("div");
+  const el1 = _element("h1");
+  const text2 = _text("Hello");
   el1.appendChild(text2);
   el0.appendChild(el1);
-  const el3 = document.createElement("p");
-  const text4 = document.createTextNode("World");
+  const el3 = _element("p");
+  const text4 = _text("World");
   el3.appendChild(text4);
   el0.appendChild(el3);
   const rootElement = el0;
@@ -917,41 +683,12 @@ export function render(root, _props) {
 `;
 
 exports[`Web App Framework Compiler Compiles spread.jsx 1`] = `
-"import { hookEffect as _hookEffect, applySpread as _applySpread, signal as _signal, createPropsProxy as _createPropsProxy, _reconnectWafComponent, _clearChildren, withInstance as _withInstance, _disconnectWafComponent } from "@opentf/web";
+"import { _element, _text, _svg, _fragment, hookEffect as _hookEffect, applySpread as _applySpread, signal as _signal, createPropsProxy as _createPropsProxy, _initInternalState, _reconnectWafComponent, _clearChildren, withInstance as _withInstance, _disconnectWafComponent } from "@opentf/web";
 class SpreadTestElement extends HTMLElement {
   static observedAttributes = [];
   constructor() {
     super();
-    Object.defineProperty(this, "_propsSignals", {
-      value: {},
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_onMounts", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_onCleanups", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_children", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_mounted", {
-      value: false,
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
+    _initInternalState(this, {});
   }
   attributeChangedCallback(name, _, value) {
     if (this._propsSignals[name]) this._propsSignals[name].value = value;
@@ -963,27 +700,30 @@ class SpreadTestElement extends HTMLElement {
     }
     this._mounted = true;
     const _waf_props = _createPropsProxy(this);
-    this._children = Array.from(this.childNodes);
-    _clearChildren(this);
+    const _isHydrating = this.hasAttribute("data-ssg");
+    if (!_isHydrating) {
+      this._children = Array.from(this.childNodes);
+      _clearChildren(this);
+    }
     _withInstance(this, () => {
       const props = {
         id: "test",
         className: "foo",
         "data-custom": "bar"
       };
-      const el0 = document.createElement("div");
+      const el0 = _element("div");
       _hookEffect(() => _applySpread(el0, props, false));
-      const el1 = document.createElement("span");
+      const el1 = _element("span");
       _hookEffect(() => _applySpread(el1, {
         style: {
           color: "red"
         }
       }, false));
-      const text2 = document.createTextNode("Hello");
+      const text2 = _text("Hello");
       el1.appendChild(text2);
       el0.appendChild(el1);
       const rootElement = el0;
-      this.appendChild(rootElement);
+      if (!_isHydrating) this.appendChild(rootElement);
     });
     _withInstance(this, () => {
       this._onMounts.forEach(fn => fn());
@@ -998,41 +738,12 @@ export default SpreadTestElement;"
 `;
 
 exports[`Web App Framework Compiler Compiles state-edge-cases.jsx 1`] = `
-"import { signal as _signal, renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy, _reconnectWafComponent, _clearChildren, withInstance as _withInstance, _disconnectWafComponent } from "@opentf/web";
+"import { signal as _signal, _element, _text, _svg, _fragment, renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy, _initInternalState, _reconnectWafComponent, _clearChildren, withInstance as _withInstance, _disconnectWafComponent } from "@opentf/web";
 class StateEdgeCasesElement extends HTMLElement {
   static observedAttributes = [];
   constructor() {
     super();
-    Object.defineProperty(this, "_propsSignals", {
-      value: {},
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_onMounts", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_onCleanups", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_children", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_mounted", {
-      value: false,
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
+    _initInternalState(this, {});
   }
   attributeChangedCallback(name, _, value) {
     if (this._propsSignals[name]) this._propsSignals[name].value = value;
@@ -1044,8 +755,11 @@ class StateEdgeCasesElement extends HTMLElement {
     }
     this._mounted = true;
     const _waf_props = _createPropsProxy(this);
-    this._children = Array.from(this.childNodes);
-    _clearChildren(this);
+    const _isHydrating = this.hasAttribute("data-ssg");
+    if (!_isHydrating) {
+      this._children = Array.from(this.childNodes);
+      _clearChildren(this);
+    }
     _withInstance(this, () => {
       let count = _signal(0);
       let user = _signal({
@@ -1084,23 +798,23 @@ class StateEdgeCasesElement extends HTMLElement {
 
       // 7. Passing as argument
       console.log(count.value, user.value);
-      const el0 = document.createElement("div");
-      const el1 = document.createElement("span");
+      const el0 = _element("div");
+      const el1 = _element("span");
       _renderDynamic(el1, () => count.value);
       el0.appendChild(el1);
-      const el2 = document.createElement("span");
+      const el2 = _element("span");
       _renderDynamic(el2, () => user.value.name);
       el0.appendChild(el2);
-      const el3 = document.createElement("button");
+      const el3 = _element("button");
       el3.onclick = () => {
         count.value++;
         user.value.age++;
       };
-      const text4 = document.createTextNode("Increment");
+      const text4 = _text("Increment");
       el3.appendChild(text4);
       el0.appendChild(el3);
       const rootElement = el0;
-      this.appendChild(rootElement);
+      if (!_isHydrating) this.appendChild(rootElement);
     });
     _withInstance(this, () => {
       this._onMounts.forEach(fn => fn());
@@ -1115,7 +829,7 @@ export default StateEdgeCasesElement;"
 `;
 
 exports[`Web App Framework Compiler Compiles styling.jsx 1`] = `
-"import { signal as _signal, setProperty as _setProperty, hookEffect as _hookEffect, createPropsProxy as _createPropsProxy, _reconnectWafComponent, _clearChildren, withInstance as _withInstance, _disconnectWafComponent } from "@opentf/web";
+"import { signal as _signal, _element, _text, _svg, _fragment, setProperty as _setProperty, hookEffect as _hookEffect, createPropsProxy as _createPropsProxy, _initInternalState, _reconnectWafComponent, _clearChildren, withInstance as _withInstance, _disconnectWafComponent } from "@opentf/web";
 class StylingTestElement extends HTMLElement {
   static observedAttributes = ["theme"];
   set theme(_val) {
@@ -1128,37 +842,8 @@ class StylingTestElement extends HTMLElement {
   }
   constructor() {
     super();
-    Object.defineProperty(this, "_propsSignals", {
-      value: {
-        theme: _signal(null)
-      },
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_onMounts", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_onCleanups", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_children", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_mounted", {
-      value: false,
-      enumerable: false,
-      writable: true,
-      configurable: true
+    _initInternalState(this, {
+      theme: _signal(null)
     });
   }
   attributeChangedCallback(name, _, value) {
@@ -1171,26 +856,29 @@ class StylingTestElement extends HTMLElement {
     }
     this._mounted = true;
     const _waf_props = _createPropsProxy(this);
-    this._children = Array.from(this.childNodes);
-    _clearChildren(this);
+    const _isHydrating = this.hasAttribute("data-ssg");
+    if (!_isHydrating) {
+      this._children = Array.from(this.childNodes);
+      _clearChildren(this);
+    }
     _withInstance(this, () => {
       const props = _waf_props;
       let active = _signal(true);
-      const el0 = document.createElement("div");
+      const el0 = _element("div");
       _setProperty(el0, "className", "static-class", false);
       _setProperty(el0, "className", "static-classname", false);
-      const el1 = document.createElement("span");
+      const el1 = _element("span");
       _hookEffect(() => _setProperty(el1, "className", active.value ? "active" : "inactive", false));
-      const text2 = document.createTextNode(" Reactive Class ");
+      const text2 = _text(" Reactive Class ");
       el1.appendChild(text2);
       el0.appendChild(el1);
-      const el3 = document.createElement("button");
+      const el3 = _element("button");
       _hookEffect(() => _setProperty(el3, "className", props.theme.value, false));
-      const text4 = document.createTextNode(" Reactive ClassName from Props ");
+      const text4 = _text(" Reactive ClassName from Props ");
       el3.appendChild(text4);
       el0.appendChild(el3);
       const rootElement = el0;
-      this.appendChild(rootElement);
+      if (!_isHydrating) this.appendChild(rootElement);
     });
     _withInstance(this, () => {
       this._onMounts.forEach(fn => fn());
@@ -1205,42 +893,13 @@ export default StylingTestElement;"
 `;
 
 exports[`Web App Framework Compiler Compiles forms.jsx 1`] = `
-"import { hookEffect as _hookEffect, applySpread as _applySpread, renderDynamic as _renderDynamic, signal as _signal, createPropsProxy as _createPropsProxy, _reconnectWafComponent, _clearChildren, withInstance as _withInstance, _disconnectWafComponent } from "@opentf/web";
+"import { _element, _text, _svg, _fragment, hookEffect as _hookEffect, applySpread as _applySpread, renderDynamic as _renderDynamic, signal as _signal, createPropsProxy as _createPropsProxy, _initInternalState, _reconnectWafComponent, _clearChildren, withInstance as _withInstance, _disconnectWafComponent } from "@opentf/web";
 import { createForm } from "@opentf/web-form";
 class FormCaseElement extends HTMLElement {
   static observedAttributes = [];
   constructor() {
     super();
-    Object.defineProperty(this, "_propsSignals", {
-      value: {},
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_onMounts", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_onCleanups", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_children", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_mounted", {
-      value: false,
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
+    _initInternalState(this, {});
   }
   attributeChangedCallback(name, _, value) {
     if (this._propsSignals[name]) this._propsSignals[name].value = value;
@@ -1252,30 +911,33 @@ class FormCaseElement extends HTMLElement {
     }
     this._mounted = true;
     const _waf_props = _createPropsProxy(this);
-    this._children = Array.from(this.childNodes);
-    _clearChildren(this);
+    const _isHydrating = this.hasAttribute("data-ssg");
+    if (!_isHydrating) {
+      this._children = Array.from(this.childNodes);
+      _clearChildren(this);
+    }
     _withInstance(this, () => {
       const form = createForm({
         initialValues: {
           name: "Alice"
         }
       });
-      const el0 = document.createElement("div");
-      const el1 = document.createElement("input");
+      const el0 = _element("div");
+      const el1 = _element("input");
       _hookEffect(() => _applySpread(el1, form.register('name'), false));
       el0.appendChild(el1);
-      const el2 = document.createElement("p");
-      const text3 = document.createTextNode("Hello, ");
+      const el2 = _element("p");
+      const text3 = _text("Hello, ");
       el2.appendChild(text3);
       _renderDynamic(el2, () => form.values.name);
       el0.appendChild(el2);
-      const el4 = document.createElement("button");
+      const el4 = _element("button");
       el4.onclick = form.handleSubmit(v => console.log(v));
-      const text5 = document.createTextNode(" Submit ");
+      const text5 = _text(" Submit ");
       el4.appendChild(text5);
       el0.appendChild(el4);
       const rootElement = el0;
-      this.appendChild(rootElement);
+      if (!_isHydrating) this.appendChild(rootElement);
     });
     _withInstance(this, () => {
       this._onMounts.forEach(fn => fn());
@@ -1290,41 +952,12 @@ export default FormCaseElement;"
 `;
 
 exports[`Web App Framework Compiler Compiles ref.jsx 1`] = `
-"import { signal as _signal, onMount as _onMount, createPropsProxy as _createPropsProxy, _reconnectWafComponent, _clearChildren, withInstance as _withInstance, _disconnectWafComponent, hookEffect as _hookEffect } from "@opentf/web";
+"import { signal as _signal, onMount as _onMount, _element, _text, _svg, _fragment, createPropsProxy as _createPropsProxy, _initInternalState, _reconnectWafComponent, _clearChildren, withInstance as _withInstance, _disconnectWafComponent, hookEffect as _hookEffect } from "@opentf/web";
 class CustomInputElement extends HTMLElement {
   static observedAttributes = [];
   constructor() {
     super();
-    Object.defineProperty(this, "_propsSignals", {
-      value: {},
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_onMounts", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_onCleanups", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_children", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_mounted", {
-      value: false,
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
+    _initInternalState(this, {});
   }
   attributeChangedCallback(name, _, value) {
     if (this._propsSignals[name]) this._propsSignals[name].value = value;
@@ -1336,20 +969,23 @@ class CustomInputElement extends HTMLElement {
     }
     this._mounted = true;
     const _waf_props = _createPropsProxy(this);
-    this._children = Array.from(this.childNodes);
-    _clearChildren(this);
+    const _isHydrating = this.hasAttribute("data-ssg");
+    if (!_isHydrating) {
+      this._children = Array.from(this.childNodes);
+      _clearChildren(this);
+    }
     _withInstance(this, () => {
       const input = _signal();
       const focus = () => input.value.focus();
       Object.assign(this, {
         focus
       });
-      const el0 = document.createElement("input");
+      const el0 = _element("input");
       input.value = el0;
       el0.setAttribute("type", "text");
       el0.setAttribute("placeholder", "Custom Input");
       const rootElement = el0;
-      this.appendChild(rootElement);
+      if (!_isHydrating) this.appendChild(rootElement);
     });
     _withInstance(this, () => {
       this._onMounts.forEach(fn => fn());
@@ -1364,36 +1000,7 @@ class RefTestElement extends HTMLElement {
   static observedAttributes = [];
   constructor() {
     super();
-    Object.defineProperty(this, "_propsSignals", {
-      value: {},
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_onMounts", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_onCleanups", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_children", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_mounted", {
-      value: false,
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
+    _initInternalState(this, {});
   }
   attributeChangedCallback(name, _, value) {
     if (this._propsSignals[name]) this._propsSignals[name].value = value;
@@ -1405,8 +1012,11 @@ class RefTestElement extends HTMLElement {
     }
     this._mounted = true;
     const _waf_props = _createPropsProxy(this);
-    this._children = Array.from(this.childNodes);
-    _clearChildren(this);
+    const _isHydrating = this.hasAttribute("data-ssg");
+    if (!_isHydrating) {
+      this._children = Array.from(this.childNodes);
+      _clearChildren(this);
+    }
     _withInstance(this, () => {
       const myDiv = _signal();
       const myInput = _signal();
@@ -1415,28 +1025,28 @@ class RefTestElement extends HTMLElement {
         myDiv.value.style.backgroundColor = "lightgray";
         myInput.value.focus();
       });
-      const el0 = document.createElement("div");
+      const el0 = _element("div");
       myDiv.value = el0;
       _hookEffect(() => Object.assign(el0.style, {
         padding: "20px"
       }));
-      const el1 = document.createElement("h1");
+      const el1 = _element("h1");
       _hookEffect(() => Object.assign(el1.style, {
         color: color.value
       }));
-      const text2 = document.createTextNode("Ref Test");
+      const text2 = _text("Ref Test");
       el1.appendChild(text2);
       el0.appendChild(el1);
-      const el3 = document.createElement("web-custominput");
+      const el3 = _element("web-custominput");
       myInput.value = el3;
       el0.appendChild(el3);
-      const el4 = document.createElement("button");
+      const el4 = _element("button");
       el4.onclick = () => color.value = "blue";
-      const text5 = document.createTextNode("Change Color");
+      const text5 = _text("Change Color");
       el4.appendChild(text5);
       el0.appendChild(el4);
       const rootElement = el0;
-      this.appendChild(rootElement);
+      if (!_isHydrating) this.appendChild(rootElement);
     });
     _withInstance(this, () => {
       this._onMounts.forEach(fn => fn());
@@ -1451,7 +1061,7 @@ export default RefTestElement;"
 `;
 
 exports[`Web App Framework Compiler Compiles products-page.page.jsx 1`] = `
-"import { signal as _signal, setProperty as _setProperty, _mapped, hookEffect as _hookEffect, renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy } from "@opentf/web";
+"import { signal as _signal, _element, _text, _svg, _fragment, setProperty as _setProperty, _mapped, hookEffect as _hookEffect, renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy } from "@opentf/web";
 export function render(root, _props) {
   const _holder = {
     _children: _props.children || []
@@ -1476,47 +1086,47 @@ export function render(root, _props) {
   const reverse = () => {
     products.value = [...products.value].reverse();
   };
-  const el0 = document.createElement("div");
-  const el1 = document.createElement("div");
+  const el0 = _element("div");
+  const el1 = _element("div");
   _setProperty(el1, "className", "flex justify-between items-center mb-6", false);
-  const el2 = document.createElement("h1");
+  const el2 = _element("h1");
   _setProperty(el2, "className", "text-2xl font-bold text-white", false);
-  const text3 = document.createTextNode("Products (1000 items)");
+  const text3 = _text("Products (1000 items)");
   el2.appendChild(text3);
   el1.appendChild(el2);
-  const el4 = document.createElement("div");
+  const el4 = _element("div");
   _setProperty(el4, "className", "space-x-4", false);
-  const el5 = document.createElement("button");
+  const el5 = _element("button");
   el5.onclick = shuffle;
   _setProperty(el5, "className", "bg-indigo-600 px-4 py-2 rounded text-white hover:bg-indigo-500 transition-colors", false);
-  const text6 = document.createTextNode(" Shuffle List ");
+  const text6 = _text(" Shuffle List ");
   el5.appendChild(text6);
   el4.appendChild(el5);
-  const el7 = document.createElement("button");
+  const el7 = _element("button");
   el7.onclick = reverse;
   _setProperty(el7, "className", "bg-slate-700 px-4 py-2 rounded text-white hover:bg-slate-600 transition-colors", false);
-  const text8 = document.createTextNode(" Reverse List ");
+  const text8 = _text(" Reverse List ");
   el7.appendChild(text8);
   el4.appendChild(el7);
   el1.appendChild(el4);
   el0.appendChild(el1);
-  const el9 = document.createElement("div");
+  const el9 = _element("div");
   _setProperty(el9, "className", "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4", false);
   const mapped10 = _mapped(() => products.value, p => (() => {
-    const el0 = document.createElement("div");
+    const el0 = _element("div");
     el0._key = p.value.id;
     _setProperty(el0, "className", "p-4 bg-slate-800 rounded border border-slate-700 hover:border-indigo-500 transition-all", false);
-    const el1 = document.createElement("div");
+    const el1 = _element("div");
     _setProperty(el1, "className", "font-bold text-white", false);
     _renderDynamic(el1, () => p.value.name);
     el0.appendChild(el1);
-    const el2 = document.createElement("div");
+    const el2 = _element("div");
     _setProperty(el2, "className", "text-slate-400 mt-1", false);
-    const text3 = document.createTextNode("$");
+    const text3 = _text("$");
     el2.appendChild(text3);
     _renderDynamic(el2, () => p.value.price);
     el0.appendChild(el2);
-    const el4 = document.createElement("input");
+    const el4 = _element("input");
     el4.setAttribute("placeholder", "Add note...");
     _setProperty(el4, "className", "mt-2 w-full bg-slate-900 border border-slate-700 rounded px-2 py-1 text-sm text-slate-300 focus:outline-none focus:border-indigo-500", false);
     el0.appendChild(el4);
@@ -1530,21 +1140,21 @@ export function render(root, _props) {
 `;
 
 exports[`Web App Framework Compiler Compiles comments.page.jsx 1`] = `
-"import { setProperty as _setProperty, createPropsProxy as _createPropsProxy } from "@opentf/web";
+"import { _element, _text, _svg, _fragment, setProperty as _setProperty, createPropsProxy as _createPropsProxy } from "@opentf/web";
 export function render(root, _props) {
   const _holder = {
     _children: _props.children || []
   };
   const _waf_props = _createPropsProxy(_holder);
   Object.assign(_waf_props, _props);
-  const el0 = document.createElement("div");
-  const el1 = document.createElement("h1");
-  const text2 = document.createTextNode("Title");
+  const el0 = _element("div");
+  const el1 = _element("h1");
+  const text2 = _text("Title");
   el1.appendChild(text2);
   el0.appendChild(el1);
-  const el3 = document.createElement("p");
+  const el3 = _element("p");
   _setProperty(el3, "className", "foo", false);
-  const text4 = document.createTextNode(" Content ");
+  const text4 = _text(" Content ");
   el3.appendChild(text4);
   el0.appendChild(el3);
   const rootElement = el0;
@@ -1553,41 +1163,12 @@ export function render(root, _props) {
 `;
 
 exports[`Web App Framework Compiler Compiles svg.jsx 1`] = `
-"import { signal as _signal, hookEffect as _hookEffect, createPropsProxy as _createPropsProxy, _reconnectWafComponent, _clearChildren, withInstance as _withInstance, _disconnectWafComponent } from "@opentf/web";
+"import { signal as _signal, _element, _text, _svg, _fragment, hookEffect as _hookEffect, createPropsProxy as _createPropsProxy, _initInternalState, _reconnectWafComponent, _clearChildren, withInstance as _withInstance, _disconnectWafComponent } from "@opentf/web";
 class SvgTestElement extends HTMLElement {
   static observedAttributes = [];
   constructor() {
     super();
-    Object.defineProperty(this, "_propsSignals", {
-      value: {},
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_onMounts", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_onCleanups", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_children", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_mounted", {
-      value: false,
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
+    _initInternalState(this, {});
   }
   attributeChangedCallback(name, _, value) {
     if (this._propsSignals[name]) this._propsSignals[name].value = value;
@@ -1599,15 +1180,18 @@ class SvgTestElement extends HTMLElement {
     }
     this._mounted = true;
     const _waf_props = _createPropsProxy(this);
-    this._children = Array.from(this.childNodes);
-    _clearChildren(this);
+    const _isHydrating = this.hasAttribute("data-ssg");
+    if (!_isHydrating) {
+      this._children = Array.from(this.childNodes);
+      _clearChildren(this);
+    }
     _withInstance(this, () => {
       let strokeWidth = _signal(2);
-      const el0 = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      const el0 = _svg("svg");
       el0.setAttribute("width", "100");
       el0.setAttribute("height", "100");
       el0.setAttribute("viewBox", "0 0 100 100");
-      const el1 = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+      const el1 = _svg("circle");
       el1.setAttribute("cx", "50");
       el1.setAttribute("cy", "50");
       el1.setAttribute("r", "40");
@@ -1615,13 +1199,13 @@ class SvgTestElement extends HTMLElement {
       _hookEffect(() => el1.setAttribute("strokeWidth", strokeWidth.value));
       el1.setAttribute("fill", "transparent");
       el0.appendChild(el1);
-      const el2 = document.createElementNS("http://www.w3.org/2000/svg", "path");
+      const el2 = _svg("path");
       el2.setAttribute("d", "M 10 10 L 90 90");
       el2.setAttribute("stroke", "blue");
       el2.setAttribute("strokeLinecap", "round");
       el0.appendChild(el2);
       const rootElement = el0;
-      this.appendChild(rootElement);
+      if (!_isHydrating) this.appendChild(rootElement);
     });
     _withInstance(this, () => {
       this._onMounts.forEach(fn => fn());
@@ -1636,41 +1220,12 @@ export default SvgTestElement;"
 `;
 
 exports[`Web App Framework Compiler Compiles component-props.jsx 1`] = `
-"import { signal as _signal, setProperty as _setProperty, hookEffect as _hookEffect, createPropsProxy as _createPropsProxy, _reconnectWafComponent, _clearChildren, withInstance as _withInstance, _disconnectWafComponent, renderDynamic as _renderDynamic } from "@opentf/web";
+"import { signal as _signal, _element, _text, _svg, _fragment, setProperty as _setProperty, hookEffect as _hookEffect, createPropsProxy as _createPropsProxy, _initInternalState, _reconnectWafComponent, _clearChildren, withInstance as _withInstance, _disconnectWafComponent, renderDynamic as _renderDynamic } from "@opentf/web";
 class ParentElement extends HTMLElement {
   static observedAttributes = [];
   constructor() {
     super();
-    Object.defineProperty(this, "_propsSignals", {
-      value: {},
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_onMounts", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_onCleanups", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_children", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_mounted", {
-      value: false,
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
+    _initInternalState(this, {});
   }
   attributeChangedCallback(name, _, value) {
     if (this._propsSignals[name]) this._propsSignals[name].value = value;
@@ -1682,21 +1237,24 @@ class ParentElement extends HTMLElement {
     }
     this._mounted = true;
     const _waf_props = _createPropsProxy(this);
-    this._children = Array.from(this.childNodes);
-    _clearChildren(this);
+    const _isHydrating = this.hasAttribute("data-ssg");
+    if (!_isHydrating) {
+      this._children = Array.from(this.childNodes);
+      _clearChildren(this);
+    }
     _withInstance(this, () => {
       let count = _signal(0);
-      const el0 = document.createElement("div");
-      const el1 = document.createElement("web-child");
+      const el0 = _element("div");
+      const el1 = _element("web-child");
       _hookEffect(() => _setProperty(el1, "val", count.value, true));
       el0.appendChild(el1);
-      const el2 = document.createElement("button");
+      const el2 = _element("button");
       el2.onclick = () => count.value++;
-      const text3 = document.createTextNode("Inc");
+      const text3 = _text("Inc");
       el2.appendChild(text3);
       el0.appendChild(el2);
       const rootElement = el0;
-      this.appendChild(rootElement);
+      if (!_isHydrating) this.appendChild(rootElement);
     });
     _withInstance(this, () => {
       this._onMounts.forEach(fn => fn());
@@ -1720,37 +1278,8 @@ class ChildElement extends HTMLElement {
   }
   constructor() {
     super();
-    Object.defineProperty(this, "_propsSignals", {
-      value: {
-        val: _signal(null)
-      },
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_onMounts", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_onCleanups", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_children", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_mounted", {
-      value: false,
-      enumerable: false,
-      writable: true,
-      configurable: true
+    _initInternalState(this, {
+      val: _signal(null)
     });
   }
   attributeChangedCallback(name, _, value) {
@@ -1763,16 +1292,19 @@ class ChildElement extends HTMLElement {
     }
     this._mounted = true;
     const _waf_props = _createPropsProxy(this);
-    this._children = Array.from(this.childNodes);
-    _clearChildren(this);
+    const _isHydrating = this.hasAttribute("data-ssg");
+    if (!_isHydrating) {
+      this._children = Array.from(this.childNodes);
+      _clearChildren(this);
+    }
     _withInstance(this, () => {
       const {
         val
       } = _waf_props;
-      const el0 = document.createElement("div");
+      const el0 = _element("div");
       _renderDynamic(el0, () => _waf_props.val.value);
       const rootElement = el0;
-      this.appendChild(rootElement);
+      if (!_isHydrating) this.appendChild(rootElement);
     });
     _withInstance(this, () => {
       this._onMounts.forEach(fn => fn());
@@ -1786,41 +1318,12 @@ customElements.define("web-child", ChildElement);"
 `;
 
 exports[`Web App Framework Compiler Compiles multiple-components.jsx 1`] = `
-"import { setProperty as _setProperty, hookEffect as _hookEffect, signal as _signal, createPropsProxy as _createPropsProxy, _reconnectWafComponent, _clearChildren, withInstance as _withInstance, _disconnectWafComponent, renderDynamic as _renderDynamic } from "@opentf/web";
+"import { _element, _text, _svg, _fragment, setProperty as _setProperty, hookEffect as _hookEffect, signal as _signal, createPropsProxy as _createPropsProxy, _initInternalState, _reconnectWafComponent, _clearChildren, withInstance as _withInstance, _disconnectWafComponent, renderDynamic as _renderDynamic } from "@opentf/web";
 class MultipleComponentsElement extends HTMLElement {
   static observedAttributes = [];
   constructor() {
     super();
-    Object.defineProperty(this, "_propsSignals", {
-      value: {},
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_onMounts", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_onCleanups", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_children", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_mounted", {
-      value: false,
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
+    _initInternalState(this, {});
   }
   attributeChangedCallback(name, _, value) {
     if (this._propsSignals[name]) this._propsSignals[name].value = value;
@@ -1832,19 +1335,22 @@ class MultipleComponentsElement extends HTMLElement {
     }
     this._mounted = true;
     const _waf_props = _createPropsProxy(this);
-    this._children = Array.from(this.childNodes);
-    _clearChildren(this);
+    const _isHydrating = this.hasAttribute("data-ssg");
+    if (!_isHydrating) {
+      this._children = Array.from(this.childNodes);
+      _clearChildren(this);
+    }
     _withInstance(this, () => {
       const props = _waf_props;
-      const el0 = document.createElement("div");
-      const el1 = document.createElement("web-a");
+      const el0 = _element("div");
+      const el1 = _element("web-a");
       _hookEffect(() => _setProperty(el1, "val", props.a.value, true));
       el0.appendChild(el1);
-      const el2 = document.createElement("web-b");
+      const el2 = _element("web-b");
       _hookEffect(() => _setProperty(el2, "val", props.b.value, true));
       el0.appendChild(el2);
       const rootElement = el0;
-      this.appendChild(rootElement);
+      if (!_isHydrating) this.appendChild(rootElement);
     });
     _withInstance(this, () => {
       this._onMounts.forEach(fn => fn());
@@ -1868,37 +1374,8 @@ class AElement extends HTMLElement {
   }
   constructor() {
     super();
-    Object.defineProperty(this, "_propsSignals", {
-      value: {
-        val: _signal(null)
-      },
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_onMounts", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_onCleanups", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_children", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_mounted", {
-      value: false,
-      enumerable: false,
-      writable: true,
-      configurable: true
+    _initInternalState(this, {
+      val: _signal(null)
     });
   }
   attributeChangedCallback(name, _, value) {
@@ -1911,14 +1388,17 @@ class AElement extends HTMLElement {
     }
     this._mounted = true;
     const _waf_props = _createPropsProxy(this);
-    this._children = Array.from(this.childNodes);
-    _clearChildren(this);
+    const _isHydrating = this.hasAttribute("data-ssg");
+    if (!_isHydrating) {
+      this._children = Array.from(this.childNodes);
+      _clearChildren(this);
+    }
     _withInstance(this, () => {
       const props = _waf_props;
-      const el0 = document.createElement("div");
+      const el0 = _element("div");
       _renderDynamic(el0, () => props.val.value);
       const rootElement = el0;
-      this.appendChild(rootElement);
+      if (!_isHydrating) this.appendChild(rootElement);
     });
     _withInstance(this, () => {
       this._onMounts.forEach(fn => fn());
@@ -1941,37 +1421,8 @@ class BElement extends HTMLElement {
   }
   constructor() {
     super();
-    Object.defineProperty(this, "_propsSignals", {
-      value: {
-        val: _signal(null)
-      },
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_onMounts", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_onCleanups", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_children", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_mounted", {
-      value: false,
-      enumerable: false,
-      writable: true,
-      configurable: true
+    _initInternalState(this, {
+      val: _signal(null)
     });
   }
   attributeChangedCallback(name, _, value) {
@@ -1984,14 +1435,17 @@ class BElement extends HTMLElement {
     }
     this._mounted = true;
     const _waf_props = _createPropsProxy(this);
-    this._children = Array.from(this.childNodes);
-    _clearChildren(this);
+    const _isHydrating = this.hasAttribute("data-ssg");
+    if (!_isHydrating) {
+      this._children = Array.from(this.childNodes);
+      _clearChildren(this);
+    }
     _withInstance(this, () => {
       const props = _waf_props;
-      const el0 = document.createElement("div");
+      const el0 = _element("div");
       _renderDynamic(el0, () => props.val.value);
       const rootElement = el0;
-      this.appendChild(rootElement);
+      if (!_isHydrating) this.appendChild(rootElement);
     });
     _withInstance(this, () => {
       this._onMounts.forEach(fn => fn());
@@ -2005,7 +1459,7 @@ customElements.define("web-b", BElement);"
 `;
 
 exports[`Web App Framework Compiler Compiles routing-layout.layout.jsx 1`] = `
-"import { setProperty as _setProperty, renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy } from "@opentf/web";
+"import { _element, _text, _svg, _fragment, setProperty as _setProperty, renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy } from "@opentf/web";
 export function render(root, _props) {
   const _holder = {
     _children: _props.children || []
@@ -2013,16 +1467,16 @@ export function render(root, _props) {
   const _waf_props = _createPropsProxy(_holder);
   Object.assign(_waf_props, _props);
   const props = _waf_props;
-  const el0 = document.createElement("div");
+  const el0 = _element("div");
   _setProperty(el0, "className", "root-layout", false);
-  const el1 = document.createElement("nav");
-  const el2 = document.createElement("a");
+  const el1 = _element("nav");
+  const el2 = _element("a");
   _setProperty(el2, "href", "/", false);
-  const text3 = document.createTextNode("Home");
+  const text3 = _text("Home");
   el2.appendChild(text3);
   el1.appendChild(el2);
   el0.appendChild(el1);
-  const el4 = document.createElement("main");
+  const el4 = _element("main");
   _renderDynamic(el4, () => props.children);
   el0.appendChild(el4);
   const rootElement = el0;
@@ -2031,7 +1485,7 @@ export function render(root, _props) {
 `;
 
 exports[`Web App Framework Compiler Compiles catch-all-page.page.jsx 1`] = `
-"import { setProperty as _setProperty, _mapped, renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy } from "@opentf/web";
+"import { _element, _text, _svg, _fragment, setProperty as _setProperty, _mapped, renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy } from "@opentf/web";
 export function render(root, _props) {
   const _holder = {
     _children: _props.children || []
@@ -2039,33 +1493,33 @@ export function render(root, _props) {
   const _waf_props = _createPropsProxy(_holder);
   Object.assign(_waf_props, _props);
   const props = _waf_props;
-  const el0 = document.createElement("div");
-  const el1 = document.createElement("h1");
+  const el0 = _element("div");
+  const el1 = _element("h1");
   _setProperty(el1, "className", "text-2xl font-bold", false);
-  const text2 = document.createTextNode("Shop");
+  const text2 = _text("Shop");
   el1.appendChild(text2);
   el0.appendChild(el1);
-  const el3 = document.createElement("p");
+  const el3 = _element("p");
   _setProperty(el3, "className", "mt-4", false);
-  const text4 = document.createTextNode("Slug segments: ");
+  const text4 = _text("Slug segments: ");
   el3.appendChild(text4);
   el0.appendChild(el3);
-  const el5 = document.createElement("ul");
+  const el5 = _element("ul");
   _setProperty(el5, "className", "list-disc ml-6 mt-2", false);
   const mapped6 = _mapped(() => props.params.value.slug, segment => (() => {
-    const el0 = document.createElement("li");
+    const el0 = _element("li");
     _renderDynamic(el0, () => segment.value);
     return el0;
   })());
   _renderDynamic(el5, () => mapped6());
   el0.appendChild(el5);
-  const el7 = document.createElement("div");
+  const el7 = _element("div");
   _setProperty(el7, "className", "mt-4 p-4 bg-slate-800 rounded", false);
-  const text8 = document.createTextNode(" Full path: ");
+  const text8 = _text(" Full path: ");
   el7.appendChild(text8);
-  const el9 = document.createElement("span");
+  const el9 = _element("span");
   _setProperty(el9, "className", "text-indigo-400 font-mono", false);
-  const text10 = document.createTextNode("/shop/");
+  const text10 = _text("/shop/");
   el9.appendChild(text10);
   _renderDynamic(el9, () => props.params.value.slug.join('/'));
   el7.appendChild(el9);
@@ -2076,41 +1530,12 @@ export function render(root, _props) {
 `;
 
 exports[`Web App Framework Compiler Compiles inline-styles.jsx 1`] = `
-"import { signal as _signal, hookEffect as _hookEffect, setProperty as _setProperty, createPropsProxy as _createPropsProxy, _reconnectWafComponent, _clearChildren, withInstance as _withInstance, _disconnectWafComponent } from "@opentf/web";
+"import { signal as _signal, _element, _text, _svg, _fragment, hookEffect as _hookEffect, setProperty as _setProperty, createPropsProxy as _createPropsProxy, _initInternalState, _reconnectWafComponent, _clearChildren, withInstance as _withInstance, _disconnectWafComponent } from "@opentf/web";
 class StyleTestElement extends HTMLElement {
   static observedAttributes = [];
   constructor() {
     super();
-    Object.defineProperty(this, "_propsSignals", {
-      value: {},
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_onMounts", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_onCleanups", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_children", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_mounted", {
-      value: false,
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
+    _initInternalState(this, {});
   }
   attributeChangedCallback(name, _, value) {
     if (this._propsSignals[name]) this._propsSignals[name].value = value;
@@ -2122,29 +1547,32 @@ class StyleTestElement extends HTMLElement {
     }
     this._mounted = true;
     const _waf_props = _createPropsProxy(this);
-    this._children = Array.from(this.childNodes);
-    _clearChildren(this);
+    const _isHydrating = this.hasAttribute("data-ssg");
+    if (!_isHydrating) {
+      this._children = Array.from(this.childNodes);
+      _clearChildren(this);
+    }
     _withInstance(this, () => {
       let color = _signal("red");
-      const el0 = document.createElement("div");
+      const el0 = _element("div");
       _hookEffect(() => Object.assign(el0.style, {
         display: "flex",
         gap: "10px"
       }));
-      const el1 = document.createElement("span");
+      const el1 = _element("span");
       _hookEffect(() => Object.assign(el1.style, {
         color: color.value
       }));
-      const text2 = document.createTextNode(" Reactive Style ");
+      const text2 = _text(" Reactive Style ");
       el1.appendChild(text2);
       el0.appendChild(el1);
-      const el3 = document.createElement("div");
+      const el3 = _element("div");
       _setProperty(el3, "style", "font-weight: bold;", false);
-      const text4 = document.createTextNode(" Static Style String ");
+      const text4 = _text(" Static Style String ");
       el3.appendChild(text4);
       el0.appendChild(el3);
       const rootElement = el0;
-      this.appendChild(rootElement);
+      if (!_isHydrating) this.appendChild(rootElement);
     });
     _withInstance(this, () => {
       this._onMounts.forEach(fn => fn());
@@ -2159,41 +1587,12 @@ export default StyleTestElement;"
 `;
 
 exports[`Web App Framework Compiler Compiles macros.jsx 1`] = `
-"import { signal as _signal, computed as _computed, hookEffect as _hookEffect, isSSG as _isSSG, renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy, _reconnectWafComponent, _clearChildren, withInstance as _withInstance, _disconnectWafComponent } from "@opentf/web";
+"import { signal as _signal, computed as _computed, hookEffect as _hookEffect, isSSG as _isSSG, _element, _text, _svg, _fragment, renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy, _initInternalState, _reconnectWafComponent, _clearChildren, withInstance as _withInstance, _disconnectWafComponent } from "@opentf/web";
 class MacroTestElement extends HTMLElement {
   static observedAttributes = [];
   constructor() {
     super();
-    Object.defineProperty(this, "_propsSignals", {
-      value: {},
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_onMounts", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_onCleanups", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_children", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_mounted", {
-      value: false,
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
+    _initInternalState(this, {});
   }
   attributeChangedCallback(name, _, value) {
     if (this._propsSignals[name]) this._propsSignals[name].value = value;
@@ -2205,32 +1604,35 @@ class MacroTestElement extends HTMLElement {
     }
     this._mounted = true;
     const _waf_props = _createPropsProxy(this);
-    this._children = Array.from(this.childNodes);
-    _clearChildren(this);
+    const _isHydrating = this.hasAttribute("data-ssg");
+    if (!_isHydrating) {
+      this._children = Array.from(this.childNodes);
+      _clearChildren(this);
+    }
     _withInstance(this, () => {
       let count = _signal(0);
       const doubled = _computed(() => count.value * 2);
       if (!_isSSG) _hookEffect(() => {
         console.log("Count changed:", count.value);
       });
-      const el0 = document.createElement("div");
-      const el1 = document.createElement("p");
-      const text2 = document.createTextNode("Count: ");
+      const el0 = _element("div");
+      const el1 = _element("p");
+      const text2 = _text("Count: ");
       el1.appendChild(text2);
       _renderDynamic(el1, () => count.value);
       el0.appendChild(el1);
-      const el3 = document.createElement("p");
-      const text4 = document.createTextNode("Doubled: ");
+      const el3 = _element("p");
+      const text4 = _text("Doubled: ");
       el3.appendChild(text4);
       _renderDynamic(el3, () => doubled.value);
       el0.appendChild(el3);
-      const el5 = document.createElement("button");
+      const el5 = _element("button");
       el5.onclick = () => count.value++;
-      const text6 = document.createTextNode("Increment");
+      const text6 = _text("Increment");
       el5.appendChild(text6);
       el0.appendChild(el5);
       const rootElement = el0;
-      this.appendChild(rootElement);
+      if (!_isHydrating) this.appendChild(rootElement);
     });
     _withInstance(this, () => {
       this._onMounts.forEach(fn => fn());
@@ -2245,41 +1647,12 @@ export default MacroTestElement;"
 `;
 
 exports[`Web App Framework Compiler Compiles list-rendering.jsx 1`] = `
-"import { signal as _signal, _mapped, renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy, _reconnectWafComponent, _clearChildren, withInstance as _withInstance, _disconnectWafComponent } from "@opentf/web";
+"import { signal as _signal, _element, _text, _svg, _fragment, _mapped, renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy, _initInternalState, _reconnectWafComponent, _clearChildren, withInstance as _withInstance, _disconnectWafComponent } from "@opentf/web";
 class ListRenderingElement extends HTMLElement {
   static observedAttributes = [];
   constructor() {
     super();
-    Object.defineProperty(this, "_propsSignals", {
-      value: {},
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_onMounts", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_onCleanups", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_children", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_mounted", {
-      value: false,
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
+    _initInternalState(this, {});
   }
   attributeChangedCallback(name, _, value) {
     if (this._propsSignals[name]) this._propsSignals[name].value = value;
@@ -2291,29 +1664,32 @@ class ListRenderingElement extends HTMLElement {
     }
     this._mounted = true;
     const _waf_props = _createPropsProxy(this);
-    this._children = Array.from(this.childNodes);
-    _clearChildren(this);
+    const _isHydrating = this.hasAttribute("data-ssg");
+    if (!_isHydrating) {
+      this._children = Array.from(this.childNodes);
+      _clearChildren(this);
+    }
     _withInstance(this, () => {
       const props = _waf_props;
       let items = _signal(['A', 'B', 'C']);
-      const el0 = document.createElement("div");
-      const el1 = document.createElement("ul");
+      const el0 = _element("div");
+      const el1 = _element("ul");
       const mapped2 = _mapped(() => items.value, item => (() => {
-        const el0 = document.createElement("li");
-        const text1 = document.createTextNode("Item ");
+        const el0 = _element("li");
+        const text1 = _text("Item ");
         el0.appendChild(text1);
         _renderDynamic(el0, () => item.value);
         return el0;
       })());
       _renderDynamic(el1, () => mapped2());
       el0.appendChild(el1);
-      const el3 = document.createElement("button");
+      const el3 = _element("button");
       el3.onclick = () => items.value = [...items.value, 'D'];
-      const text4 = document.createTextNode(" Add ");
+      const text4 = _text(" Add ");
       el3.appendChild(text4);
       el0.appendChild(el3);
       const rootElement = el0;
-      this.appendChild(rootElement);
+      if (!_isHydrating) this.appendChild(rootElement);
     });
     _withInstance(this, () => {
       this._onMounts.forEach(fn => fn());
@@ -2328,41 +1704,12 @@ export default ListRenderingElement;"
 `;
 
 exports[`Web App Framework Compiler Compiles icon-library.jsx 1`] = `
-"import { setProperty as _setProperty, hookEffect as _hookEffect, signal as _signal, createPropsProxy as _createPropsProxy, _reconnectWafComponent, _clearChildren, withInstance as _withInstance, _disconnectWafComponent, applySpread as _applySpread } from "@opentf/web";
+"import { _element, _text, _svg, _fragment, setProperty as _setProperty, hookEffect as _hookEffect, signal as _signal, createPropsProxy as _createPropsProxy, _initInternalState, _reconnectWafComponent, _clearChildren, withInstance as _withInstance, _disconnectWafComponent, applySpread as _applySpread } from "@opentf/web";
 class IconGalleryElement extends HTMLElement {
   static observedAttributes = [];
   constructor() {
     super();
-    Object.defineProperty(this, "_propsSignals", {
-      value: {},
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_onMounts", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_onCleanups", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_children", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_mounted", {
-      value: false,
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
+    _initInternalState(this, {});
   }
   attributeChangedCallback(name, _, value) {
     if (this._propsSignals[name]) this._propsSignals[name].value = value;
@@ -2374,25 +1721,28 @@ class IconGalleryElement extends HTMLElement {
     }
     this._mounted = true;
     const _waf_props = _createPropsProxy(this);
-    this._children = Array.from(this.childNodes);
-    _clearChildren(this);
+    const _isHydrating = this.hasAttribute("data-ssg");
+    if (!_isHydrating) {
+      this._children = Array.from(this.childNodes);
+      _clearChildren(this);
+    }
     _withInstance(this, () => {
       const props = _waf_props;
-      const el0 = document.createElement("div");
+      const el0 = _element("div");
       _setProperty(el0, "className", "flex gap-4", false);
-      const el1 = document.createElement("web-cameraicon");
+      const el1 = _element("web-cameraicon");
       _hookEffect(() => _setProperty(el1, "size", 32, true));
       _setProperty(el1, "color", "red", true);
       el0.appendChild(el1);
-      const el2 = document.createElement("web-usericon");
+      const el2 = _element("web-usericon");
       _hookEffect(() => _setProperty(el2, "size", 24, true));
       _setProperty(el2, "className", "text-blue-500", true);
       el0.appendChild(el2);
-      const el3 = document.createElement("web-settingsicon");
+      const el3 = _element("web-settingsicon");
       _hookEffect(() => _setProperty(el3, "strokeWidth", 3, true));
       el0.appendChild(el3);
       const rootElement = el0;
-      this.appendChild(rootElement);
+      if (!_isHydrating) this.appendChild(rootElement);
     });
     _withInstance(this, () => {
       this._onMounts.forEach(fn => fn());
@@ -2424,38 +1774,9 @@ class CameraIconElement extends HTMLElement {
   }
   constructor() {
     super();
-    Object.defineProperty(this, "_propsSignals", {
-      value: {
-        size: _signal(null),
-        color: _signal(null)
-      },
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_onMounts", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_onCleanups", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_children", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_mounted", {
-      value: false,
-      enumerable: false,
-      writable: true,
-      configurable: true
+    _initInternalState(this, {
+      size: _signal(null),
+      color: _signal(null)
     });
   }
   attributeChangedCallback(name, _, value) {
@@ -2468,15 +1789,18 @@ class CameraIconElement extends HTMLElement {
     }
     this._mounted = true;
     const _waf_props = _createPropsProxy(this);
-    this._children = Array.from(this.childNodes);
-    _clearChildren(this);
+    const _isHydrating = this.hasAttribute("data-ssg");
+    if (!_isHydrating) {
+      this._children = Array.from(this.childNodes);
+      _clearChildren(this);
+    }
     _withInstance(this, () => {
       const {
         size = 24,
         color = "currentColor",
         ...props
       } = _waf_props;
-      const el0 = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      const el0 = _svg("svg");
       el0.setAttribute("xmlns", "http://www.w3.org/2000/svg");
       _hookEffect(() => el0.setAttribute("width", _waf_props.size.value));
       _hookEffect(() => el0.setAttribute("height", _waf_props.size.value));
@@ -2487,16 +1811,16 @@ class CameraIconElement extends HTMLElement {
       el0.setAttribute("strokeLinecap", "round");
       el0.setAttribute("strokeLinejoin", "round");
       _hookEffect(() => _applySpread(el0, props, false));
-      const el1 = document.createElementNS("http://www.w3.org/2000/svg", "path");
+      const el1 = _svg("path");
       el1.setAttribute("d", "M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z");
       el0.appendChild(el1);
-      const el2 = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+      const el2 = _svg("circle");
       el2.setAttribute("cx", "12");
       el2.setAttribute("cy", "13");
       el2.setAttribute("r", "4");
       el0.appendChild(el2);
       const rootElement = el0;
-      this.appendChild(rootElement);
+      if (!_isHydrating) this.appendChild(rootElement);
     });
     _withInstance(this, () => {
       this._onMounts.forEach(fn => fn());
@@ -2519,37 +1843,8 @@ class UserIconElement extends HTMLElement {
   }
   constructor() {
     super();
-    Object.defineProperty(this, "_propsSignals", {
-      value: {
-        size: _signal(null)
-      },
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_onMounts", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_onCleanups", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_children", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_mounted", {
-      value: false,
-      enumerable: false,
-      writable: true,
-      configurable: true
+    _initInternalState(this, {
+      size: _signal(null)
     });
   }
   attributeChangedCallback(name, _, value) {
@@ -2562,14 +1857,17 @@ class UserIconElement extends HTMLElement {
     }
     this._mounted = true;
     const _waf_props = _createPropsProxy(this);
-    this._children = Array.from(this.childNodes);
-    _clearChildren(this);
+    const _isHydrating = this.hasAttribute("data-ssg");
+    if (!_isHydrating) {
+      this._children = Array.from(this.childNodes);
+      _clearChildren(this);
+    }
     _withInstance(this, () => {
       const {
         size = 24,
         ...props
       } = _waf_props;
-      const el0 = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      const el0 = _svg("svg");
       el0.setAttribute("xmlns", "http://www.w3.org/2000/svg");
       _hookEffect(() => el0.setAttribute("width", _waf_props.size.value));
       _hookEffect(() => el0.setAttribute("height", _waf_props.size.value));
@@ -2580,16 +1878,16 @@ class UserIconElement extends HTMLElement {
       el0.setAttribute("strokeLinecap", "round");
       el0.setAttribute("strokeLinejoin", "round");
       _hookEffect(() => _applySpread(el0, props, false));
-      const el1 = document.createElementNS("http://www.w3.org/2000/svg", "path");
+      const el1 = _svg("path");
       el1.setAttribute("d", "M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2");
       el0.appendChild(el1);
-      const el2 = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+      const el2 = _svg("circle");
       el2.setAttribute("cx", "12");
       el2.setAttribute("cy", "7");
       el2.setAttribute("r", "4");
       el0.appendChild(el2);
       const rootElement = el0;
-      this.appendChild(rootElement);
+      if (!_isHydrating) this.appendChild(rootElement);
     });
     _withInstance(this, () => {
       this._onMounts.forEach(fn => fn());
@@ -2612,37 +1910,8 @@ class SettingsIconElement extends HTMLElement {
   }
   constructor() {
     super();
-    Object.defineProperty(this, "_propsSignals", {
-      value: {
-        strokeWidth: _signal(null)
-      },
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_onMounts", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_onCleanups", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_children", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_mounted", {
-      value: false,
-      enumerable: false,
-      writable: true,
-      configurable: true
+    _initInternalState(this, {
+      strokeWidth: _signal(null)
     });
   }
   attributeChangedCallback(name, _, value) {
@@ -2655,14 +1924,17 @@ class SettingsIconElement extends HTMLElement {
     }
     this._mounted = true;
     const _waf_props = _createPropsProxy(this);
-    this._children = Array.from(this.childNodes);
-    _clearChildren(this);
+    const _isHydrating = this.hasAttribute("data-ssg");
+    if (!_isHydrating) {
+      this._children = Array.from(this.childNodes);
+      _clearChildren(this);
+    }
     _withInstance(this, () => {
       const {
         strokeWidth = 2,
         ...props
       } = _waf_props;
-      const el0 = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      const el0 = _svg("svg");
       el0.setAttribute("xmlns", "http://www.w3.org/2000/svg");
       el0.setAttribute("width", "24");
       el0.setAttribute("height", "24");
@@ -2673,16 +1945,16 @@ class SettingsIconElement extends HTMLElement {
       el0.setAttribute("strokeLinecap", "round");
       el0.setAttribute("strokeLinejoin", "round");
       _hookEffect(() => _applySpread(el0, props, false));
-      const el1 = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+      const el1 = _svg("circle");
       el1.setAttribute("cx", "12");
       el1.setAttribute("cy", "12");
       el1.setAttribute("r", "3");
       el0.appendChild(el1);
-      const el2 = document.createElementNS("http://www.w3.org/2000/svg", "path");
+      const el2 = _svg("path");
       el2.setAttribute("d", "M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z");
       el0.appendChild(el2);
       const rootElement = el0;
-      this.appendChild(rootElement);
+      if (!_isHydrating) this.appendChild(rootElement);
     });
     _withInstance(this, () => {
       this._onMounts.forEach(fn => fn());
@@ -2696,41 +1968,12 @@ customElements.define("web-settingsicon", SettingsIconElement);"
 `;
 
 exports[`Web App Framework Compiler Compiles nested-fragments.jsx 1`] = `
-"import { signal as _signal, renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy, _reconnectWafComponent, _clearChildren, withInstance as _withInstance, _disconnectWafComponent } from "@opentf/web";
+"import { signal as _signal, _element, _text, _svg, _fragment, renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy, _initInternalState, _reconnectWafComponent, _clearChildren, withInstance as _withInstance, _disconnectWafComponent } from "@opentf/web";
 class NestedFragmentsElement extends HTMLElement {
   static observedAttributes = [];
   constructor() {
     super();
-    Object.defineProperty(this, "_propsSignals", {
-      value: {},
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_onMounts", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_onCleanups", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_children", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_mounted", {
-      value: false,
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
+    _initInternalState(this, {});
   }
   attributeChangedCallback(name, _, value) {
     if (this._propsSignals[name]) this._propsSignals[name].value = value;
@@ -2742,31 +1985,34 @@ class NestedFragmentsElement extends HTMLElement {
     }
     this._mounted = true;
     const _waf_props = _createPropsProxy(this);
-    this._children = Array.from(this.childNodes);
-    _clearChildren(this);
+    const _isHydrating = this.hasAttribute("data-ssg");
+    if (!_isHydrating) {
+      this._children = Array.from(this.childNodes);
+      _clearChildren(this);
+    }
     _withInstance(this, () => {
       let show = _signal(true);
-      const el0 = document.createElement("div");
+      const el0 = _element("div");
       _renderDynamic(el0, () => show.value && (() => {
-        const frag0 = document.createDocumentFragment();
-        const el1 = document.createElement("span");
-        const text2 = document.createTextNode("A");
+        const frag0 = _fragment();
+        const el1 = _element("span");
+        const text2 = _text("A");
         el1.appendChild(text2);
         frag0.appendChild(el1);
-        const frag3 = document.createDocumentFragment();
-        const el4 = document.createElement("span");
-        const text5 = document.createTextNode("B");
+        const frag3 = _fragment();
+        const el4 = _element("span");
+        const text5 = _text("B");
         el4.appendChild(text5);
         frag3.appendChild(el4);
-        const el6 = document.createElement("span");
-        const text7 = document.createTextNode("C");
+        const el6 = _element("span");
+        const text7 = _text("C");
         el6.appendChild(text7);
         frag3.appendChild(el6);
         frag0.appendChild(frag3);
         return frag0;
       })());
       const rootElement = el0;
-      this.appendChild(rootElement);
+      if (!_isHydrating) this.appendChild(rootElement);
     });
     _withInstance(this, () => {
       this._onMounts.forEach(fn => fn());
@@ -2781,7 +2027,7 @@ export default NestedFragmentsElement;"
 `;
 
 exports[`Web App Framework Compiler Compiles dynamic-page.page.jsx 1`] = `
-"import { onMount as _onMount, onCleanup as _onCleanup, setProperty as _setProperty, renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy } from "@opentf/web";
+"import { onMount as _onMount, onCleanup as _onCleanup, _element, _text, _svg, _fragment, setProperty as _setProperty, renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy } from "@opentf/web";
 export function render(root, _props) {
   const _holder = {
     _children: _props.children || []
@@ -2795,18 +2041,18 @@ export function render(root, _props) {
   _onCleanup(() => {
     console.log(\`Post page cleaned up with ID: \${props.params.value.id}\`);
   });
-  const el0 = document.createElement("div");
-  const el1 = document.createElement("h1");
+  const el0 = _element("div");
+  const el1 = _element("h1");
   _setProperty(el1, "className", "text-2xl font-bold", false);
-  const text2 = document.createTextNode("Post ");
+  const text2 = _text("Post ");
   el1.appendChild(text2);
   _renderDynamic(el1, () => props.params.value.id);
   el0.appendChild(el1);
-  const el3 = document.createElement("p");
+  const el3 = _element("p");
   _setProperty(el3, "className", "mt-4", false);
-  const text4 = document.createTextNode("This is a dynamic post page for ID: ");
+  const text4 = _text("This is a dynamic post page for ID: ");
   el3.appendChild(text4);
-  const el5 = document.createElement("span");
+  const el5 = _element("span");
   _setProperty(el5, "className", "font-mono bg-gray-200 px-1", false);
   _renderDynamic(el5, () => props.params.value.id);
   el3.appendChild(el5);
@@ -2817,7 +2063,7 @@ export function render(root, _props) {
 `;
 
 exports[`Web App Framework Compiler Compiles whitespace.page.jsx 1`] = `
-"import { renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy } from "@opentf/web";
+"import { _element, _text, _svg, _fragment, renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy } from "@opentf/web";
 export function render(root, _props) {
   const _holder = {
     _children: _props.children || []
@@ -2825,20 +2071,20 @@ export function render(root, _props) {
   const _waf_props = _createPropsProxy(_holder);
   Object.assign(_waf_props, _props);
   const name = "Web App Framework";
-  const el0 = document.createElement("div");
-  const el1 = document.createElement("span");
-  const text2 = document.createTextNode("Hello ");
+  const el0 = _element("div");
+  const el1 = _element("span");
+  const text2 = _text("Hello ");
   el1.appendChild(text2);
   _renderDynamic(el1, () => name);
-  const text3 = document.createTextNode("!");
+  const text3 = _text("!");
   el1.appendChild(text3);
   el0.appendChild(el1);
-  const el4 = document.createElement("p");
-  const text5 = document.createTextNode(" Line 1 Line 2 ");
+  const el4 = _element("p");
+  const text5 = _text(" Line 1 Line 2 ");
   el4.appendChild(text5);
   el0.appendChild(el4);
-  const el6 = document.createElement("div");
-  const text7 = document.createTextNode("Spaces should be preserved here -> ");
+  const el6 = _element("div");
+  const text7 = _text("Spaces should be preserved here -> ");
   el6.appendChild(text7);
   el0.appendChild(el6);
   const rootElement = el0;

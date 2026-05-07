@@ -47,10 +47,13 @@ The following properties are defined on every component instance in the `constru
     - **Initialization**: Signals are lazily created during the first property access via `createPropsProxy`.
     - **Initial Value Chain**: The framework resolves values in this order: `Property Value` → `Attribute Value (string)` → `undefined`.
 - `_onMounts`: An array of functions to run on `connectedCallback`.
+    - **Initialization**: Initialized as `[]` in the `constructor`.
 - `_onCleanups`: An array of functions to run on `disconnectedCallback`.
+    - **Initialization**: Initialized as `[]` in the `constructor`.
 - `_children`: An array storing the original `childNodes` of the element.
     - **Population**: Captured in `connectedCallback` using `Array.from(this.childNodes)` *before* the compiler clears the element for rendering.
-- `_mounted`: A boolean flag tracking the component's connection status.
+- `_mounted`: A boolean flag tracking the component's initial DOM construction.
+    - **Initialization**: Initialized as `false` in the `constructor`.
 
 ---
 
@@ -115,6 +118,14 @@ Default values in the component signature are supported and maintained reactivel
 - **Transformation**: `<div>{name}</div>` → `_effect(() => el.textContent = (_waf_props.name.value !== undefined ? _waf_props.name.value : "World"))`
 - **Dynamic Compatibility**: This ensures that if a prop is initially missing but is provided later (e.g., via `setAttribute`), the component will transition from the default value to the new reactive value seamlessly.
 
+### 2.11 CSS Encapsulation
+By default, WAF components use **Light DOM**.
+- **Rationale**: Ensures that global styles (like Tailwind CSS or design system tokens) apply naturally to components without complex workarounds (like `@apply` or CSS parts).
+- **Scoped CSS**: To prevent style leakage, developers are encouraged to use **CSS Modules** or the **Component Path Namespace** as a class prefix.
+- **Shadow DOM**: Support for Shadow DOM and the `@shadow` directive is **deferred** to a future version. Components currently only support Light DOM rendering.
+
+---
+
 ## 3. Reactivity & Macros
 
 ### 3.1 Signals
@@ -127,8 +138,10 @@ Macros are special function calls that the compiler transforms:
 - `$derived(expression)`: Transforms into a Signal-based computed value.
     - **Auto-wrapping**: If a raw expression or a function call is passed (e.g., `$derived(a + b)` or `$derived(compute())`), the compiler automatically wraps it in an arrow function (`() => a + b` or `() => compute()`).
     - **Function Pass-through**: If a function literal (arrow function or anonymous function) is passed (e.g., `$derived(() => count * 2)`), it is used directly without additional wrapping.
-- `$effect(callback)`: Standard runtime hook for reactive side effects. 
+    - **Reactivity Scoping**: Inside a `$derived` arrow function, the **First-Access Rule** still applies to `$signal` variables. The compiler will unwrap property access once within the scope of the computed callback.
+- `$effect(callback)`: Compiler macro for side effects. 
     - **SSG Guard**: The compiler automatically wraps `$effect()` calls in an `if (!isSSG)` check to prevent build-time execution of client-side logic.
+    - **Disposal**: The compiler automatically registers the effect's dispose function in the component's `_onCleanups` array.
 - `$ref()`: Transforms to `signal(null)`. Used in JSX: `<div ref={myRef}>`.
 - `$expose(obj)`: Transforms to `Object.assign(this, obj)` within the component class.
     - **Scoping**: The compiler rewrites the target of `Object.assign` to the component instance (`this`), exposing the object's properties as public properties of the Custom Element.
@@ -239,15 +252,24 @@ class StaticElement extends HTMLElement {
   constructor() {
     super();
     defineInternalProp(this, "_mounted", false);
+    defineInternalProp(this, "_onMounts", []);
+    defineInternalProp(this, "_onCleanups", []);
   }
 
   connectedCallback() {
-    if (this._mounted) return;
-    this._mounted = true;
+    if (!this._mounted) {
+      const el0 = document.createElement("div");
+      el0.appendChild(document.createTextNode("Hello"));
+      this.appendChild(el0);
+      this._mounted = true;
+    }
     
-    const el0 = document.createElement("div");
-    el0.appendChild(document.createTextNode("Hello"));
-    this.appendChild(el0);
+    this._onMounts.forEach(fn => fn());
+  }
+
+  disconnectedCallback() {
+    this._onCleanups.forEach(fn => fn());
+    this._onCleanups = [];
   }
 }
 customElements.define("web-static", StaticElement);
@@ -269,6 +291,8 @@ class GreetElement extends HTMLElement {
     super();
     defineInternalProp(this, "_propsSignals", { name: signal(null) });
     defineInternalProp(this, "_mounted", false);
+    defineInternalProp(this, "_onMounts", []);
+    defineInternalProp(this, "_onCleanups", []);
   }
 
   attributeChangedCallback(name, old, val) {
@@ -276,20 +300,32 @@ class GreetElement extends HTMLElement {
   }
 
   connectedCallback() {
-    if (this._mounted) return;
-    this._mounted = true;
-
     const _waf_props = createPropsProxy(this);
     const { name } = _waf_props;
 
-    const el0 = document.createElement("div");
-    el0.appendChild(document.createTextNode("Hello "));
+    if (!this._mounted) {
+      const el0 = document.createElement("div");
+      el0.appendChild(document.createTextNode("Hello "));
+      
+      const text0 = document.createTextNode("");
+      defineInternalProp(this, "_text0", text0); // Persist for re-activation
+      el0.appendChild(text0);
+      
+      this.appendChild(el0);
+      this._mounted = true;
+    }
+
+    // Reactivity Activation
+    this._onCleanups.push(
+      _effect(() => this._text0.textContent = name.value)
+    );
     
-    const text0 = document.createTextNode("");
-    _effect(() => text0.textContent = name.value);
-    el0.appendChild(text0);
-    
-    this.appendChild(el0);
+    this._onMounts.forEach(fn => fn());
+  }
+
+  disconnectedCallback() {
+    this._onCleanups.forEach(fn => fn());
+    this._onCleanups = [];
   }
 }
 customElements.define("web-greet", GreetElement);
@@ -339,22 +375,36 @@ class CounterElement extends HTMLElement {
   constructor() {
     super();
     defineInternalProp(this, "_mounted", false);
+    defineInternalProp(this, "_onMounts", []);
+    defineInternalProp(this, "_onCleanups", []);
   }
 
   connectedCallback() {
-    if (this._mounted) return;
-    this._mounted = true;
+    let count = signal(0); // State preserved across re-activations? No, state is local to connectedCallback.
+    // NOTE: For persistent state across disconnect/reconnect, use properties or external stores.
 
-    let count = signal(0);
+    if (!this._mounted) {
+      const el0 = document.createElement("button");
+      el0.onclick = () => count.value++;
+      
+      const text0 = document.createTextNode("");
+      defineInternalProp(this, "_text0", text0);
+      el0.appendChild(text0);
 
-    const el0 = document.createElement("button");
-    el0.onclick = () => count.value++;
-    
-    const text0 = document.createTextNode("");
-    _effect(() => text0.textContent = count.value);
-    el0.appendChild(text0);
+      this.appendChild(el0);
+      this._mounted = true;
+    }
 
-    this.appendChild(el0);
+    this._onCleanups.push(
+      _effect(() => this._text0.textContent = count.value)
+    );
+
+    this._onMounts.forEach(fn => fn());
+  }
+
+  disconnectedCallback() {
+    this._onCleanups.forEach(fn => fn());
+    this._onCleanups = [];
   }
 }
 customElements.define("web-counter", CounterElement);
@@ -533,6 +583,8 @@ Arrays and `.map()` operations are transformed into `_mapped()` calls for optimi
 - **Keyed List**: `<ul>{items.map(i => <li key={i.id}>{i.name}</li>)}</ul>`
 - **Nested Maps**: `<ul>{sections.map(s => s.items.map(i => <li>{i}</li>))}</ul>` (Transformed into nested `_mapped` vectors).
 
+- **Performance (Virtual Scrolling)**: For lists with 10,000+ items, `_mapped` may still incur memory overhead. WAF treats virtual scrolling as a **user-land problem**. Developers can implement windowing/virtualization by combining `$derived` (to slice the data) with `_mapped` (to render the visible window), providing the necessary primitives without a heavy built-in abstraction.
+
 ##### Key Prop Behavior
 The `key` prop is crucial for `_mapped` optimization:
 - **Type**: Must be a `string` or `number`.
@@ -638,6 +690,7 @@ A central helper for assigning values to elements. It follows this decision tree
 | **Attribute** | Default | `el.setAttribute(key, value)` (removes if null/false) |
 
 - **`isComponent` Flag**: To accurately apply event casing (preserving camelCase for components, lowercasing for native), the compiler passes an `isComponent` boolean flag to the `setProperty` runtime helper.
+  - **Compiled Output**: `_effect(() => _setProperty(el0, "onClick", fn, true))` (last arg is `isComponent`).
 
 - **Reactivity**: If `value` is a signal, `setProperty` automatically unwraps it via `value.value`.
 - **WAF Sync**: If `el` is a WAF component, `setProperty` updates the internal `el._propsSignals[key]` to propagate reactivity.
@@ -646,7 +699,8 @@ A central helper for assigning values to elements. It follows this decision tree
 Handles conditional and dynamic JSX rendering via an effect-based reconciliation strategy.
 - **Anchor Node**: Creates a "bookmark" (empty TextNode) in the `parent` to track the insertion point.
 - **Effect-based Tracking**: Runs `fn` inside an `effect`. Whenever any signals accessed in `fn` change, the reconciliation logic is triggered.
-- **Security (XSS Safe)**: By default, string and number primitives are converted to DOM nodes exclusively via `document.createTextNode()`. The framework **never** uses `innerHTML` for dynamic rendering, making it inherently safe from Cross-Site Scripting (XSS) attacks.
+- **Security (XSS Safe)**: By default, string and number primitives are converted to DOM nodes exclusively via `document.createTextNode()`. The framework **never** uses `innerHTML` for dynamic rendering. 
+- **dangerouslySetInnerHTML**: WAF does **not** provide a built-in equivalent to React's `dangerouslySetInnerHTML`. If raw HTML injection is required, developers must manually use `el.innerHTML = ...` inside an `$effect`, while being solely responsible for sanitization.
 - **Reconciliation**:
     - If `fn` returns a DOM node: It is inserted/moved before the anchor.
     - If `fn` returns `null/false/undefined`: Any previously rendered dynamic content is removed.
@@ -698,11 +752,13 @@ export function UserProfile({ id }) {
   let user = $state(null);
   let error = $state(null);
 
-  // Fire and forget
-  fetch(`/api/users/${id}`)
-    .then(res => res.json())
-    .then(data => user.value = data)
-    .catch(err => error.value = err.message);
+  // Reactive data fetching
+  $effect(() => {
+    fetch(`/api/users/${id}`)
+      .then(res => res.json())
+      .then(data => user = data)
+      .catch(err => error = err.message);
+  });
 
   return (
     <div>
@@ -735,6 +791,29 @@ WAF uses a file-based router that supports layouts, dynamic segments, and client
 Layouts are recursively applied from the root `app/` directory down to the leaf `page.jsx`.
 - Each layout receives a `children` prop containing the nested content (page or sub-layout).
 
+### 8.4 Client-side Navigation
+WAF utilizes the modern **Navigation API** (with fallback to the HTML5 History API) for seamless client-side transitions.
+- **Persistence**: The layout tree is preserved across navigations. Only the components within the changing route segments are unmounted and replaced.
+- **Scroll Restoration**: The router automatically restores scroll position on back/forward navigation and scrolls to top on new navigations (unless specified otherwise).
+
+### 8.5 The `<Link>` Component
+To enable client-side navigation, use the built-in `<Link>` component.
+- **JSX**: `<Link href="/about">About Us</Link>`
+- **Behavior**: Intercepts the click event, prevents full page reload, and triggers the internal router.
+- **Active State**: Automatically applies an `aria-current="page"` attribute and a `.active` class when the current route matches the `href`.
+
+### 8.6 Route Guards & Redirects
+- **Guards**: Defined in `page.jsx` or `layout.jsx` via an exported `middleware` function.
+- **Redirects**: Handled by throwing a `Redirect(path)` object or returning a `Response.redirect()` in middleware.
+
+```javascript
+export function middleware(request) {
+  if (!auth.isLoggedIn) {
+    throw Redirect("/login");
+  }
+}
+```
+
 ---
 
 ## 9. Static Site Generation (SSG)
@@ -755,8 +834,12 @@ The framework uses `linkedom` to provide a lightweight server-side DOM environme
 - **`$effect()`**: The `$effect` macro is **never** executed during SSG to prevent client-only logic (like `fetch` or `localStorage`) from breaking the build.
 - **`effect()` (Internal)**: To populate the DOM initially during the server build, `core/signals.js` intercepts internal `effect()` calls. During SSG, it executes the provided function *once* synchronously to trigger DOM bindings, and then returns a no-op dispose function, bypassing the reactivity engine.
 
-
----
+### 9.4 Partial Hydration Strategy
+WAF employs a **Selective Activation** strategy:
+- **Marker**: Components that were SSG'd are marked with `data-ssg="true"`.
+- **Skip Static**: On the client, the `connectedCallback` detects the marker. It skips the `_createDOM()` phase because the nodes already exist.
+- **Hydrate Reactivity**: The component still runs its `_activate()` phase to register effects, but it checks if the current DOM state matches the signal's initial value to avoid unnecessary layout shifts.
+- **Nested Hydration**: `data-ssg` is applied recursively. If a parent is SSG'd, its children are assumed to be SSG'd unless they explicitly opt-out.
 
 ---
 
@@ -857,6 +940,17 @@ WAF provides its own high-performance **Regex Router** to ensure consistent rout
 - **Platform-Agnostic**: Because the router is built into the WAF runtime, routing logic remains identical whether running on Bun, Node.js, or Edge workers.
 - **HTTP Server Utilization**: WAF utilizes the native HTTP server of the underlying runtime (e.g., `Bun.serve` or Node's `http` module) via specialized **Adapters**. These adapters translate the platform's native request/response into the standard `Request`/`Response` objects used by WAF handlers.
 
+### 11.5 Middleware & Errors
+- **Shared Middleware**: Files named `_middleware.js` in the `app/api/` directory apply to all routes in that folder and subfolders.
+- **Auth & Validation**: Cross-cutting concerns such as **Authentication**, **Authorization**, and **Request Validation** are handled exclusively via the middleware system.
+- **Error Responses**: WAF encourages standard JSON error bodies:
+  ```javascript
+  return Response.json({ error: "Unauthorized", code: 401 }, { status: 401 });
+  ```
+- **Validation Libraries**: Recommended to use libraries like `zod` inside `_middleware.js` or handlers for schema-based validation.
+
+---
+
 ## 12. DevTools & Debugging
 Because WAF compiles components to standard Custom Elements, you can use native browser developer tools to inspect and debug your application.
 
@@ -874,4 +968,36 @@ console.log($0._propsSignals.name.value);
 $0._propsSignals.name.value = "New Name";
 ```
 
-This makes debugging fine-grained reactivity straightforward without needing specialized browser extensions.
+### 12.2 Inspecting $state signals
+Since `$state` variables are local to `connectedCallback`, they are not directly accessible on the element instance. To debug them:
+1. Set a breakpoint in the component's `connectedCallback`.
+2. Inspect the closure scope in the debugger.
+3. Alternatively, use `$expose({ _debug: { count } })` to make them visible on the instance during development.
+
+### 12.3 Debugging _mapped Lists
+List items rendered via `_mapped` are "reified" into signals. To inspect an item's state:
+1. Select the child element in the inspector.
+2. In the console, use `$0.__waf_item` (if exposed by the runtime) to access the underlying signal for that list entry.
+
+### 12.4 Effect Tracing
+To trace which signal caused a DOM update:
+1. Enable "Log Updates" in WAF Dev Mode.
+2. The console will log: `[WAF] Effect fired: TextNode(12) updated via signal 'count'`.
+3. Use the browser's "Performance" tab to see the call stack originating from a signal's `.value` setter.
+
+---
+
+## 13. Build Output
+The WAF build pipeline (`waf build`) produces a production-ready bundle:
+- **`dist/public/`**: Contains the static assets and the client-side JS bundle.
+- **`dist/server/`**: Contains the SSR/API route handlers.
+- **Code Splitting**: Each route is automatically code-split. The main bundle contains only the runtime and shared layouts; pages are loaded dynamically.
+- **Asset Handling**: Images and fonts imported in JSX are hashed and moved to `dist/public/assets/`.
+
+## 14. Environment Variables
+WAF supports `.env` files with strict boundary enforcement:
+- **Server-only**: Variables in `.env` are only available in API routes and during SSG.
+- **Client-exposed**: Variables prefixed with `PUBLIC_` (e.g., `PUBLIC_API_URL`) are injected into the client bundle at build time.
+- **Access**: Use `process.env` (Node/Bun) or `import.meta.env` (Vite-based environments).
+
+---

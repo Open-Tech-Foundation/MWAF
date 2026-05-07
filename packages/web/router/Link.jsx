@@ -7,10 +7,7 @@ export default function Link(props) {
       className={props.className}
       style={props.style}
       onclick={(e) => {
-        const isMPA = router.config.mode?.navigation === 'mpa';
-        
         if (
-          isMPA ||
           e.defaultPrevented ||
           e.metaKey ||
           e.ctrlKey ||
@@ -19,8 +16,12 @@ export default function Link(props) {
           e.button !== 0
         ) return
 
-        e.preventDefault()
-        navigate(props.href)
+        // If Navigation API is supported, let it handle the interception globally.
+        // Otherwise, fallback to manual navigation.
+        if (!window.navigation) {
+          e.preventDefault()
+          navigate(props.href)
+        }
         window.scrollTo(0, 0)
       }}
     >

@@ -1,38 +1,9 @@
-import { signal as _signal, computed as _computed, hookEffect as _hookEffect, isSSG as _isSSG, renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy, _reconnectWafComponent, _clearChildren, withInstance as _withInstance, _disconnectWafComponent } from "@opentf/web";
+import { signal as _signal, computed as _computed, hookEffect as _hookEffect, isSSG as _isSSG, _element, _text, _svg, _fragment, renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy, _initInternalState, _reconnectWafComponent, _clearChildren, withInstance as _withInstance, _disconnectWafComponent } from "@opentf/web";
 class MacroTestElement extends HTMLElement {
   static observedAttributes = [];
   constructor() {
     super();
-    Object.defineProperty(this, "_propsSignals", {
-      value: {},
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_onMounts", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_onCleanups", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_children", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_mounted", {
-      value: false,
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
+    _initInternalState(this, {});
   }
   attributeChangedCallback(name, _, value) {
     if (this._propsSignals[name]) this._propsSignals[name].value = value;
@@ -44,32 +15,35 @@ class MacroTestElement extends HTMLElement {
     }
     this._mounted = true;
     const _waf_props = _createPropsProxy(this);
-    this._children = Array.from(this.childNodes);
-    _clearChildren(this);
+    const _isHydrating = this.hasAttribute("data-ssg");
+    if (!_isHydrating) {
+      this._children = Array.from(this.childNodes);
+      _clearChildren(this);
+    }
     _withInstance(this, () => {
       let count = _signal(0);
       const doubled = _computed(() => count.value * 2);
       if (!_isSSG) _hookEffect(() => {
         console.log("Count changed:", count.value);
       });
-      const el0 = document.createElement("div");
-      const el1 = document.createElement("p");
-      const text2 = document.createTextNode("Count: ");
+      const el0 = _element("div");
+      const el1 = _element("p");
+      const text2 = _text("Count: ");
       el1.appendChild(text2);
       _renderDynamic(el1, () => count.value);
       el0.appendChild(el1);
-      const el3 = document.createElement("p");
-      const text4 = document.createTextNode("Doubled: ");
+      const el3 = _element("p");
+      const text4 = _text("Doubled: ");
       el3.appendChild(text4);
       _renderDynamic(el3, () => doubled.value);
       el0.appendChild(el3);
-      const el5 = document.createElement("button");
+      const el5 = _element("button");
       el5.onclick = () => count.value++;
-      const text6 = document.createTextNode("Increment");
+      const text6 = _text("Increment");
       el5.appendChild(text6);
       el0.appendChild(el5);
       const rootElement = el0;
-      this.appendChild(rootElement);
+      if (!_isHydrating) this.appendChild(rootElement);
     });
     _withInstance(this, () => {
       this._onMounts.forEach(fn => fn());

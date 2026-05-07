@@ -1,4 +1,4 @@
-import { setProperty as _setProperty, renderDynamic as _renderDynamic, signal as _signal, createPropsProxy as _createPropsProxy, _reconnectWafComponent, _clearChildren, withInstance as _withInstance, _disconnectWafComponent } from "@opentf/web";
+import { _element, _text, _svg, _fragment, setProperty as _setProperty, renderDynamic as _renderDynamic, signal as _signal, createPropsProxy as _createPropsProxy, _initInternalState, _reconnectWafComponent, _clearChildren, withInstance as _withInstance, _disconnectWafComponent } from "@opentf/web";
 class ItemElement extends HTMLElement {
   static observedAttributes = ["name", "isPacked"];
   set name(_val) {
@@ -19,38 +19,9 @@ class ItemElement extends HTMLElement {
   }
   constructor() {
     super();
-    Object.defineProperty(this, "_propsSignals", {
-      value: {
-        name: _signal(null),
-        isPacked: _signal(null)
-      },
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_onMounts", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_onCleanups", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_children", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_mounted", {
-      value: false,
-      enumerable: false,
-      writable: true,
-      configurable: true
+    _initInternalState(this, {
+      name: _signal(null),
+      isPacked: _signal(null)
     });
   }
   attributeChangedCallback(name, _, value) {
@@ -63,22 +34,25 @@ class ItemElement extends HTMLElement {
     }
     this._mounted = true;
     const _waf_props = _createPropsProxy(this);
-    this._children = Array.from(this.childNodes);
-    _clearChildren(this);
+    const _isHydrating = this.hasAttribute("data-ssg");
+    if (!_isHydrating) {
+      this._children = Array.from(this.childNodes);
+      _clearChildren(this);
+    }
     _withInstance(this, () => {
       const {
         name,
         isPacked
       } = _waf_props;
-      const el0 = document.createElement("li");
+      const el0 = _element("li");
       _setProperty(el0, "className", "item", false);
       _renderDynamic(el0, () => _waf_props.isPacked.value ? (() => {
-        const el0 = document.createElement("del");
+        const el0 = _element("del");
         _renderDynamic(el0, () => _waf_props.name.value + ' ✅');
         return el0;
       })() : _waf_props.name.value);
       const rootElement = el0;
-      this.appendChild(rootElement);
+      if (!_isHydrating) this.appendChild(rootElement);
     });
     _withInstance(this, () => {
       this._onMounts.forEach(fn => fn());

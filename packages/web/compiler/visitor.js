@@ -1,12 +1,12 @@
 import { SVG_TAGS, SVG_CAMEL_CASE, IS_PROPERTY, STANDARD_TAGS } from "./constants.js";
 import { getMemberName, getImportHelper, createIdGenerator } from "./helpers.js";
 
-function getHelpers(t) {
+function getHelpers(t, getImport, runtimeSource) {
   return {
-    h: t.memberExpression(t.identifier("document"), t.identifier("createElement")),
-    t: t.memberExpression(t.identifier("document"), t.identifier("createTextNode")),
-    s: t.memberExpression(t.identifier("document"), t.identifier("createElementNS")),
-    f: t.memberExpression(t.identifier("document"), t.identifier("createDocumentFragment")),
+    h: getImport("_element", runtimeSource),
+    t: getImport("_text", runtimeSource),
+    s: getImport("_svg", runtimeSource),
+    f: getImport("_fragment", runtimeSource),
   };
 }
 
@@ -90,7 +90,7 @@ export function handleJSXVisitor(path, state, t) {
 
   const runtimeSource = state.runtimeSource || "@opentf/web";
   const getImport = getImportHelper(t, path, state);
-  const helpers = getHelpers(t);
+  const helpers = getHelpers(t, getImport, runtimeSource);
   const mapParams = collectMapParams(path, t);
 
   const { statements, rootId, signals } = transformJSX(
@@ -186,7 +186,7 @@ export function transformComponent(componentPath, name, isRenderFn, t, state) {
   }
 
   const mapParams = collectMapParams(componentPath, t);
-  const helpers = getHelpers(t);
+  const helpers = getHelpers(t, getImport, runtimeSource);
   const res = transformJSX(
     jsxNode, t, state, getImport, componentPath, helpers,
     isRenderFn ? t.identifier("root") : t.thisExpression(),
@@ -245,20 +245,7 @@ export function transformComponent(componentPath, name, isRenderFn, t, state) {
   const createPropsProxy = getImport("createPropsProxy", runtimeSource);
   const classId = t.identifier(name + "Element");
 
-  // Helper to define internal properties as non-enumerable with an initial value
-  const defineInternalProp = (prop, value) => t.expressionStatement(t.callExpression(
-    t.memberExpression(t.identifier("Object"), t.identifier("defineProperty")),
-    [
-      t.thisExpression(),
-      t.stringLiteral(prop),
-      t.objectExpression([
-        t.objectProperty(t.identifier("value"), value),
-        t.objectProperty(t.identifier("enumerable"), t.booleanLiteral(false)),
-        t.objectProperty(t.identifier("writable"), t.booleanLiteral(true)),
-        t.objectProperty(t.identifier("configurable"), t.booleanLiteral(true))
-      ])
-    ]
-  ));
+
 
   const classDecl = t.classDeclaration(
     classId,
@@ -309,13 +296,14 @@ export function transformComponent(componentPath, name, isRenderFn, t, state) {
       t.classMethod("constructor", t.identifier("constructor"), [],
         t.blockStatement([
           t.expressionStatement(t.callExpression(t.super(), [])),
-          defineInternalProp("_propsSignals", t.objectExpression(
-            observedAttributes.map(s => t.objectProperty(t.identifier(s), t.callExpression(signalId, [t.nullLiteral()])))
-          )),
-          defineInternalProp("_onMounts", t.arrayExpression([])),
-          defineInternalProp("_onCleanups", t.arrayExpression([])),
-          defineInternalProp("_children", t.arrayExpression([])),
-          defineInternalProp("_mounted", t.booleanLiteral(false))
+          t.expressionStatement(
+            t.callExpression(getImport("_initInternalState", runtimeSource), [
+              t.thisExpression(),
+              t.objectExpression(
+                observedAttributes.map(s => t.objectProperty(t.identifier(s), t.callExpression(signalId, [t.nullLiteral()])))
+              )
+            ])
+          )
         ])
       ),
       t.classMethod(
@@ -367,18 +355,29 @@ export function transformComponent(componentPath, name, isRenderFn, t, state) {
               t.callExpression(createPropsProxy, [t.thisExpression()])
             ),
           ]),
-          t.expressionStatement(
-            t.assignmentExpression(
-              "=",
-              t.memberExpression(t.thisExpression(), t.identifier("_children")),
-              t.callExpression(
-                t.memberExpression(t.identifier("Array"), t.identifier("from")),
-                [t.memberExpression(t.thisExpression(), t.identifier("childNodes"))]
-              )
+          t.variableDeclaration("const", [
+            t.variableDeclarator(
+              t.identifier("_isHydrating"),
+              t.callExpression(t.memberExpression(t.thisExpression(), t.identifier("hasAttribute")), [t.stringLiteral("data-ssg")])
             )
-          ),
-          t.expressionStatement(
-            t.callExpression(getImport("_clearChildren", runtimeSource), [t.thisExpression()])
+          ]),
+          t.ifStatement(
+            t.unaryExpression("!", t.identifier("_isHydrating")),
+            t.blockStatement([
+              t.expressionStatement(
+                t.assignmentExpression(
+                  "=",
+                  t.memberExpression(t.thisExpression(), t.identifier("_children")),
+                  t.callExpression(
+                    t.memberExpression(t.identifier("Array"), t.identifier("from")),
+                    [t.memberExpression(t.thisExpression(), t.identifier("childNodes"))]
+                  )
+                )
+              ),
+              t.expressionStatement(
+                t.callExpression(getImport("_clearChildren", runtimeSource), [t.thisExpression()])
+              ),
+            ])
           ),
           t.expressionStatement(
             t.callExpression(
@@ -393,7 +392,10 @@ export function transformComponent(componentPath, name, isRenderFn, t, state) {
                       : []),
                   ...originalStatements,
                   ...statements,
-                  makeAppendStatement(t, t.thisExpression(), rootId),
+                  t.ifStatement(
+                    t.unaryExpression("!", t.identifier("_isHydrating")),
+                    makeAppendStatement(t, t.thisExpression(), rootId)
+                  ),
                 ])),
               ]
             )
@@ -622,7 +624,7 @@ function transformJSX(node, t, state, getImport, path, helpers, rootIdentifier, 
         t.variableDeclarator(
           elId,
           isSvg
-            ? t.callExpression(sId, [t.stringLiteral("http://www.w3.org/2000/svg"), t.stringLiteral(tagName)])
+            ? t.callExpression(sId, [t.stringLiteral(tagName)])
             : t.callExpression(hId, [t.stringLiteral(tagName)])
         ),
       ]));

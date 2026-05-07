@@ -1,4 +1,4 @@
-import { signal as _signal, setProperty as _setProperty, hookEffect as _hookEffect, createPropsProxy as _createPropsProxy, _reconnectWafComponent, _clearChildren, withInstance as _withInstance, _disconnectWafComponent } from "@opentf/web";
+import { signal as _signal, _element, _text, _svg, _fragment, setProperty as _setProperty, hookEffect as _hookEffect, createPropsProxy as _createPropsProxy, _initInternalState, _reconnectWafComponent, _clearChildren, withInstance as _withInstance, _disconnectWafComponent } from "@opentf/web";
 class StylingTestElement extends HTMLElement {
   static observedAttributes = ["theme"];
   set theme(_val) {
@@ -11,37 +11,8 @@ class StylingTestElement extends HTMLElement {
   }
   constructor() {
     super();
-    Object.defineProperty(this, "_propsSignals", {
-      value: {
-        theme: _signal(null)
-      },
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_onMounts", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_onCleanups", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_children", {
-      value: [],
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    Object.defineProperty(this, "_mounted", {
-      value: false,
-      enumerable: false,
-      writable: true,
-      configurable: true
+    _initInternalState(this, {
+      theme: _signal(null)
     });
   }
   attributeChangedCallback(name, _, value) {
@@ -54,26 +25,29 @@ class StylingTestElement extends HTMLElement {
     }
     this._mounted = true;
     const _waf_props = _createPropsProxy(this);
-    this._children = Array.from(this.childNodes);
-    _clearChildren(this);
+    const _isHydrating = this.hasAttribute("data-ssg");
+    if (!_isHydrating) {
+      this._children = Array.from(this.childNodes);
+      _clearChildren(this);
+    }
     _withInstance(this, () => {
       const props = _waf_props;
       let active = _signal(true);
-      const el0 = document.createElement("div");
+      const el0 = _element("div");
       _setProperty(el0, "className", "static-class", false);
       _setProperty(el0, "className", "static-classname", false);
-      const el1 = document.createElement("span");
+      const el1 = _element("span");
       _hookEffect(() => _setProperty(el1, "className", active.value ? "active" : "inactive", false));
-      const text2 = document.createTextNode(" Reactive Class ");
+      const text2 = _text(" Reactive Class ");
       el1.appendChild(text2);
       el0.appendChild(el1);
-      const el3 = document.createElement("button");
+      const el3 = _element("button");
       _hookEffect(() => _setProperty(el3, "className", props.theme.value, false));
-      const text4 = document.createTextNode(" Reactive ClassName from Props ");
+      const text4 = _text(" Reactive ClassName from Props ");
       el3.appendChild(text4);
       el0.appendChild(el3);
       const rootElement = el0;
-      this.appendChild(rootElement);
+      if (!_isHydrating) this.appendChild(rootElement);
     });
     _withInstance(this, () => {
       this._onMounts.forEach(fn => fn());

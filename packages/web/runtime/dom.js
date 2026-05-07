@@ -1,6 +1,40 @@
 import { signal, effect, isSSG, untracked, Signal, PREACT_SIGNALS_BRAND } from "../core/signals.js";
-import { hookEffect } from "./lifecycle.js";
+import { hookEffect, getCurrentInstance } from "./lifecycle.js";
 import { IS_PROPERTY } from "../core/constants.js";
+
+export function _element(tag) {
+  const inst = getCurrentInstance();
+  if (inst && inst._walker) {
+    const node = inst._walker.currentNode;
+    inst._walker.nextNode();
+    return node;
+  }
+  return document.createElement(tag);
+}
+
+export function _text(content) {
+  const inst = getCurrentInstance();
+  if (inst && inst._walker) {
+    const node = inst._walker.currentNode;
+    inst._walker.nextNode();
+    return node;
+  }
+  return document.createTextNode(content);
+}
+
+export function _svg(tag) {
+  const inst = getCurrentInstance();
+  if (inst && inst._walker) {
+    const node = inst._walker.currentNode;
+    inst._walker.nextNode();
+    return node;
+  }
+  return document.createElementNS("http://www.w3.org/2000/svg", tag);
+}
+
+export function _fragment() {
+  return document.createDocumentFragment();
+}
 
 console.log("@opentf/web: dom.js loaded");
 
