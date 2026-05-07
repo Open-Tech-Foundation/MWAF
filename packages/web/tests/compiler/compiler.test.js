@@ -10,7 +10,7 @@ const OUTPUT_DIR = join(import.meta.dir, "output");
 // Ensure output directory exists
 mkdirSync(OUTPUT_DIR, { recursive: true });
 
-describe("Web App Framework Compiler", () => {
+describe("OpenTF Web Compiler", () => {
   const files = readdirSync(CASES_DIR);
 
   files.forEach((file) => {

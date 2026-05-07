@@ -1,20 +1,21 @@
-# Web App Framework (Fullstack) Specification
+# OpenTF Web - Technical Specification
+**Part of the Open Tech Foundation Ecosystem**
 
 ## 1. Philosophy
-WAF is a **native-first, fullstack** framework for building modern web applications.
+OpenTF Web is a **native-first, fullstack** framework for building modern web applications.
 - **Fullstack**: Integrated routing and Static Site Generation (SSG) for high-performance delivery.
 - **Zero-VDOM**: No virtual DOM diffing. JSX is compiled directly to imperative DOM operations.
 - **Native-first**: UI components are standard Custom Elements (`HTMLElement`).
 - **Signal-based**: Fine-grained reactivity powered by `@preact/signals-core`.
 
 ### 1.1 Single Source of Reactivity
-To prevent reactivity loss caused by multiple instances of the reactivity engine (e.g., version mismatches or duplicate bundling), WAF enforces a **Single Source of Truth**:
+To prevent reactivity loss caused by multiple instances of the reactivity engine (e.g., version mismatches or duplicate bundling), OpenTF Web enforces a **Single Source of Truth**:
 - **Central Export**: All reactive primitives (`signal`, `computed`, `effect`) MUST be imported from `@opentf/web` (which re-exports from `core/signals.js`).
 - **Global Guard**: The runtime includes a global guard that warns if multiple instances of the signals library are loaded.
 - **Strict Checks**: Internal runtime helpers (`createPropsProxy`, `setProperty`) use strict identity checks (`instanceof Signal`) and a framework-defined `brand` (`Symbol.for("preact-signals")`) to validate reactive objects.
 
 ### 1.2 TypeScript & JSX Configuration
-WAF uses a custom JSX compilation pipeline. To use TypeScript or language server features, configure your `tsconfig.json` or `jsconfig.json` as follows:
+OpenTF Web uses a custom JSX compilation pipeline. To use TypeScript or language server features, configure your `tsconfig.json` or `jsconfig.json` as follows:
 ```json
 {
   "compilerOptions": {
@@ -69,7 +70,7 @@ The framework provides a unified interface for both DOM Attributes and JS Proper
 - **Unification**: Both update the same signal in `_propsSignals`, allowing the component logic to remain agnostic of the data source.
 
 ### 2.6 Component Return Patterns
-WAF component functions are **executed once** during initialization. This "Init-Once" model impacts how return statements are processed.
+OpenTF Web component functions are **executed once** during initialization. This "Init-Once" model impacts how return statements are processed.
 
 #### 2.6.1 Static vs. Reactive Conditionals
 Top-level `if` statements and ternaries are **static**. They are evaluated only once at mount.
@@ -89,7 +90,7 @@ return layout;
 The compiler supports multiple return paths (e.g., inside `if/else` blocks), but again, these are determined at the moment of component instantiation.
 
 ### 2.7 Destructured Props
-Destructuring props in the component signature is a first-class pattern in WAF. 
+Destructuring props in the component signature is a first-class pattern in OpenTF Web. 
 
 - **Automatic Observation**: Keys extracted via destructuring (e.g., `function Comp({ name })`) are automatically added to the `observedAttributes` of the Custom Element.
 - **Reactive Rewriting**: The compiler rewrites all usages of destructured variables in the component body to access the `_waf_props` proxy directly. This ensures that even though the variable looks like a static constant, its usage in JSX remains reactive.
@@ -119,7 +120,7 @@ Default values in the component signature are supported and maintained reactivel
 - **Dynamic Compatibility**: This ensures that if a prop is initially missing but is provided later (e.g., via `setAttribute`), the component will transition from the default value to the new reactive value seamlessly.
 
 ### 2.11 CSS Encapsulation
-By default, WAF components use **Light DOM**.
+By default, OpenTF Web components use **Light DOM**.
 - **Rationale**: Ensures that global styles (like Tailwind CSS or design system tokens) apply naturally to components without complex workarounds (like `@apply` or CSS parts).
 - **Scoped CSS**: To prevent style leakage, developers are encouraged to use **CSS Modules** or the **Component Path Namespace** as a class prefix.
 - **Shadow DOM**: Support for Shadow DOM and the `@shadow` directive is **deferred** to a future version. Components currently only support Light DOM rendering.
@@ -129,7 +130,7 @@ By default, WAF components use **Light DOM**.
 ## 3. Reactivity & Macros
 
 ### 3.1 Signals
-WAF uses `@preact/signals-core`. The compiler automatically manages `.value` access.
+OpenTF Web uses `@preact/signals-core`. The compiler automatically manages `.value` access.
 - **Microtask Batching**: Multiple synchronous signal updates are automatically batched by the core engine into a single microtask. This guarantees that `_effect` closures (and DOM updates) only run once per synchronous execution block, delivering maximum performance with zero manual `batch()` boilerplate.
 
 ### 3.2 Compiler Macros
@@ -167,7 +168,7 @@ To maintain reactivity integrity and compiler predictability, the following patt
 8.  **Dynamic Imports in Body**: `await import(...)` inside the component body breaks synchronous execution and is forbidden.
 
 ### 3.5 $signal() Macro
-`$signal()` is the **explicit bridge** between external reactive objects and the WAF compiler. It tells the compiler: *"this object contains signals — track its reactive properties in JSX."* 
+`$signal()` is the **explicit bridge** between external reactive objects and the OpenTF Web compiler. It tells the compiler: *"this object contains signals — track its reactive properties in JSX."* 
 
 #### 3.5.1 Syntax & Compilation
 ```javascript
@@ -219,7 +220,7 @@ _mapped(
 ---
 
 ## 4. Component Transformation
-This section shows how the compiler progressively builds the Web Component class based on the features used in the JSX function.
+This section shows how the compiler progressively builds the OpenTF Web component class based on the features used in the JSX function.
 
 ### 4.0 Component Naming (Namespacing)
 To prevent tag name collisions across different folders, the framework uses **Deterministic Path-Based Namespacing**.
@@ -501,7 +502,7 @@ Expressions are wrapped in `_effect()` to ensure fine-grained reactivity.
 - **Data & Aria Attributes**: `data-*` and `aria-*` attributes are treated as standard attributes and applied via `setAttribute`.
 - **Null/Undefined Handling**:
     - **Native Elements**: If an expression evaluates to `null` or `undefined`, the attribute is removed: `el.removeAttribute(key)`.
-    - **WAF Components**: If a prop is set to `null` or `undefined`, the value is **preserved** and updated in the underlying signal (`propSignal.value = null`), allowing the component to react to the empty state.
+    - **OpenTF Web Components**: If a prop is set to `null` or `undefined`, the value is **preserved** and updated in the underlying signal (`propSignal.value = null`), allowing the component to react to the empty state.
 
 #### 5.2.4 Spread Attributes (Order Matters)
 Spread attributes are applied via `_applySpread()`. The order of attributes in JSX is preserved in the output, meaning later attributes can override earlier ones.
@@ -526,7 +527,7 @@ The compiler applies different case normalization based on whether the target el
 | **Component** | `<MyComp onClick={fn} />` | `el.onClick = fn;` |
 
 #### 5.3.2 Inline Handlers (No Hoisting Required)
-Unlike VDOM frameworks where inline handlers are re-created on every render, WAF component functions follow the **Init-Once** model. 
+Unlike VDOM frameworks where inline handlers are re-created on every render, OpenTF Web component functions follow the **Init-Once** model. 
 - **Setup Only**: The component body is executed exactly once during `connectedCallback`.
 - **Zero Overhead**: Inline arrow functions in event handlers are created only once per component instance.
 - **Output**: The compiler simply assigns the inline function directly to the property without any need for hoisting or `useCallback` equivalents.
@@ -549,7 +550,7 @@ The compiler determines the normalization strategy using the following tag-name 
 - **Dynamic Events Prohibited**: Dynamic event names (e.g., `<div {name}={fn} />` or `<div on={name} />`) are not supported.
 
 ### 5.4 Children Patterns
-WAF handles various children types through a combination of static creation and dynamic rendering helpers.
+OpenTF Web handles various children types through a combination of static creation and dynamic rendering helpers.
 
 #### 5.4.1 Static Children
 Static children are created and appended once during element initialization.
@@ -583,7 +584,7 @@ Arrays and `.map()` operations are transformed into `_mapped()` calls for optimi
 - **Keyed List**: `<ul>{items.map(i => <li key={i.id}>{i.name}</li>)}</ul>`
 - **Nested Maps**: `<ul>{sections.map(s => s.items.map(i => <li>{i}</li>))}</ul>` (Transformed into nested `_mapped` vectors).
 
-- **Performance (Virtual Scrolling)**: For lists with 10,000+ items, `_mapped` may still incur memory overhead. WAF treats virtual scrolling as a **user-land problem**. Developers can implement windowing/virtualization by combining `$derived` (to slice the data) with `_mapped` (to render the visible window), providing the necessary primitives without a heavy built-in abstraction.
+- **Performance (Virtual Scrolling)**: For lists with 10,000+ items, `_mapped` may still incur memory overhead. OpenTF Web treats virtual scrolling as a **user-land problem**. Developers can implement windowing/virtualization by combining `$derived` (to slice the data) with `_mapped` (to render the visible window), providing the necessary primitives without a heavy built-in abstraction.
 
 ##### Key Prop Behavior
 The `key` prop is crucial for `_mapped` optimization:
@@ -693,14 +694,14 @@ A central helper for assigning values to elements. It follows this decision tree
   - **Compiled Output**: `_effect(() => _setProperty(el0, "onClick", fn, true))` (last arg is `isComponent`).
 
 - **Reactivity**: If `value` is a signal, `setProperty` automatically unwraps it via `value.value`.
-- **WAF Sync**: If `el` is a WAF component, `setProperty` updates the internal `el._propsSignals[key]` to propagate reactivity.
+- **OpenTF Web Sync**: If `el` is a OpenTF Web component, `setProperty` updates the internal `el._propsSignals[key]` to propagate reactivity.
 
 ### 6.3 `renderDynamic(parent, fn)`
 Handles conditional and dynamic JSX rendering via an effect-based reconciliation strategy.
 - **Anchor Node**: Creates a "bookmark" (empty TextNode) in the `parent` to track the insertion point.
 - **Effect-based Tracking**: Runs `fn` inside an `effect`. Whenever any signals accessed in `fn` change, the reconciliation logic is triggered.
 - **Security (XSS Safe)**: By default, string and number primitives are converted to DOM nodes exclusively via `document.createTextNode()`. The framework **never** uses `innerHTML` for dynamic rendering. 
-- **dangerouslySetInnerHTML**: WAF does **not** provide a built-in equivalent to React's `dangerouslySetInnerHTML`. If raw HTML injection is required, developers must manually use `el.innerHTML = ...` inside an `$effect`, while being solely responsible for sanitization.
+- **dangerouslySetInnerHTML**: OpenTF Web does **not** provide a built-in equivalent to React's `dangerouslySetInnerHTML`. If raw HTML injection is required, developers must manually use `el.innerHTML = ...` inside an `$effect`, while being solely responsible for sanitization.
 - **Reconciliation**:
     - If `fn` returns a DOM node: It is inserted/moved before the anchor.
     - If `fn` returns `null/false/undefined`: Any previously rendered dynamic content is removed.
@@ -728,22 +729,22 @@ A scoping helper used during component initialization.
 - `onCleanup(cb)`: Associates `cb` with the current component instance. Executed once in `disconnectedCallback`.
 - **Execution Order**: Multiple hooks of the same type within a component are executed in **FIFO (First-In, First-Out)** order.
 - **Mechanism**: These hooks rely on `getCurrentInstance()` (set via `withInstance`) to find the active component.
-- **Synchronous Constraint**: WAF component functions MUST be strictly synchronous. Using `async/await` in the component body breaks the `withInstance` context, causing lifecycle hooks called after an `await` to silently fail. Async logic should be placed inside `onMount` or `$effect` instead.
+- **Synchronous Constraint**: OpenTF Web component functions MUST be strictly synchronous. Using `async/await` in the component body breaks the `withInstance` context, causing lifecycle hooks called after an `await` to silently fail. Async logic should be placed inside `onMount` or `$effect` instead.
 
 ### 7.2 Environment
 - `isSSG`: A boolean flag. When `true`, `$effect` macros are ignored, and certain DOM operations (like `_clearChildren`) are skipped to allow for hydration-friendly output.
 
 ### 7.3 Error Handling & Boundaries
-WAF does **not** use VDOM-style Error Boundaries (`<ErrorBoundary>`). Instead, it relies on a **Fine-Grained Failure** model:
+OpenTF Web does **not** use VDOM-style Error Boundaries (`<ErrorBoundary>`). Instead, it relies on a **Fine-Grained Failure** model:
 - **Mount Errors**: An error thrown directly inside the component body or `connectedCallback` stops the component from mounting, bubbling up to the global error handler (`window.onerror`).
 - **Effect Errors**: An error thrown inside an `_effect` kills *only that specific DOM binding's reactivity*. The rest of the component remains perfectly functional.
-- **Global Handler**: The framework provides `WAF.setErrorHandler((error, context) => {...})` to globally catch uncaught effect failures.
+- **Global Handler**: The framework provides `OpenTFWeb.setErrorHandler((error, context) => {...})` to globally catch uncaught effect failures.
 - **Local Recovery**: Developers can use the `$onError(err => {...})` macro (transformed to a try/catch inside effects) to gracefully catch local effect failures without crashing the application.
 
 ### 7.4 Async Data Loading (Resource Pattern)
 Because component functions must be strictly synchronous, top-level `await` is forbidden. The official pattern for data fetching is the **Resource Pattern**:
 1. Initialize a `$state` signal for the data (e.g., `let data = $state(null)`).
-2. Trigger the async operation inside an `$effect` or directly in the component body (without `await`).
+2. Trigger the async operation inside an `$effect` (for reactive re-fetching) or directly in the component body (for one-time initialization).
 3. Render conditionally based on the signal value.
 
 **Example**:
@@ -774,7 +775,7 @@ export function UserProfile({ id }) {
 
 ## 8. Fullstack Routing
 
-WAF uses a file-based router that supports layouts, dynamic segments, and client-side guards.
+OpenTF Web uses a file-based router that supports layouts, dynamic segments, and client-side guards.
 
 ### 8.1 Directory Structure
 - `app/`: The root of the routing system.
@@ -792,7 +793,7 @@ Layouts are recursively applied from the root `app/` directory down to the leaf 
 - Each layout receives a `children` prop containing the nested content (page or sub-layout).
 
 ### 8.4 Client-side Navigation
-WAF utilizes the modern **Navigation API** (with fallback to the HTML5 History API) for seamless client-side transitions.
+OpenTF Web utilizes the modern **Navigation API** (with fallback to the HTML5 History API) for seamless client-side transitions.
 - **Persistence**: The layout tree is preserved across navigations. Only the components within the changing route segments are unmounted and replaced.
 - **Scroll Restoration**: The router automatically restores scroll position on back/forward navigation and scrolls to top on new navigations (unless specified otherwise).
 
@@ -818,7 +819,7 @@ export function middleware(request) {
 
 ## 9. Static Site Generation (SSG)
 
-WAF is designed for high-performance static rendering, allowing the entire app to be pre-rendered into HTML at build time.
+OpenTF Web is designed for high-performance static rendering, allowing the entire app to be pre-rendered into HTML at build time.
 
 ### 9.1 Build-time Rendering
 The framework uses `linkedom` to provide a lightweight server-side DOM environment.
@@ -835,7 +836,7 @@ The framework uses `linkedom` to provide a lightweight server-side DOM environme
 - **`effect()` (Internal)**: To populate the DOM initially during the server build, `core/signals.js` intercepts internal `effect()` calls. During SSG, it executes the provided function *once* synchronously to trigger DOM bindings, and then returns a no-op dispose function, bypassing the reactivity engine.
 
 ### 9.4 Partial Hydration Strategy
-WAF employs a **Selective Activation** strategy:
+OpenTF Web employs a **Selective Activation** strategy:
 - **Marker**: Components that were SSG'd are marked with `data-ssg="true"`.
 - **Skip Static**: On the client, the `connectedCallback` detects the marker. It skips the `_createDOM()` phase because the nodes already exist.
 - **Hydrate Reactivity**: The component still runs its `_activate()` phase to register effects, but it checks if the current DOM state matches the signal's initial value to avoid unnecessary layout shifts.
@@ -845,10 +846,10 @@ WAF employs a **Selective Activation** strategy:
 
 ## 10. Global State Management
 
-WAF enables a "zero-boilerplate" store pattern using plain JS modules and signals, eliminating the need for complex state management libraries.
+OpenTF Web enables a "zero-boilerplate" store pattern using plain JS modules and signals, eliminating the need for complex state management libraries.
 
 ### 10.1 Philosophy: The Plain Object Store
-A store in WAF is simply a plain JavaScript object that exposes signals as properties. Because WAF has no Virtual DOM and no component re-renders, it does not need selectors or complex subscription logic.
+A store in OpenTF Web is simply a plain JavaScript object that exposes signals as properties. Because OpenTF Web has no Virtual DOM and no component re-renders, it does not need selectors or complex subscription logic.
 
 #### Definition Example
 ```javascript
@@ -869,15 +870,15 @@ export const counterStore = {
 ```
 
 ### 10.2 The Library Author Contract
-To participate in the WAF reactive ecosystem, library authors (Forms, Query, Auth) should follow this simplified contract:
+To participate in the OpenTF Web reactive ecosystem, library authors (Forms, Query, Auth) should follow this simplified contract:
 1. **Top-Level Signals**: Expose reactive state as top-level properties of a plain object, wrapped in `signal()`.
-2. **Standard Data Structures**: Nested data (arrays of objects, etc.) should be kept as plain JS structures. WAF's `_mapped` helper will handle item-level reactivity.
+2. **Standard Data Structures**: Nested data (arrays of objects, etc.) should be kept as plain JS structures. OpenTF Web's `_mapped` helper will handle item-level reactivity.
 3. **No Explicit Typing**: Because the compiler uses the single-level unwrap heuristic (the First-Access Rule), no `Signal<T>` typing or JSDoc is required. The compiler blindly unwraps the first property access, so the library author simply needs to structure the store such that those top-level accessed properties are the actual signals.
 4. **Plain Actions**: Expose mutation methods as plain functions, not signals.
 
 ### 10.3 Comparison with VDOM Frameworks
 
-| Aspect | Zustand / Redux | WAF |
+| Aspect | Zustand / Redux | OpenTF Web |
 |---|---|---|
 | **Read State** | `useStore(selector)` | `$signal(store)` |
 | **Write State** | `dispatch(action)` | Direct call: `store.action()` |
@@ -887,7 +888,7 @@ To participate in the WAF reactive ecosystem, library authors (Forms, Query, Aut
 | **Provider Needed** | Yes | No |
 
 ### 10.4 Why Selectors are Irrelevant
-In VDOM frameworks, selectors are used to prevent unnecessary component re-renders. In WAF, **components never re-render**. Instead, each DOM binding is its own fine-grained subscription:
+In VDOM frameworks, selectors are used to prevent unnecessary component re-renders. In OpenTF Web, **components never re-render**. Instead, each DOM binding is its own fine-grained subscription:
 - `_effect(() => el.textContent = app.count.value)` only updates that specific text node.
 - Changing `app.user` will not affect the `app.count` binding, even if they are in the same component.
 - **DOM granularity makes selective subscription irrelevant.**
@@ -896,10 +897,10 @@ In VDOM frameworks, selectors are used to prevent unnecessary component re-rende
 
 ## 11. API Routes
 
-WAF provides a lightweight, standards-compliant server-side routing system for building APIs and backend logic.
+OpenTF Web provides a lightweight, standards-compliant server-side routing system for building APIs and backend logic.
 
 ### 11.1 Standard Web APIs
-WAF strictly adheres to the standard **Fetch API** for server-side handlers. This ensures that API routes are portable across modern JS runtimes (Bun, Node 20+, Cloudflare Workers, Deno).
+OpenTF Web strictly adheres to the standard **Fetch API** for server-side handlers. This ensures that API routes are portable across modern JS runtimes (Bun, Node 20+, Cloudflare Workers, Deno).
 
 - **Input**: The handler receives a standard `Request` object.
 - **Output**: The handler MUST return a standard `Response` object.
@@ -933,17 +934,17 @@ export async function POST(request) {
 }
 ```
 
-### 11.4 WAF Regex Router & Runtime Adapters
-WAF provides its own high-performance **Regex Router** to ensure consistent routing behavior across all deployment targets.
+### 11.4 OpenTF Web Regex Router & Runtime Adapters
+OpenTF Web provides its own high-performance **Regex Router** to ensure consistent routing behavior across all deployment targets.
 
 - **Internal Router**: The framework-provided router matches incoming URLs against compiled regex patterns and dispatches them to the appropriate named exports (`GET`, `POST`, etc.).
-- **Platform-Agnostic**: Because the router is built into the WAF runtime, routing logic remains identical whether running on Bun, Node.js, or Edge workers.
-- **HTTP Server Utilization**: WAF utilizes the native HTTP server of the underlying runtime (e.g., `Bun.serve` or Node's `http` module) via specialized **Adapters**. These adapters translate the platform's native request/response into the standard `Request`/`Response` objects used by WAF handlers.
+- **Platform-Agnostic**: Because the router is built into the OpenTF Web runtime, routing logic remains identical whether running on Bun, Node.js, or Edge workers.
+- **HTTP Server Utilization**: OpenTF Web utilizes the native HTTP server of the underlying runtime (e.g., `Bun.serve` or Node's `http` module) via specialized **Adapters**. These adapters translate the platform's native request/response into the standard `Request`/`Response` objects used by OpenTF Web handlers.
 
 ### 11.5 Middleware & Errors
 - **Shared Middleware**: Files named `_middleware.js` in the `app/api/` directory apply to all routes in that folder and subfolders.
 - **Auth & Validation**: Cross-cutting concerns such as **Authentication**, **Authorization**, and **Request Validation** are handled exclusively via the middleware system.
-- **Error Responses**: WAF encourages standard JSON error bodies:
+- **Error Responses**: OpenTF Web encourages standard JSON error bodies:
   ```javascript
   return Response.json({ error: "Unauthorized", code: 401 }, { status: 401 });
   ```
@@ -952,10 +953,10 @@ WAF provides its own high-performance **Regex Router** to ensure consistent rout
 ---
 
 ## 12. DevTools & Debugging
-Because WAF compiles components to standard Custom Elements, you can use native browser developer tools to inspect and debug your application.
+Because OpenTF Web compiles components to standard Custom Elements, you can use native browser developer tools to inspect and debug your application.
 
 ### 12.1 Inspecting Reactive State
-If you select a WAF component in the Elements panel, it is available as `$0` in the Console.
+If you select a OpenTF Web component in the Elements panel, it is available as `$0` in the Console.
 You can inspect the component's reactive state by accessing its internal signals:
 ```javascript
 // View the actual signal objects holding the prop values
@@ -981,21 +982,21 @@ List items rendered via `_mapped` are "reified" into signals. To inspect an item
 
 ### 12.4 Effect Tracing
 To trace which signal caused a DOM update:
-1. Enable "Log Updates" in WAF Dev Mode.
-2. The console will log: `[WAF] Effect fired: TextNode(12) updated via signal 'count'`.
+1. Enable "Log Updates" in OpenTF Web Dev Mode.
+2. The console will log: `[OpenTF Web] Effect fired: TextNode(12) updated via signal 'count'`.
 3. Use the browser's "Performance" tab to see the call stack originating from a signal's `.value` setter.
 
 ---
 
 ## 13. Build Output
-The WAF build pipeline (`waf build`) produces a production-ready bundle:
+The OpenTF Web build pipeline (`waf build`) produces a production-ready bundle:
 - **`dist/public/`**: Contains the static assets and the client-side JS bundle.
 - **`dist/server/`**: Contains the SSR/API route handlers.
 - **Code Splitting**: Each route is automatically code-split. The main bundle contains only the runtime and shared layouts; pages are loaded dynamically.
 - **Asset Handling**: Images and fonts imported in JSX are hashed and moved to `dist/public/assets/`.
 
 ## 14. Environment Variables
-WAF supports `.env` files with strict boundary enforcement:
+OpenTF Web supports `.env` files with strict boundary enforcement:
 - **Server-only**: Variables in `.env` are only available in API routes and during SSG.
 - **Client-exposed**: Variables prefixed with `PUBLIC_` (e.g., `PUBLIC_API_URL`) are injected into the client bundle at build time.
 - **Access**: Use `process.env` (Node/Bun) or `import.meta.env` (Vite-based environments).

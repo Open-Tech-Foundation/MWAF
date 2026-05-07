@@ -3,7 +3,7 @@ import { render, cleanup, userEvent } from "@opentf/web-test";
 import { CompilerCore } from "./CompilerCore.jsx";
 import { LifecycleCore } from "./LifecycleCore.jsx";
 
-describe("Web App Framework - Comprehensive Suite", () => {
+describe("OpenTF Web - Comprehensive Suite", () => {
   describe("Compiler Core Features", () => {
     test("renders basic JSX and handles dynamic props", async () => {
       const { getByTestId, getByText } = render(CompilerCore, { 

@@ -1,7 +1,7 @@
 {
   "name": "@opentf/web",
   "version": "0.4.0",
-  "description": "The high-performance, native-first core of the Web App Framework, featuring a Zero-VDOM compiler and signal-based reactivity.",
+  "description": "The high-performance, native-first core of the OpenTF Web, featuring a Zero-VDOM compiler and signal-based reactivity.",
   "main": "dist/index.js",
   "module": "dist/index.js",
   "type": "module",

@@ -1,6 +1,6 @@
 # @opentf/create-web
 
-The official scaffolding tool for the **Web App Framework**.
+The official scaffolding tool for **OpenTF Web**.
 
 ## Quick Start
 
@@ -14,10 +14,10 @@ bun create @opentf/web@latest
 
 ## Features
 
-- 🏗️ **Instant Scaffolding**: Create production-ready Web App Framework projects with a single command.
+- 🏗️ **Instant Scaffolding**: Create production-ready OpenTF Web projects with a single command.
 - 🎨 **Multiple Templates**: Choose from "bare" or "minimal-form" starters.
 - ⚡ **Vite-Powered**: Built-in development server with Hot Module Replacement.
-- 🛠️ **Pre-configured**: Includes the Web App Framework compiler, TailwindCSS (optional), and essential build tools.
+- 🛠️ **Pre-configured**: Includes the OpenTF Web compiler, TailwindCSS (optional), and essential build tools.
 
 ## Usage
 

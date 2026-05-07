@@ -1,6 +1,6 @@
 # @opentf/web-test
 
-A testing utility for the Open Tech Foundation Web App Framework, inspired by React Testing Library.
+A testing utility for **OpenTF Web**, inspired by React Testing Library.
 
 ## Features
 

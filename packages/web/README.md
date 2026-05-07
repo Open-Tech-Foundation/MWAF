@@ -1,6 +1,6 @@
 # @opentf/web
 
-The core engine of the **Web App Framework**, a lightweight, high-performance SPA framework designed for the modern web.
+The core engine of **OpenTF Web**, a lightweight, high-performance SPA framework designed for the modern web.
 
 ## Features
 

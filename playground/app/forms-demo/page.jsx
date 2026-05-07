@@ -1,7 +1,7 @@
 import { BasicForm, ComplexForm } from "./FormComponents";
 
 /**
- * Web App Framework Forms Demo Page
+ * OpenTF Web Forms Demo Page
  * 
  * This page acts as a container for our modular form components.
  * Each form component manages its own state using 'web-forms'.

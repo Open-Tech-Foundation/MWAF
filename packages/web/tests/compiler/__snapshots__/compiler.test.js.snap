@@ -1,6 +1,6 @@
 // Bun Snapshot v1, https://bun.sh/docs/test/snapshots
 
-exports[`Web App Framework Compiler Compiles complex-expressions.jsx 1`] = `
+exports[`OpenTF Web Compiler Compiles complex-expressions.jsx 1`] = `
 "import { signal as _signal, _element, _text, _svg, _fragment, hookEffect as _hookEffect, setProperty as _setProperty, renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy, _initInternalState, _reconnectWafComponent, _clearChildren, withInstance as _withInstance, _disconnectWafComponent } from "@opentf/web";
 class ComplexExpressionsElement extends HTMLElement {
   static observedAttributes = ["theme", "color", "loading", "title", "logMessage"];
@@ -111,7 +111,7 @@ customElements.define("web-complexexpressions", ComplexExpressionsElement);
 export default ComplexExpressionsElement;"
 `;
 
-exports[`Web App Framework Compiler Compiles conditional.jsx 1`] = `
+exports[`OpenTF Web Compiler Compiles conditional.jsx 1`] = `
 "import { _element, _text, _svg, _fragment, setProperty as _setProperty, renderDynamic as _renderDynamic, signal as _signal, createPropsProxy as _createPropsProxy, _initInternalState, _reconnectWafComponent, _clearChildren, withInstance as _withInstance, _disconnectWafComponent } from "@opentf/web";
 class ItemElement extends HTMLElement {
   static observedAttributes = ["name", "isPacked"];
@@ -180,7 +180,7 @@ customElements.define("web-item", ItemElement);
 export default ItemElement;"
 `;
 
-exports[`Web App Framework Compiler Compiles routing-404.404.jsx 1`] = `
+exports[`OpenTF Web Compiler Compiles routing-404.404.jsx 1`] = `
 "import { _element, _text, _svg, _fragment, createPropsProxy as _createPropsProxy } from "@opentf/web";
 export function render(root, _props) {
   const _holder = {
@@ -202,7 +202,7 @@ export function render(root, _props) {
 }"
 `;
 
-exports[`Web App Framework Compiler Compiles children-projection.jsx 1`] = `
+exports[`OpenTF Web Compiler Compiles children-projection.jsx 1`] = `
 "import { _element, _text, _svg, _fragment, setProperty as _setProperty, signal as _signal, createPropsProxy as _createPropsProxy, _initInternalState, _reconnectWafComponent, _clearChildren, withInstance as _withInstance, _disconnectWafComponent } from "@opentf/web";
 class WrapperElement extends HTMLElement {
   static observedAttributes = [];
@@ -254,7 +254,7 @@ customElements.define("web-wrapper", WrapperElement);
 export default WrapperElement;"
 `;
 
-exports[`Web App Framework Compiler Compiles lifecycle.jsx 1`] = `
+exports[`OpenTF Web Compiler Compiles lifecycle.jsx 1`] = `
 "import { onMount as _onMount, onCleanup as _onCleanup, _element, _text, _svg, _fragment, signal as _signal, createPropsProxy as _createPropsProxy, _initInternalState, _reconnectWafComponent, _clearChildren, withInstance as _withInstance, _disconnectWafComponent } from "@opentf/web";
 class LifecycleElement extends HTMLElement {
   static observedAttributes = [];
@@ -302,7 +302,7 @@ customElements.define("web-lifecycle", LifecycleElement);
 export default LifecycleElement;"
 `;
 
-exports[`Web App Framework Compiler Compiles reactivity.jsx 1`] = `
+exports[`OpenTF Web Compiler Compiles reactivity.jsx 1`] = `
 "import { signal as _signal, _element, _text, _svg, _fragment, hookEffect as _hookEffect, setProperty as _setProperty, renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy, _initInternalState, _reconnectWafComponent, _clearChildren, withInstance as _withInstance, _disconnectWafComponent } from "@opentf/web";
 import { signal } from "@preact/signals";
 class ReactivityElement extends HTMLElement {
@@ -364,7 +364,7 @@ customElements.define("web-reactivity", ReactivityElement);
 export default ReactivityElement;"
 `;
 
-exports[`Web App Framework Compiler Compiles basic-form-verify.jsx 1`] = `
+exports[`OpenTF Web Compiler Compiles basic-form-verify.jsx 1`] = `
 "import { computed as _computed, _element, _text, _svg, _fragment, hookEffect as _hookEffect, setProperty as _setProperty, renderDynamic as _renderDynamic, signal as _signal, createPropsProxy as _createPropsProxy, _initInternalState, _reconnectWafComponent, _clearChildren, withInstance as _withInstance, _disconnectWafComponent } from "@opentf/web";
 import { createForm } from "@opentf/web-form";
 export class BasicForm extends HTMLElement {
@@ -417,7 +417,7 @@ export class BasicForm extends HTMLElement {
 customElements.define("web-basicform", BasicForm);"
 `;
 
-exports[`Web App Framework Compiler Compiles react-patterns.jsx 1`] = `
+exports[`OpenTF Web Compiler Compiles react-patterns.jsx 1`] = `
 "import { _element, _text, _svg, _fragment, setProperty as _setProperty, hookEffect as _hookEffect, renderDynamic as _renderDynamic, applySpread as _applySpread, signal as _signal, createPropsProxy as _createPropsProxy, _initInternalState, _reconnectWafComponent, _clearChildren, withInstance as _withInstance, _disconnectWafComponent } from "@opentf/web";
 import { UI } from './ui-lib';
 class ReactPatternsElement extends HTMLElement {
@@ -601,7 +601,7 @@ class CustomComponentElement extends HTMLElement {
 customElements.define("web-customcomponent", CustomComponentElement);"
 `;
 
-exports[`Web App Framework Compiler Compiles nested-reactivity.jsx 1`] = `
+exports[`OpenTF Web Compiler Compiles nested-reactivity.jsx 1`] = `
 "import { signal as _signal, _element, _text, _svg, _fragment, hookEffect as _hookEffect, setProperty as _setProperty, renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy, _initInternalState, _reconnectWafComponent, _clearChildren, withInstance as _withInstance, _disconnectWafComponent } from "@opentf/web";
 class NestedReactivityElement extends HTMLElement {
   static observedAttributes = ["title"];
@@ -660,7 +660,7 @@ customElements.define("web-nestedreactivity", NestedReactivityElement);
 export default NestedReactivityElement;"
 `;
 
-exports[`Web App Framework Compiler Compiles basic-elements.page.jsx 1`] = `
+exports[`OpenTF Web Compiler Compiles basic-elements.page.jsx 1`] = `
 "import { _element, _text, _svg, _fragment, createPropsProxy as _createPropsProxy } from "@opentf/web";
 export function render(root, _props) {
   const _holder = {
@@ -682,7 +682,7 @@ export function render(root, _props) {
 }"
 `;
 
-exports[`Web App Framework Compiler Compiles spread.jsx 1`] = `
+exports[`OpenTF Web Compiler Compiles spread.jsx 1`] = `
 "import { _element, _text, _svg, _fragment, hookEffect as _hookEffect, applySpread as _applySpread, signal as _signal, createPropsProxy as _createPropsProxy, _initInternalState, _reconnectWafComponent, _clearChildren, withInstance as _withInstance, _disconnectWafComponent } from "@opentf/web";
 class SpreadTestElement extends HTMLElement {
   static observedAttributes = [];
@@ -737,7 +737,7 @@ customElements.define("web-spreadtest", SpreadTestElement);
 export default SpreadTestElement;"
 `;
 
-exports[`Web App Framework Compiler Compiles state-edge-cases.jsx 1`] = `
+exports[`OpenTF Web Compiler Compiles state-edge-cases.jsx 1`] = `
 "import { signal as _signal, _element, _text, _svg, _fragment, renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy, _initInternalState, _reconnectWafComponent, _clearChildren, withInstance as _withInstance, _disconnectWafComponent } from "@opentf/web";
 class StateEdgeCasesElement extends HTMLElement {
   static observedAttributes = [];
@@ -828,7 +828,7 @@ customElements.define("web-stateedgecases", StateEdgeCasesElement);
 export default StateEdgeCasesElement;"
 `;
 
-exports[`Web App Framework Compiler Compiles styling.jsx 1`] = `
+exports[`OpenTF Web Compiler Compiles styling.jsx 1`] = `
 "import { signal as _signal, _element, _text, _svg, _fragment, setProperty as _setProperty, hookEffect as _hookEffect, createPropsProxy as _createPropsProxy, _initInternalState, _reconnectWafComponent, _clearChildren, withInstance as _withInstance, _disconnectWafComponent } from "@opentf/web";
 class StylingTestElement extends HTMLElement {
   static observedAttributes = ["theme"];
@@ -892,7 +892,7 @@ customElements.define("web-stylingtest", StylingTestElement);
 export default StylingTestElement;"
 `;
 
-exports[`Web App Framework Compiler Compiles forms.jsx 1`] = `
+exports[`OpenTF Web Compiler Compiles forms.jsx 1`] = `
 "import { _element, _text, _svg, _fragment, hookEffect as _hookEffect, applySpread as _applySpread, renderDynamic as _renderDynamic, signal as _signal, createPropsProxy as _createPropsProxy, _initInternalState, _reconnectWafComponent, _clearChildren, withInstance as _withInstance, _disconnectWafComponent } from "@opentf/web";
 import { createForm } from "@opentf/web-form";
 class FormCaseElement extends HTMLElement {
@@ -951,7 +951,7 @@ customElements.define("web-formcase", FormCaseElement);
 export default FormCaseElement;"
 `;
 
-exports[`Web App Framework Compiler Compiles ref.jsx 1`] = `
+exports[`OpenTF Web Compiler Compiles ref.jsx 1`] = `
 "import { signal as _signal, onMount as _onMount, _element, _text, _svg, _fragment, createPropsProxy as _createPropsProxy, _initInternalState, _reconnectWafComponent, _clearChildren, withInstance as _withInstance, _disconnectWafComponent, hookEffect as _hookEffect } from "@opentf/web";
 class CustomInputElement extends HTMLElement {
   static observedAttributes = [];
@@ -1060,7 +1060,7 @@ customElements.define("web-reftest", RefTestElement);
 export default RefTestElement;"
 `;
 
-exports[`Web App Framework Compiler Compiles products-page.page.jsx 1`] = `
+exports[`OpenTF Web Compiler Compiles products-page.page.jsx 1`] = `
 "import { signal as _signal, _element, _text, _svg, _fragment, setProperty as _setProperty, _mapped, hookEffect as _hookEffect, renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy } from "@opentf/web";
 export function render(root, _props) {
   const _holder = {
@@ -1139,7 +1139,7 @@ export function render(root, _props) {
 }"
 `;
 
-exports[`Web App Framework Compiler Compiles comments.page.jsx 1`] = `
+exports[`OpenTF Web Compiler Compiles comments.page.jsx 1`] = `
 "import { _element, _text, _svg, _fragment, setProperty as _setProperty, createPropsProxy as _createPropsProxy } from "@opentf/web";
 export function render(root, _props) {
   const _holder = {
@@ -1162,7 +1162,7 @@ export function render(root, _props) {
 }"
 `;
 
-exports[`Web App Framework Compiler Compiles svg.jsx 1`] = `
+exports[`OpenTF Web Compiler Compiles svg.jsx 1`] = `
 "import { signal as _signal, _element, _text, _svg, _fragment, hookEffect as _hookEffect, createPropsProxy as _createPropsProxy, _initInternalState, _reconnectWafComponent, _clearChildren, withInstance as _withInstance, _disconnectWafComponent } from "@opentf/web";
 class SvgTestElement extends HTMLElement {
   static observedAttributes = [];
@@ -1219,7 +1219,7 @@ customElements.define("web-svgtest", SvgTestElement);
 export default SvgTestElement;"
 `;
 
-exports[`Web App Framework Compiler Compiles component-props.jsx 1`] = `
+exports[`OpenTF Web Compiler Compiles component-props.jsx 1`] = `
 "import { signal as _signal, _element, _text, _svg, _fragment, setProperty as _setProperty, hookEffect as _hookEffect, createPropsProxy as _createPropsProxy, _initInternalState, _reconnectWafComponent, _clearChildren, withInstance as _withInstance, _disconnectWafComponent, renderDynamic as _renderDynamic } from "@opentf/web";
 class ParentElement extends HTMLElement {
   static observedAttributes = [];
@@ -1317,7 +1317,7 @@ class ChildElement extends HTMLElement {
 customElements.define("web-child", ChildElement);"
 `;
 
-exports[`Web App Framework Compiler Compiles multiple-components.jsx 1`] = `
+exports[`OpenTF Web Compiler Compiles multiple-components.jsx 1`] = `
 "import { _element, _text, _svg, _fragment, setProperty as _setProperty, hookEffect as _hookEffect, signal as _signal, createPropsProxy as _createPropsProxy, _initInternalState, _reconnectWafComponent, _clearChildren, withInstance as _withInstance, _disconnectWafComponent, renderDynamic as _renderDynamic } from "@opentf/web";
 class MultipleComponentsElement extends HTMLElement {
   static observedAttributes = [];
@@ -1458,7 +1458,7 @@ class BElement extends HTMLElement {
 customElements.define("web-b", BElement);"
 `;
 
-exports[`Web App Framework Compiler Compiles routing-layout.layout.jsx 1`] = `
+exports[`OpenTF Web Compiler Compiles routing-layout.layout.jsx 1`] = `
 "import { _element, _text, _svg, _fragment, setProperty as _setProperty, renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy } from "@opentf/web";
 export function render(root, _props) {
   const _holder = {
@@ -1484,7 +1484,7 @@ export function render(root, _props) {
 }"
 `;
 
-exports[`Web App Framework Compiler Compiles catch-all-page.page.jsx 1`] = `
+exports[`OpenTF Web Compiler Compiles catch-all-page.page.jsx 1`] = `
 "import { _element, _text, _svg, _fragment, setProperty as _setProperty, _mapped, renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy } from "@opentf/web";
 export function render(root, _props) {
   const _holder = {
@@ -1529,7 +1529,7 @@ export function render(root, _props) {
 }"
 `;
 
-exports[`Web App Framework Compiler Compiles inline-styles.jsx 1`] = `
+exports[`OpenTF Web Compiler Compiles inline-styles.jsx 1`] = `
 "import { signal as _signal, _element, _text, _svg, _fragment, hookEffect as _hookEffect, setProperty as _setProperty, createPropsProxy as _createPropsProxy, _initInternalState, _reconnectWafComponent, _clearChildren, withInstance as _withInstance, _disconnectWafComponent } from "@opentf/web";
 class StyleTestElement extends HTMLElement {
   static observedAttributes = [];
@@ -1586,7 +1586,7 @@ customElements.define("web-styletest", StyleTestElement);
 export default StyleTestElement;"
 `;
 
-exports[`Web App Framework Compiler Compiles macros.jsx 1`] = `
+exports[`OpenTF Web Compiler Compiles macros.jsx 1`] = `
 "import { signal as _signal, computed as _computed, hookEffect as _hookEffect, isSSG as _isSSG, _element, _text, _svg, _fragment, renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy, _initInternalState, _reconnectWafComponent, _clearChildren, withInstance as _withInstance, _disconnectWafComponent } from "@opentf/web";
 class MacroTestElement extends HTMLElement {
   static observedAttributes = [];
@@ -1646,7 +1646,7 @@ customElements.define("web-macrotest", MacroTestElement);
 export default MacroTestElement;"
 `;
 
-exports[`Web App Framework Compiler Compiles list-rendering.jsx 1`] = `
+exports[`OpenTF Web Compiler Compiles list-rendering.jsx 1`] = `
 "import { signal as _signal, _element, _text, _svg, _fragment, _mapped, renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy, _initInternalState, _reconnectWafComponent, _clearChildren, withInstance as _withInstance, _disconnectWafComponent } from "@opentf/web";
 class ListRenderingElement extends HTMLElement {
   static observedAttributes = [];
@@ -1703,7 +1703,7 @@ customElements.define("web-listrendering", ListRenderingElement);
 export default ListRenderingElement;"
 `;
 
-exports[`Web App Framework Compiler Compiles icon-library.jsx 1`] = `
+exports[`OpenTF Web Compiler Compiles icon-library.jsx 1`] = `
 "import { _element, _text, _svg, _fragment, setProperty as _setProperty, hookEffect as _hookEffect, signal as _signal, createPropsProxy as _createPropsProxy, _initInternalState, _reconnectWafComponent, _clearChildren, withInstance as _withInstance, _disconnectWafComponent, applySpread as _applySpread } from "@opentf/web";
 class IconGalleryElement extends HTMLElement {
   static observedAttributes = [];
@@ -1967,7 +1967,7 @@ class SettingsIconElement extends HTMLElement {
 customElements.define("web-settingsicon", SettingsIconElement);"
 `;
 
-exports[`Web App Framework Compiler Compiles nested-fragments.jsx 1`] = `
+exports[`OpenTF Web Compiler Compiles nested-fragments.jsx 1`] = `
 "import { signal as _signal, _element, _text, _svg, _fragment, renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy, _initInternalState, _reconnectWafComponent, _clearChildren, withInstance as _withInstance, _disconnectWafComponent } from "@opentf/web";
 class NestedFragmentsElement extends HTMLElement {
   static observedAttributes = [];
@@ -2026,7 +2026,7 @@ customElements.define("web-nestedfragments", NestedFragmentsElement);
 export default NestedFragmentsElement;"
 `;
 
-exports[`Web App Framework Compiler Compiles dynamic-page.page.jsx 1`] = `
+exports[`OpenTF Web Compiler Compiles dynamic-page.page.jsx 1`] = `
 "import { onMount as _onMount, onCleanup as _onCleanup, _element, _text, _svg, _fragment, setProperty as _setProperty, renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy } from "@opentf/web";
 export function render(root, _props) {
   const _holder = {
@@ -2062,7 +2062,7 @@ export function render(root, _props) {
 }"
 `;
 
-exports[`Web App Framework Compiler Compiles whitespace.page.jsx 1`] = `
+exports[`OpenTF Web Compiler Compiles whitespace.page.jsx 1`] = `
 "import { _element, _text, _svg, _fragment, renderDynamic as _renderDynamic, createPropsProxy as _createPropsProxy } from "@opentf/web";
 export function render(root, _props) {
   const _holder = {

@@ -2,7 +2,7 @@
 
 A project of the [Open Tech Foundation](https://github.com/Open-Tech-Foundation).
 
-**[🚀 Try the Web App Framework Documentation & Playground](https://web.opentechf.org/)**
+**[🚀 Try the OpenTF Web Documentation & Playground](https://web.opentechf.org/)**
 
 > [!CAUTION]
 > **EXPERIMENTAL PRE-RELEASE**
@@ -11,9 +11,9 @@ A project of the [Open Tech Foundation](https://github.com/Open-Tech-Foundation)
 
 ## Overview
 
->**Web App Framework** is a high-performance, native-first UI framework that compiles JSX directly into optimized, imperative native DOM operations. 
+>**OpenTF Web** is a high-performance, native-first UI framework that compiles JSX directly into optimized, imperative native DOM operations. 
 
-Unlike traditional frameworks, Web App Framework has **Zero-VDOM**. There is no Virtual DOM diffing or reconciliation loop. Instead, our compiler statically analyzes your components and generates the exact `document.createElement` and DOM property assignments needed. Every component you write is compiled into a **Standard Web Component**, ensuring perfect isolation and native performance.
+Unlike traditional frameworks, OpenTF Web has **Zero-VDOM**. There is no Virtual DOM diffing or reconciliation loop. Instead, our compiler statically analyzes your components and generates the exact `document.createElement` and DOM property assignments needed. Every component you write is compiled into a **Standard Web Component**, ensuring perfect isolation and native performance.
 
 ## Key Features
 
@@ -70,11 +70,11 @@ Captures a reference to a DOM element directly.
 
 ## 📊 Performance Benchmarks
 
-Web App Framework is designed for extreme performance in data-heavy applications. By bypassing the Virtual DOM, we aim for near-native speeds for large-scale DOM manipulations.
+OpenTF Web is designed for extreme performance in data-heavy applications. By bypassing the Virtual DOM, we aim for near-native speeds for large-scale DOM manipulations.
 
 > [!NOTE]
 > **Comprehensive Benchmarks Coming Soon.**
-> We are currently preparing a standardized benchmark suite comparing Web App Framework against other major frameworks (React, Svelte, Solid) across rendering, memory usage, and update latency.
+> We are currently preparing a standardized benchmark suite comparing OpenTF Web against other major frameworks (React, Svelte, Solid) across rendering, memory usage, and update latency.
 
 ## License
 
